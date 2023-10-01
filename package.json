@@ -15,5 +15,7 @@
     "@parcel/transformer-typescript-types": "2.9.3",
     "parcel": "^2.9.3",
     "typescript": ">=3.0.0"
-  }
+  },
+  "repository": "git@github.com:WilkerSebastian/GamaSource.git",
+  "author": "WilkerSebastian <wilkerafonso2005@gmail.com>"
 }
