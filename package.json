@@ -1,10 +1,10 @@
 {
   "name": "gamasource",
-  "version": "0.0.82",
+  "version": "0.0.9",
   "source": "src/GamaSource.ts",
   "main": "dist/GamaSource.js",
   "module": "dist/GamaSource.mjs",
-  "types": "dist/types/.d.ts",
+  "types": "dist/types.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "tsup src/GamaSource.ts --format cjs,esm && tsc"
