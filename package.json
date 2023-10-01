@@ -1,6 +1,6 @@
 {
   "name": "gamasource",
-  "version": "0.0.6",
+  "version": "0.0.6-hotfix",
   "source": "src/GamaSource.ts",
   "main": "dist/cjs/GamaSource.js",
   "module": "dist/esm/GamaSource.js",
