@@ -1,20 +1,20 @@
 {
   "name": "gamasource",
-  "version": "0.0.6-hotfix",
+  "version": "0.0.82",
   "source": "src/GamaSource.ts",
-  "main": "dist/cjs/GamaSource.js",
-  "module": "dist/esm/GamaSource.js",
-  "types": "dist/types.d.ts",
+  "main": "dist/GamaSource.js",
+  "module": "dist/GamaSource.mjs",
+  "types": "dist/types/.d.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel watch",
-    "build": "parcel build"
+    "build": "tsup src/GamaSource.ts --format cjs,esm && tsc"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "2.9.3",
-    "@parcel/transformer-typescript-types": "2.9.3",
-    "parcel": "^2.9.3",
+    "tsup": "^7.2.0",
     "typescript": ">=3.0.0"
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
   },
   "repository": "git@github.com:WilkerSebastian/GamaSource.git",
   "author": "WilkerSebastian <wilkerafonso2005@gmail.com>"
