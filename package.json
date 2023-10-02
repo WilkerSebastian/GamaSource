@@ -1,6 +1,6 @@
 {
   "name": "gamasource",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "source": "src/GamaSource.ts",
   "main": "dist/cjs/GamaSource.js",
   "types": "dist/GamaSource.d.ts",
