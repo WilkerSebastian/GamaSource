@@ -1,14 +1,14 @@
 {
   "name": "cube_move",
-  "version": "0.0.6-hotfix",
+  "version": "1.0.0",
   "license": "MIT",
   "source": "ts/game.ts",
   "main": "dist/main.js",
   "scripts": {
-    "dev": "parcel watch"
+    "dev": "parcel cube.html"
   },
   "dependencies": {
-    "gamasource": "^0.0.6",
+    "gamasource": "^0.1.5",
     "parcel": "^2.9.3"
   }
 }

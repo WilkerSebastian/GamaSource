@@ -1,4 +1,4 @@
-import Time from "../define/Time"
+import Time from "../define/GamaSourceTime"
 
 export default class TimeController {
 
@@ -11,10 +11,11 @@ export default class TimeController {
 
     constructor(maxFPS:number) {
 
+        this.FPS = 0
         this.DeltaTime = 0
         this.lastFrameTime = performance.now()
         this.frameCount = 0
-        this.setMaxFPS(maxFPS)
+        this.frameInterval = Time.SECOND / maxFPS
 
     }
 

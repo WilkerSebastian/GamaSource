@@ -1,5 +1,7 @@
-export default interface GamaSourceConfig {
+enum GamaSourceTime {
 
-    maxFPS?:number
+    SECOND = 1000,
 
 }
+
+export default GamaSourceTime

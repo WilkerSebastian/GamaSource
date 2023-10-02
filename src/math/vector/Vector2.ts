@@ -5,7 +5,8 @@ export default class Vector2 {
 
     constructor(x:number, y:number) {
 
-        this.set(x,y)
+        this.x = x
+        this.y = y
 
     }
 

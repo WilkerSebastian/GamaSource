@@ -2,13 +2,13 @@ import GamaSource from "../GamaSource"
 import Vector2 from "../math/vector/Vector2"
 import Sprite from "../rendering/Sprite"
 
-export default class GameOject {
+export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0)
     protected sprite: Sprite | null = null
     public tag:string = "not defined"
 
-    public static create(obj: typeof GameOject) {
+    public static create(obj: typeof GameObject) {
 
         GamaSource.GameObjects.push(new obj())
 

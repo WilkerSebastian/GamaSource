@@ -1,12 +1,12 @@
-import GamaSource from "../../../src/GamaSource";
-import GameOject from "../../../src/gameObject/GameObject";
-import Cube from "./Cube";
+import GamaSource from "gamasource";
+import {GameObject} from "gamasource";
+import Player from "./Player";
 
 const game = new GamaSource()
 
 game.main = () => {
 
-    GameOject.create(Cube) 
+    GameObject.create(Player) 
 
 }
  

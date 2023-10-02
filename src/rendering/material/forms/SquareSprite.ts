@@ -1,11 +1,11 @@
 import GamaSource from "../../../GamaSource";
-import GameOject from "../../../gameObject/GameObject";
+import GameObject from "../../../gameObject/GameObject";
 import Vector2 from "../../../math/vector/Vector2";
 import ShapeSprite from "../ShapeSprite";
 
 export default class SquareSprite extends ShapeSprite {
 
-    constructor(reference:Vector2 | GameOject, width:number, height:number, color:string) {
+    constructor(reference:Vector2 | GameObject, width:number, height:number, color:string) {
 
         super(reference, width, height, color)
 
@@ -13,7 +13,7 @@ export default class SquareSprite extends ShapeSprite {
 
     public render() {
 
-        if (this.reference instanceof GameOject) {
+        if (this.reference instanceof GameObject) {
         
             GamaSource.ctx.fillStyle = this.color
             GamaSource.ctx.fillRect(this.reference.transform.x, this.reference.transform.y, this.width, this.height)

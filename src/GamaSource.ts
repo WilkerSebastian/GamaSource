@@ -1,14 +1,19 @@
-import GamaSourceState from "./define/GamaSoruceState"
-import GamaSourceConfig from "./define/GamaSourceTime"
-import GameOject from "./gameObject/GameObject"
+import GamaSourceState from "./define/GamaSourceState"
+import GamaSourceConfig from "./define/GamaSourceConfig"
+import GameObject from "./gameObject/GameObject"
 import KeyBoard from "./input/KeyBoard"
 import TimeController from "./math/TimeController"
 import GameCanvas from "./UI/view/GameCanvas"
 import GameWindow from "./UI/view/GameWindow"
+import GamaSourceTime from "./define/GamaSourceTime"
+import Vector2 from "./math/vector/Vector2"
+import Sprite from "./rendering/Sprite"
+import ShapeSprite from "./rendering/material/ShapeSprite"
+import SquareSprite from "./rendering/material/forms/SquareSprite"
 
-export default class GamaSource {
+class GamaSource {
 
-    public static GameObjects = new Array<GameOject>()
+    public static GameObjects = new Array<GameObject>()
     public static ctx:CanvasRenderingContext2D
     public static window:GameWindow
 
@@ -129,3 +134,22 @@ export default class GamaSource {
     }
 
 }
+
+export default GamaSource
+
+// exportações para biblioteca
+export {    
+    GamaSource, 
+    GamaSourceState, 
+    GamaSourceTime, 
+    GamaSourceConfig,
+    GameObject, 
+    KeyBoard,
+    Vector2,
+    TimeController,
+    Sprite,
+    ShapeSprite, 
+    SquareSprite, 
+    GameCanvas, 
+    GameWindow 
+};
