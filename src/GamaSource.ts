@@ -2,7 +2,7 @@ import GamaSourceState from "./define/GamaSourceState"
 import GamaSourceConfig from "./define/GamaSourceConfig"
 import GameObject from "./gameObject/GameObject"
 import KeyBoard from "./input/KeyBoard"
-import TimeController from "./math/TimeController"
+import TimeController from "./math/time/TimeController"
 import GameCanvas from "./UI/view/GameCanvas"
 import GameWindow from "./UI/view/GameWindow"
 import GamaSourceTime from "./define/GamaSourceTime"
@@ -10,6 +10,7 @@ import Vector2 from "./math/vector/Vector2"
 import Sprite from "./rendering/Sprite"
 import ShapeSprite from "./rendering/material/ShapeSprite"
 import SquareSprite from "./rendering/material/forms/SquareSprite"
+import GameMath from "./math/GameMath"
 
 class GamaSource {
 
@@ -151,5 +152,6 @@ export {
     ShapeSprite, 
     SquareSprite, 
     GameCanvas, 
-    GameWindow 
+    GameWindow,
+    GameMath
 };
