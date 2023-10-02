@@ -1,12 +1,13 @@
 {
   "name": "gamasource",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "source": "src/GamaSource.ts",
   "main": "dist/cjs/GamaSource.js",
+  "module": "dist/esm/GamaSource.js",
   "types": "dist/GamaSource.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "parcel build && rm -r ./dist/types.d.ts ./dist/types.d.ts.map && ./bundle && tsc && rm -rf unique"
+    "build": "parcel build"
   },
   "files": [
     "/dist"
