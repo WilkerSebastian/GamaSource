@@ -1,21 +1,21 @@
 {
   "name": "gamasource",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "source": "src/GamaSource.ts",
-  "main": "dist/GamaSource.js",
-  "module": "dist/GamaSource.mjs",
-  "types": "dist/GamaSource.d.ts",
+  "main": "dist/cjs/GamaSource.js",
+  "module": "dist/esm/GamaSource.js",
+  "types": "dist/types.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "NODE_ENV=production tsup --config tsup.config.ts",
-    "dev": "NODE_ENV=development tsup --config tsup.config.ts"
+    "build": "parcel build && rm -r ./dist/types.d.ts ./dist/types.d.ts.map && ./bundle && tsc && rm -rf unique"
   },
   "files": [
     "/dist"
   ],
   "devDependencies": {
-    "@types/node": "^20.8.0",
-    "tsup": "^7.2.0",
+    "@parcel/packager-ts": "2.9.3",
+    "@parcel/transformer-typescript-types": "2.9.3",
+    "parcel": "^2.9.3",
     "typescript": ">=3.0.0"
   },
   "repository": "git@github.com:WilkerSebastian/GamaSource.git",
