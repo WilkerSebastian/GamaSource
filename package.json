@@ -1,15 +1,18 @@
 {
   "name": "gamasource",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "source": "src/GamaSource.ts",
   "main": "dist/GamaSource.js",
   "module": "dist/GamaSource.mjs",
-  "types": "dist/types.d.ts",
+  "types": "dist/GamaSource.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "NODE_ENV=production tsup --config tsup.config.ts",
     "dev": "NODE_ENV=development tsup --config tsup.config.ts"
   },
+  "files": [
+    "/dist"
+  ],
   "devDependencies": {
     "@types/node": "^20.8.0",
     "tsup": "^7.2.0",
