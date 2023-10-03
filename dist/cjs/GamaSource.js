@@ -14,6 +14,7 @@ $parcel$export(module.exports, "TimeGame", () => $5e379901baf0d859$export$2e2bcd
 $parcel$export(module.exports, "GamaSourceConfig", () => $1d90ffda7b1fdff4$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "GameObject", () => $093225c56a233e0f$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "KeyBoard", () => $ec5426ac07e1e730$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "Mouse", () => $eb2672c705c386be$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Vector2", () => $fbe8591a509f65b2$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "TimeController", () => $bcca9c904f06c83e$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Sprite", () => $966979a7503d5337$export$2e2bcd8739ae039);
@@ -413,6 +414,53 @@ var $6a34e6f6a90b2c9f$export$2e2bcd8739ae039 = ()=>{
 };
 
 
+
+class $eb2672c705c386be$export$2e2bcd8739ae039 {
+    static #_ = (()=>{
+        this.events = new Array;
+    })();
+    static #_1 = (()=>{
+        this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+    })();
+    static #_2 = (()=>{
+        this.mapper = new Map;
+    })();
+    static #_3 = (()=>{
+        this.pressed = false;
+    })();
+    static initialize() {
+        document.addEventListener("mousemove", (e)=>{
+            this.transform.set(e.clientX, e.clientY);
+        });
+        document.addEventListener("mousedown", (e)=>{
+            this.mapper.set("mouse " + e.button, true);
+            this.pressed = true;
+        });
+        document.addEventListener("mouseup", (e)=>{
+            this.mapper.set("mouse " + e.button, false);
+            this.pressed = false;
+        });
+    }
+    static addEventClick(ev) {
+        this.events.push(ev);
+        document.addEventListener("mousedown", (m)=>{
+            this.mapper.set("mouse " + m.button, true);
+            this.pressed = true;
+            this.events.forEach((e)=>{
+                e(m);
+            });
+        });
+    }
+    static hasPressed() {
+        return this.pressed;
+    }
+    static getButtonPressed(button) {
+        if (typeof button == "number") return this.mapper.get("mouse" + button);
+        return this.mapper.get(button);
+    }
+}
+
+
 class $be9b019dcf88b1d2$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -437,6 +485,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
             this.background.height = $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT;
         });
         (0, $6e1d1d3cd91f3210$export$2e2bcd8739ae039)();
+        (0, $eb2672c705c386be$export$2e2bcd8739ae039).initialize();
         (0, $ec5426ac07e1e730$export$2e2bcd8739ae039).initialize();
         this.time = new (0, $bcca9c904f06c83e$export$2e2bcd8739ae039)(config?.maxFPS ?? 60);
         $be9b019dcf88b1d2$export$d36076abcf594543.state = (0, $a7f36dda3f4a8094$export$2e2bcd8739ae039).CLOSED;

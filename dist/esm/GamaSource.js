@@ -388,6 +388,53 @@ var $f589213aaea6faa3$export$2e2bcd8739ae039 = ()=>{
 };
 
 
+
+class $a5c17bf62a97e3fd$export$2e2bcd8739ae039 {
+    static #_ = (()=>{
+        this.events = new Array;
+    })();
+    static #_1 = (()=>{
+        this.transform = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    })();
+    static #_2 = (()=>{
+        this.mapper = new Map;
+    })();
+    static #_3 = (()=>{
+        this.pressed = false;
+    })();
+    static initialize() {
+        document.addEventListener("mousemove", (e)=>{
+            this.transform.set(e.clientX, e.clientY);
+        });
+        document.addEventListener("mousedown", (e)=>{
+            this.mapper.set("mouse " + e.button, true);
+            this.pressed = true;
+        });
+        document.addEventListener("mouseup", (e)=>{
+            this.mapper.set("mouse " + e.button, false);
+            this.pressed = false;
+        });
+    }
+    static addEventClick(ev) {
+        this.events.push(ev);
+        document.addEventListener("mousedown", (m)=>{
+            this.mapper.set("mouse " + m.button, true);
+            this.pressed = true;
+            this.events.forEach((e)=>{
+                e(m);
+            });
+        });
+    }
+    static hasPressed() {
+        return this.pressed;
+    }
+    static getButtonPressed(button) {
+        if (typeof button == "number") return this.mapper.get("mouse" + button);
+        return this.mapper.get(button);
+    }
+}
+
+
 class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -412,6 +459,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
             this.background.height = $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT;
         });
         (0, $0e52282bd7cacc2f$export$2e2bcd8739ae039)();
+        (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).initialize();
         (0, $94db9bb1e19ed727$export$2e2bcd8739ae039).initialize();
         this.time = new (0, $08a27fb1cb0f162c$export$2e2bcd8739ae039)(config?.maxFPS ?? 60);
         $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED;
@@ -482,5 +530,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath};
 //# sourceMappingURL=GamaSource.js.map

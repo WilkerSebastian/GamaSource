@@ -15,6 +15,7 @@ import GameMath from "./math/GameMath"
 import GameAudio from "./asset/audio/GameAudio"
 import GameImage from "./asset/image/GameImage"
 import Loader from "./UI/view/Loader"
+import Mouse from "./input/Mouse"
 
 class GamaSource {
 
@@ -59,6 +60,7 @@ class GamaSource {
         })
 
         GameCanvas()
+        Mouse.initialize()
         KeyBoard.initialize()
 
         this.time = new TimeController(config?.maxFPS ?? 60)
@@ -197,7 +199,7 @@ class GamaSource {
 
         return names
 
-    } 
+    }
 
 }
 
@@ -211,6 +213,7 @@ export {
     GamaSourceConfig,
     GameObject, 
     KeyBoard,
+    Mouse,
     Vector2,
     TimeController,
     Sprite,

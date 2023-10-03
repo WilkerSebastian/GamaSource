@@ -97,6 +97,12 @@ declare class GameAudio {
     play(): Promise<void>;
     getSource(): HTMLAudioElement;
 }
+export abstract class Mouse {
+    static initialize(): void;
+    static addEventClick(ev: (mouse: MouseEvent) => void): void;
+    static hasPressed(): boolean;
+    static getButtonPressed(button: string | number): boolean | undefined;
+}
 export class GamaSource {
     static LOAD: number;
     static ASSETS: Map<string, GameImage | GameAudio>;
