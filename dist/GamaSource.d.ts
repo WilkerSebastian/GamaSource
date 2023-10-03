@@ -17,22 +17,28 @@ export abstract class Sprite {
     reference: Vector2 | GameObject;
     width: number;
     height: number;
+    constructor(reference: Vector2 | GameObject, width: number, height: number);
     abstract render(): void;
 }
 export class GameObject {
     transform: Vector2;
     protected sprite: Sprite | null;
+    protected visible: boolean;
     tag: string;
     static create(obj: typeof GameObject): void;
+    destroy(): void;
+    static getElementByTag<T>(tag: string): T;
+    static getAllElementsByTag<T>(tag: string): T;
     start(): void;
-    update(): void;
+    protected update(): void;
+    gameUpdate(): void;
     render(): void;
 }
 export abstract class KeyBoard {
     static initialize(): void;
     static getKeyDown(key: string): boolean | undefined;
 }
-export default GamaSourceTime;
+export default GameTime;
 export class TimeController {
     DeltaTime: number;
     FPS: number;
@@ -63,6 +69,14 @@ export class SquareSprite extends ShapeSprite {
     constructor(reference: Vector2 | GameObject, width: number, height: number, color: string);
     render(): void;
 }
+declare class GameImage {
+    constructor(path: string);
+    getSource(): HTMLImageElement;
+}
+export class StaticSprite extends Sprite {
+    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number);
+    render(): void;
+}
 export abstract class GameMath {
     static standard: Math;
     static random(min?: number, max?: number): number;
@@ -82,13 +96,9 @@ declare class GameAudio {
     play(): Promise<void>;
     getSource(): HTMLAudioElement;
 }
-declare class GameImage {
-    constructor(path: string);
-    getSource(): HTMLImageElement;
-}
 export class GamaSource {
     static LOAD: number;
-    static ASSETS: Map<string, GameAudio | GameImage>;
+    static ASSETS: Map<string, GameImage | GameAudio>;
     static GameObjects: GameObject[];
     static ctx: CanvasRenderingContext2D;
     static window: GameWindow;

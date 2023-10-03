@@ -1,4 +1,4 @@
-import Time from "../../define/GamaSourceTime"
+import Time from "../../define/TimeGame"
 
 export default class TimeController {
 

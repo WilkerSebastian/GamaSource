@@ -7,6 +7,14 @@ export default abstract class Sprite {
     public width = 0;
     public height = 0;
 
+    constructor(reference:Vector2 | GameObject, width:number, height:number) {
+
+        this.reference = reference
+        this.width = width
+        this.height = height
+
+    }
+
     public abstract render():void
 
 }

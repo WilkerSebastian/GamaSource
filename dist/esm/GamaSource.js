@@ -1,11 +1,20 @@
-var $d138717687ddda30$var$GamaSourceState;
-(function(GamaSourceState) {
-    GamaSourceState[GamaSourceState["CLOSED"] = 0] = "CLOSED";
-    GamaSourceState[GamaSourceState["LOADING"] = 1] = "LOADING";
-    GamaSourceState[GamaSourceState["RUNNING"] = 2] = "RUNNING";
-    GamaSourceState[GamaSourceState["STOPPED"] = 3] = "STOPPED";
-    GamaSourceState[GamaSourceState["CRASHED"] = 4] = "CRASHED";
-})($d138717687ddda30$var$GamaSourceState || ($d138717687ddda30$var$GamaSourceState = {}));
+class $d138717687ddda30$var$GamaSourceState {
+    static #_ = (()=>{
+        this.CLOSED = 0;
+    })();
+    static #_1 = (()=>{
+        this.LOADING = 1;
+    })();
+    static #_2 = (()=>{
+        this.RUNNING = 2;
+    })();
+    static #_3 = (()=>{
+        this.STOPPED = 3;
+    })();
+    static #_4 = (()=>{
+        this.CRASHED = 4;
+    })();
+}
 var $d138717687ddda30$export$2e2bcd8739ae039 = $d138717687ddda30$var$GamaSourceState;
 
 
@@ -47,14 +56,27 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     static create(obj) {
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.push(new obj());
     }
+    destroy() {
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj != this);
+    }
+    static getElementByTag(tag) {
+        return (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag)[0];
+    }
+    static getAllElementsByTag(tag) {
+        return (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag);
+    }
     start() {}
     update() {}
+    gameUpdate() {
+        if (this.visible) this.update();
+    }
     render() {
-        if (this.sprite) this.sprite.render();
+        if (this.sprite && this.visible) this.sprite.render();
     }
     constructor(){
         this.transform = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.sprite = null;
+        this.visible = true;
         this.tag = "not defined";
     }
 }
@@ -82,11 +104,9 @@ class $94db9bb1e19ed727$export$2e2bcd8739ae039 {
 }
 
 
-var $c79c3a840d79a37e$var$GamaSourceTime;
-(function(GamaSourceTime) {
-    GamaSourceTime[GamaSourceTime["SECOND"] = 1000] = "SECOND";
-})($c79c3a840d79a37e$var$GamaSourceTime || ($c79c3a840d79a37e$var$GamaSourceTime = {}));
-var $c79c3a840d79a37e$export$2e2bcd8739ae039 = $c79c3a840d79a37e$var$GamaSourceTime;
+class $64d48ff8d4d06d3a$var$GameTime {
+}
+var $64d48ff8d4d06d3a$export$2e2bcd8739ae039 = $64d48ff8d4d06d3a$var$GameTime;
 
 
 class $08a27fb1cb0f162c$export$2e2bcd8739ae039 {
@@ -95,11 +115,11 @@ class $08a27fb1cb0f162c$export$2e2bcd8739ae039 {
         this.DeltaTime = 0;
         this.lastFrameTime = performance.now();
         this.frameCount = 0;
-        this.frameInterval = (0, $c79c3a840d79a37e$export$2e2bcd8739ae039).SECOND / maxFPS;
+        this.frameInterval = (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND / maxFPS;
     }
     updateFrame(currentTime) {
         this.frameCount++;
-        if (currentTime > this.lastFrameTime + (0, $c79c3a840d79a37e$export$2e2bcd8739ae039).SECOND) {
+        if (currentTime > this.lastFrameTime + (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND) {
             this.FPS = this.frameCount;
             this.frameCount = 0;
             this.lastFrameTime = currentTime;
@@ -109,10 +129,10 @@ class $08a27fb1cb0f162c$export$2e2bcd8739ae039 {
         this.lastFrameTime = performance.now();
     }
     setMaxFPS(maxFPS) {
-        this.frameInterval = (0, $c79c3a840d79a37e$export$2e2bcd8739ae039).SECOND / maxFPS;
+        this.frameInterval = (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND / maxFPS;
     }
     getDeltaTime(currentTime) {
-        if (currentTime) return (currentTime - this.lastFrameTime) / (0, $c79c3a840d79a37e$export$2e2bcd8739ae039).SECOND;
+        if (currentTime) return (currentTime - this.lastFrameTime) / (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND;
         return this.DeltaTime;
     }
     getFrameInterval() {
@@ -174,10 +194,13 @@ class $58cc35928f5b21f0$export$2e2bcd8739ae039 {
 
 
 class $b9476ce5e7489a8e$export$2e2bcd8739ae039 {
-    constructor(){
+    constructor(reference, width, height){
         this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.width = 0;
         this.height = 0;
+        this.reference = reference;
+        this.width = width;
+        this.height = height;
     }
 }
 
@@ -185,10 +208,7 @@ class $b9476ce5e7489a8e$export$2e2bcd8739ae039 {
 
 class $59f2c5857d98d905$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$export$2e2bcd8739ae039) {
     constructor(reference, width, height, color){
-        super();
-        this.reference = reference;
-        this.width = width;
-        this.height = height;
+        super(reference, width, height);
         this.color = color;
     }
 }
@@ -209,6 +229,47 @@ class $c4d1796e1253327f$export$2e2bcd8739ae039 extends (0, $59f2c5857d98d905$exp
         }
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height);
+    }
+}
+
+
+
+
+class $f5702f0cdcfb7649$export$2e2bcd8739ae039 {
+    constructor(path){
+        this.source = new Image();
+        this.source.addEventListener("load", ()=>{
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).LOAD++;
+        });
+        this.source.src = path;
+        const name = path.split("/");
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
+    }
+    getSource() {
+        return this.source;
+    }
+}
+
+
+
+class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$export$2e2bcd8739ae039) {
+    constructor(source, reference, width, height){
+        super(reference, width, height);
+        const image = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(source);
+        if (!image) {
+            console.error("Error on instace of StaticSprite " + source);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
+            this.image = new (0, $f5702f0cdcfb7649$export$2e2bcd8739ae039)("failed");
+            return;
+        }
+        this.image = image;
+    }
+    render() {
+        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.transform.x, this.reference.transform.y, this.width, this.height);
+            return;
+        }
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.x, this.reference.y, this.width, this.height);
     }
 }
 
@@ -273,22 +334,6 @@ class $13749c1ad70c82ef$export$2e2bcd8739ae039 {
     }
 }
 
-
-
-class $f5702f0cdcfb7649$export$2e2bcd8739ae039 {
-    constructor(path){
-        this.source = new Image();
-        this.source.addEventListener("load", ()=>{
-            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).LOAD++;
-        });
-        this.source.src = path;
-        const name = path.split("/");
-        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
-    }
-    getSource() {
-        return this.source;
-    }
-}
 
 
 
@@ -370,7 +415,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
     }
     update() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.update());
+        $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameUpdate());
     }
     render() {
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.clearRect(0, 0, $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT);
@@ -423,5 +468,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $c79c3a840d79a37e$export$2e2bcd8739ae039 as GamaSourceTime, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath};
 //# sourceMappingURL=GamaSource.js.map

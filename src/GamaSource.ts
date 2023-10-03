@@ -5,11 +5,12 @@ import KeyBoard from "./input/KeyBoard"
 import TimeController from "./math/time/TimeController"
 import GameCanvas from "./UI/view/GameCanvas"
 import GameWindow from "./UI/view/GameWindow"
-import GamaSourceTime from "./define/GamaSourceTime"
+import TimeGame from "./define/TimeGame"
 import Vector2 from "./math/vector/Vector2"
 import Sprite from "./rendering/Sprite"
 import ShapeSprite from "./rendering/material/ShapeSprite"
 import SquareSprite from "./rendering/material/forms/SquareSprite"
+import StaticSprite from "./rendering/spriteAsset/static/StaticSprite"
 import GameMath from "./math/GameMath"
 import GameAudio from "./asset/audio/GameAudio"
 import GameImage from "./asset/image/GameImage"
@@ -61,7 +62,7 @@ class GamaSource {
 
     private update() {
 
-        GamaSource.GameObjects.forEach((g) => g.update())
+        GamaSource.GameObjects.forEach((g) => g.gameUpdate())
 
     }
 
@@ -176,7 +177,7 @@ export default GamaSource
 export {    
     GamaSource, 
     GamaSourceState, 
-    GamaSourceTime, 
+    TimeGame, 
     GamaSourceConfig,
     GameObject, 
     KeyBoard,
@@ -185,6 +186,7 @@ export {
     Sprite,
     ShapeSprite, 
     SquareSprite, 
+    StaticSprite,
     GameCanvas, 
     GameWindow,
     GameMath

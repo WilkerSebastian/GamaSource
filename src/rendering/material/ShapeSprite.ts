@@ -8,10 +8,7 @@ export default abstract class ShapeSprite extends Sprite {
 
     constructor(reference:Vector2 | GameObject, width:number, height:number, color:string) {
 
-        super()
-        this.reference = reference
-        this.width = width
-        this.height = height
+        super(reference, width, height)
         this.color = color
 
     }
