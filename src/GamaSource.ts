@@ -11,9 +11,14 @@ import Sprite from "./rendering/Sprite"
 import ShapeSprite from "./rendering/material/ShapeSprite"
 import SquareSprite from "./rendering/material/forms/SquareSprite"
 import GameMath from "./math/GameMath"
+import GameAudio from "./asset/audio/GameAudio"
+import GameImage from "./asset/image/GameImage"
+import Loader from "./UI/view/Loader"
 
 class GamaSource {
 
+    public static LOAD:number = 0
+    public static ASSETS = new Map<string , GameAudio | GameImage>
     public static GameObjects = new Array<GameObject>()
     public static ctx:CanvasRenderingContext2D
     public static window:GameWindow
@@ -42,9 +47,13 @@ class GamaSource {
 
     }
 
+    // métodos de incialização
+
     private start() {
 
-         this.main()
+        this.main()
+
+        Loader()
 
         GamaSource.GameObjects.forEach((g) => g.start())
 
@@ -101,7 +110,7 @@ class GamaSource {
 
     public run() {
 
-         this.start()
+        this.start()
 
         GamaSource.state = GamaSourceState.RUNNING;
 
@@ -133,6 +142,31 @@ class GamaSource {
         GamaSource.state = GamaSourceState.CRASHED
 
     }
+
+    // métodos de controle
+    public static loader(...assets:string[]) {
+
+        assets.forEach(a => {
+
+            const name = a.split("/")
+
+            if (!this.ASSETS.get(name[name.length - 1])) {
+             
+                if (/\.(mp3|wav|flac|ogg)$/i.test(a)) {
+
+                    new GameAudio(a)
+                    
+                } else if(/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(a)) {
+    
+                    new GameImage(a)
+                    
+                }
+
+            }
+
+        })
+
+    } 
 
 }
 

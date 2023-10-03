@@ -2,6 +2,8 @@ import { Vector2 } from "../GamaSource"
 
 export default abstract class GameMath {
 
+    public static standard:Math
+
     public static random(min?:number, max?:number) {
 
         min = min ?? 0
@@ -40,13 +42,13 @@ export default abstract class GameMath {
 
     public static degressToRadian(degress:number) {
 
-        return degress / 180
+        return degress * Math.PI / 180
 
     }
 
     public static radianToDegress(radian:number) {
 
-        return radian * 180
+        return radian * 180 / Math.PI
 
     }
 

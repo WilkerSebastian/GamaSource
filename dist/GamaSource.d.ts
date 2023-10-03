@@ -63,7 +63,32 @@ export class SquareSprite extends ShapeSprite {
     constructor(reference: Vector2 | GameObject, width: number, height: number, color: string);
     render(): void;
 }
+export abstract class GameMath {
+    static standard: Math;
+    static random(min?: number, max?: number): number;
+    static randomInteger(min?: number, max?: number): number;
+    static parseInt(x: number): number;
+    static root(x: number, exp: number): number;
+    static distance(v1: Vector2, v2: Vector2): number;
+    static degressToRadian(degress: number): number;
+    static radianToDegress(radian: number): number;
+}
+declare class GameAudio {
+    constructor(path: string);
+    pause(): void;
+    setLoop(loop: boolean): void;
+    setVolume(volume: number): void;
+    getVolume(): number;
+    play(): Promise<void>;
+    getSource(): HTMLAudioElement;
+}
+declare class GameImage {
+    constructor(path: string);
+    getSource(): HTMLImageElement;
+}
 export class GamaSource {
+    static LOAD: number;
+    static ASSETS: Map<string, GameAudio | GameImage>;
     static GameObjects: GameObject[];
     static ctx: CanvasRenderingContext2D;
     static window: GameWindow;
@@ -74,6 +99,7 @@ export class GamaSource {
     static resume(): void;
     static exit(): void;
     static falied(): void;
+    static loader(...assets: string[]): void;
 }
 export default GamaSource;
 
