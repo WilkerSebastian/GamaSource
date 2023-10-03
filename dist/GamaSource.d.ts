@@ -1,6 +1,7 @@
 export default GamaSourceState;
 export class GamaSourceConfig {
     maxFPS?: number;
+    background?: string;
 }
 export class Vector2 {
     x: number;
@@ -109,7 +110,7 @@ export class GamaSource {
     static resume(): void;
     static exit(): void;
     static falied(): void;
-    static loader(...assets: string[]): void;
+    static loader(...assets: string[]): string[];
 }
 export default GamaSource;
 

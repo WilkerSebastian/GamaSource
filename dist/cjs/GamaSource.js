@@ -426,6 +426,16 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     constructor(config){
         this.main = ()=>{};
         $be9b019dcf88b1d2$export$d36076abcf594543.window = new (0, $d56f756e1dc733a9$export$2e2bcd8739ae039)();
+        const source = config?.background ?? "#787878";
+        if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $16a63ba451fb476c$export$2e2bcd8739ae039)(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT, source);
+        else {
+            const name = $be9b019dcf88b1d2$export$d36076abcf594543.loader(source)[0];
+            this.background = new (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039)(name, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT);
+        }
+        $be9b019dcf88b1d2$export$d36076abcf594543.window.addEvent(()=>{
+            this.background.width = $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH;
+            this.background.height = $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT;
+        });
         (0, $6e1d1d3cd91f3210$export$2e2bcd8739ae039)();
         (0, $ec5426ac07e1e730$export$2e2bcd8739ae039).initialize();
         this.time = new (0, $bcca9c904f06c83e$export$2e2bcd8739ae039)(config?.maxFPS ?? 60);
@@ -444,6 +454,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     }
     render() {
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.clearRect(0, 0, $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT);
+        this.background.render();
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>g.render());
     }
     loop(currentTime) {
@@ -481,13 +492,16 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     }
     // métodos de controle
     static loader(...assets) {
+        let names = [];
         assets.forEach((a)=>{
             const name = a.split("/");
+            names.push(name[name.length - 1]);
             if (!this.ASSETS.get(name[name.length - 1])) {
                 if (/\.(mp3|wav|flac|ogg)$/i.test(a)) new (0, $53e27565d1108d13$export$2e2bcd8739ae039)(a);
                 else if (/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(a)) new (0, $157157e820ac0459$export$2e2bcd8739ae039)(a);
             }
         });
+        return names;
     }
 }
 var $be9b019dcf88b1d2$export$2e2bcd8739ae039 = $be9b019dcf88b1d2$export$d36076abcf594543;

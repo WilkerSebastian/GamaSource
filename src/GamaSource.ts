@@ -29,11 +29,34 @@ class GamaSource {
     private static state:GamaSourceState
     private time:TimeController
 
+    private background:Sprite
     public main = () => {}
 
     constructor(config?:GamaSourceConfig) {
 
         GamaSource.window = new GameWindow()
+
+        const source = config?.background ?? "#787878"
+
+        if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) {
+
+            this.background = new SquareSprite(new Vector2(0,0), GamaSource.window.WIDTH, GamaSource.window.HEIGHT, source)
+            
+        } else {
+
+            const name = GamaSource.loader(source)[0]
+
+            this.background = new StaticSprite(name, new Vector2(0,0), GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
+
+    
+        }
+
+        GamaSource.window.addEvent(() => {
+
+            this.background.width = GamaSource.window.WIDTH
+            this.background.height = GamaSource.window.HEIGHT
+
+        })
 
         GameCanvas()
         KeyBoard.initialize()
@@ -67,9 +90,10 @@ class GamaSource {
     }
 
     private render() {
-        
 
         GamaSource.ctx.clearRect(0, 0, GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
+
+        this.background.render()
 
         GamaSource.GameObjects.forEach((g) => g.render())
 
@@ -147,9 +171,13 @@ class GamaSource {
     // métodos de controle
     public static loader(...assets:string[]) {
 
+        let names:string[] = []
+
         assets.forEach(a => {
 
             const name = a.split("/")
+
+            names.push(name[name.length - 1])
 
             if (!this.ASSETS.get(name[name.length - 1])) {
              
@@ -166,6 +194,8 @@ class GamaSource {
             }
 
         })
+
+        return names
 
     } 
 
