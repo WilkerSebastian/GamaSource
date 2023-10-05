@@ -103,12 +103,88 @@ export abstract class Mouse {
     static hasPressed(): boolean;
     static getButtonPressed(button: string | number): boolean | undefined;
 }
+type ratio = number | `${number}%`;
+export class FrameComponent {
+    protected position: Vector2;
+    protected width: number;
+    protected height: number;
+    protected visible: boolean;
+    constructor(frame: {
+        x: ratio;
+        y: ratio;
+        width: ratio;
+        height: ratio;
+        visible?: boolean;
+        father?: FrameComponent;
+    });
+    setX(x: ratio): void;
+    sety(y: ratio): void;
+    setWidth(width: ratio): void;
+    setHeight(height: ratio): void;
+    setPosition(x: ratio, y: ratio): void;
+    setSize(width: ratio, height: ratio): void;
+    setBounds(x: ratio, y: ratio, width: ratio, height: ratio): void;
+    add(frame: FrameComponent): void;
+    setFather(frame: FrameComponent): void;
+    getFather(): FrameComponent | null;
+    getPosition(): Vector2;
+    getWidth(): number;
+    getHeight(): number;
+    FrameRender(): void;
+    getChildrens(): FrameComponent[];
+    setChildrens(childrens: FrameComponent[]): void;
+    protected render(): void;
+}
+export class FramePanel extends FrameComponent {
+    protected source: string;
+    protected rounded: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined;
+    protected border: {
+        color?: string;
+        size?: number;
+    };
+    constructor(frame: {
+        x: ratio;
+        y: ratio;
+        width: ratio;
+        height: ratio;
+        visible?: boolean;
+        father?: FrameComponent;
+        source?: string;
+        rounded?: number | DOMPointInit | Iterable<number | DOMPointInit>;
+        border?: {
+            color?: string;
+            size?: number;
+        };
+    });
+    protected render(): void;
+}
+export class FrameText extends FrameComponent {
+    constructor(frame: {
+        x: ratio;
+        y: ratio;
+        width: ratio;
+        text?: string;
+        visible?: boolean;
+        father?: FrameComponent;
+        fontSize?: ratio;
+        font?: string;
+        color?: string;
+    });
+    protected render(): void;
+    setText(text: string): void;
+    getText(): string;
+    setFontSize(fontSize: ratio): void;
+    getFontSize(): number;
+    setFont(font: string): void;
+    getFont(): string;
+}
 export class GamaSource {
     static LOAD: number;
     static ASSETS: Map<string, GameImage | GameAudio>;
     static GameObjects: GameObject[];
     static ctx: CanvasRenderingContext2D;
     static window: GameWindow;
+    static UI: FrameComponent;
     main: () => void;
     constructor(config?: GamaSourceConfig);
     run(): void;

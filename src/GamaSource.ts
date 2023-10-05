@@ -16,6 +16,9 @@ import GameAudio from "./asset/audio/GameAudio"
 import GameImage from "./asset/image/GameImage"
 import Loader from "./UI/view/Loader"
 import Mouse from "./input/Mouse"
+import FrameComponent from "./UI/FrameComponent"
+import FramePanel from "./UI/components/FramePanel"
+import FrameText from "./UI/components/FrameText"
 
 class GamaSource {
 
@@ -24,6 +27,7 @@ class GamaSource {
     public static GameObjects = new Array<GameObject>()
     public static ctx:CanvasRenderingContext2D
     public static window:GameWindow
+    public static UI:FrameComponent
 
     private static canvas:HTMLCanvasElement
 
@@ -48,11 +52,20 @@ class GamaSource {
             const name = GamaSource.loader(source)[0]
 
             this.background = new StaticSprite(name, new Vector2(0,0), GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
-
     
         }
 
+        GamaSource.UI = new FrameComponent({
+            x:0,
+            y:0,
+            width:GamaSource.window.WIDTH,
+            height:GamaSource.window.HEIGHT,
+            visible:true
+        })
+
         GamaSource.window.addEvent(() => {
+
+            GamaSource.UI.setSize(GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
 
             this.background.width = GamaSource.window.WIDTH
             this.background.height = GamaSource.window.HEIGHT
@@ -89,6 +102,8 @@ class GamaSource {
 
         GamaSource.GameObjects.forEach((g) => g.gameUpdate())
 
+        GamaSource.UI.FrameUpdate()
+
     }
 
     private render() {
@@ -98,6 +113,8 @@ class GamaSource {
         this.background.render()
 
         GamaSource.GameObjects.forEach((g) => g.render())
+
+        GamaSource.UI.FrameRender()
 
     }
 
@@ -222,5 +239,8 @@ export {
     StaticSprite,
     GameCanvas, 
     GameWindow,
-    GameMath
+    GameMath,
+    FrameComponent,
+    FramePanel,
+    FrameText
 };

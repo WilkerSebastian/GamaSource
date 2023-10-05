@@ -435,6 +435,198 @@ class $a5c17bf62a97e3fd$export$2e2bcd8739ae039 {
 }
 
 
+
+class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
+    constructor(frame){
+        this.father = null;
+        this.childrens = new Array();
+        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+        this.width = 0;
+        this.height = 0;
+        this.visible = false;
+        if (frame.father) this.setFather(frame.father);
+        this.setBounds(frame.x, frame.y, frame.width, frame.height);
+        this.visible = frame.visible ?? false;
+    }
+    setX(x) {
+        const px = parseInt(x.toString());
+        if (this.father) {
+            if (typeof x == "string") {
+                this.position.x = this.father.position.x + this.father.width * (px / 100);
+                return;
+            }
+            this.position.x = this.father.position.x + px;
+        }
+        this.position.x = px;
+    }
+    sety(y) {
+        const py = parseInt(y.toString());
+        if (this.father) {
+            if (typeof y == "string") {
+                this.position.y = this.father.position.y + this.father.height * (py / 100);
+                return;
+            }
+            this.position.y = this.father.position.y + py;
+        }
+        this.position.y = py;
+    }
+    setWidth(width) {
+        const pw = parseInt(width.toString());
+        if (this.father && typeof width == "string") {
+            this.width = this.father.getWidth() * (pw / 100);
+            return;
+        }
+        this.width = pw;
+    }
+    setHeight(height) {
+        const ph = parseInt(height.toString());
+        if (this.father && typeof height == "string") {
+            this.height = this.father.getHeight() * (ph / 100);
+            return;
+        }
+        this.height = ph;
+    }
+    setPosition(x, y) {
+        this.setX(x);
+        this.sety(y);
+    }
+    setSize(width, height) {
+        this.setWidth(width);
+        this.setHeight(height);
+    }
+    setBounds(x, y, width, height) {
+        this.setPosition(x, y);
+        this.setSize(width, height);
+    }
+    add(frame) {
+        if (!this.father) frame.setFather(this);
+        this.childrens.push(frame);
+    }
+    setFather(frame) {
+        this.father = frame;
+    }
+    getFather() {
+        return this.father;
+    }
+    getPosition() {
+        return this.position;
+    }
+    getWidth() {
+        return this.width;
+    }
+    getHeight() {
+        return this.height;
+    }
+    FrameRender() {
+        if (this.visible) {
+            this.render();
+            this.childrens.forEach((e)=>{
+                if (e.visible) e.render();
+            });
+        }
+    }
+    getChildrens() {
+        return this.childrens;
+    }
+    setChildrens(childrens) {
+        this.childrens = childrens;
+    }
+    render() {}
+}
+
+
+
+
+class $8482aeb5ffc96aff$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$export$2e2bcd8739ae039) {
+    constructor(frame){
+        super(frame);
+        this.source = frame.source ?? "#fff";
+        this.rounded = frame.rounded ?? 0;
+        this.border = frame.border ?? {};
+    }
+    render() {
+        if (this.border.color) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.strokeStyle = this.border.color;
+        if (this.border.size) {
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.scale(1 + this.border.size / 100, 1 + this.border.size / 100);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.strokeRect(this.getPosition().x, this.getPosition().y, this.width, this.height);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
+        }
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.beginPath();
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = this.source;
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.roundRect(this.getPosition().x, this.getPosition().y, this.getWidth(), this.getHeight(), this.rounded);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fill();
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.closePath();
+    }
+}
+
+
+
+
+class $82182a7e02a00cea$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$export$2e2bcd8739ae039) {
+    constructor(frame){
+        super({
+            x: frame.x,
+            y: frame.y,
+            width: frame.width,
+            height: 0,
+            visible: frame.visible,
+            father: frame.father
+        });
+        this.lines = [];
+        this.fontSize = 0;
+        this.font = "";
+        this.color = frame.color ?? "#000";
+        this.setFontSize(frame.fontSize ?? 11);
+        this.setFont(frame.font ?? "ARIAL");
+        this.setText(frame.text ?? "");
+    }
+    render() {
+        this.lines.forEach((line, index)=>{
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.font = `${this.getFontSize()}px ${this.getFont()}`;
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillText(line, this.getPosition().x, this.getPosition().y * (index + 1), this.getWidth());
+        });
+    }
+    setText(text) {
+        const lines = [];
+        const l = text.trim().split(" ");
+        let line = "";
+        for(let index = 0; index < l.length; index++){
+            const word = l[index];
+            if (word.length * this.fontSize > this.getWidth()) {
+                lines.push(line.trim());
+                line = word;
+            } else line += word + " ";
+            if (index == l.length - 1 && line) lines.push(line.trim());
+        }
+        this.setHeight(this.getFontSize() * lines.length);
+        this.lines = lines.filter((word)=>word);
+    }
+    getText() {
+        return this.lines.join(" ");
+    }
+    setFontSize(fontSize) {
+        const fs = parseInt(fontSize.toString());
+        const width = this.getFather()?.getWidth();
+        if (typeof fontSize == "string" && width) {
+            this.fontSize = width * (fs / 100);
+            return;
+        }
+        this.fontSize = fs;
+    }
+    getFontSize() {
+        return this.fontSize;
+    }
+    setFont(font) {
+        this.font = font;
+    }
+    getFont() {
+        return this.font;
+    }
+}
+
+
 class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -454,7 +646,15 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
             const name = $f8bbed27444dc2b3$export$d36076abcf594543.loader(source)[0];
             this.background = new (0, $406f161b36ba144b$export$2e2bcd8739ae039)(name, new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0), $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT);
         }
+        $f8bbed27444dc2b3$export$d36076abcf594543.UI = new (0, $0d012e83fb7d1e90$export$2e2bcd8739ae039)({
+            x: 0,
+            y: 0,
+            width: $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH,
+            height: $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT,
+            visible: true
+        });
         $f8bbed27444dc2b3$export$d36076abcf594543.window.addEvent(()=>{
+            $f8bbed27444dc2b3$export$d36076abcf594543.UI.setSize($f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT);
             this.background.width = $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH;
             this.background.height = $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT;
         });
@@ -479,6 +679,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.clearRect(0, 0, $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT);
         this.background.render();
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.render());
+        $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameRender();
     }
     loop(currentTime) {
         try {
@@ -530,5 +731,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText};
 //# sourceMappingURL=GamaSource.js.map
