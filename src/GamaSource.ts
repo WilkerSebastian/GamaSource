@@ -112,7 +112,13 @@ class GamaSource {
 
         this.background.render()
 
-        GamaSource.GameObjects.forEach((g) => g.render())
+        GamaSource.ctx.beginPath()
+        GamaSource.GameObjects.forEach((g) => {
+            
+            g.render()
+            
+        })
+        GamaSource.ctx.closePath()
 
         GamaSource.UI.FrameRender()
 

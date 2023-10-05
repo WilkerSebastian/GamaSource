@@ -7,11 +7,14 @@ export default class GameObject {
     public transform:Vector2 = new Vector2(0, 0)
     protected sprite: Sprite | null = null
     protected visible:boolean = true
+    public layer:number = 1
     public tag:string = "not defined"
 
     public static create(obj: typeof GameObject) {
 
         GamaSource.GameObjects.push(new obj())
+
+        GamaSource.GameObjects = GamaSource.GameObjects.sort((a,b) => a.layer - b.layer)
 
     }
 
