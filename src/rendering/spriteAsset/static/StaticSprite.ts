@@ -25,6 +25,12 @@ export default class StaticSprite extends Sprite {
 
     }
 
+    public getImage() {
+
+        return this.image
+
+    }
+
     public render(): void {
 
         if (this.reference instanceof GameObject) {

@@ -266,6 +266,9 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         }
         this.image = image;
     }
+    getImage() {
+        return this.image;
+    }
     render() {
         if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.transform.x, this.reference.transform.y, this.width, this.height);

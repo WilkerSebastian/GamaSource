@@ -295,6 +295,9 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
         }
         this.image = image;
     }
+    getImage() {
+        return this.image;
+    }
     render() {
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.transform.x, this.reference.transform.y, this.width, this.height);

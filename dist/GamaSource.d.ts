@@ -77,6 +77,7 @@ declare class GameImage {
 }
 export class StaticSprite extends Sprite {
     constructor(source: string, reference: Vector2 | GameObject, width: number, height: number);
+    getImage(): GameImage;
     render(): void;
 }
 export abstract class GameMath {
