@@ -25,6 +25,7 @@ export class GameObject {
     transform: Vector2;
     protected sprite: Sprite | null;
     protected visible: boolean;
+    layer: number;
     tag: string;
     static create(obj: typeof GameObject): void;
     destroy(): void;
@@ -131,6 +132,8 @@ export class FrameComponent {
     getWidth(): number;
     getHeight(): number;
     FrameRender(): void;
+    FrameUpdate(): void;
+    protected update(): void;
     getChildrens(): FrameComponent[];
     setChildrens(childrens: FrameComponent[]): void;
     protected render(): void;
@@ -185,7 +188,8 @@ export class GamaSource {
     static ctx: CanvasRenderingContext2D;
     static window: GameWindow;
     static UI: FrameComponent;
-    main: () => void;
+    static globalEnv: Map<string, any>;
+    static ReferenceGame: GamaSource;
     constructor(config?: GamaSourceConfig);
     run(): void;
     static stop(): void;
@@ -193,6 +197,8 @@ export class GamaSource {
     static exit(): void;
     static falied(): void;
     static loader(...assets: string[]): string[];
+    addScene(scene: string, performer: () => void): void;
+    changeScene(scene: string): void;
 }
 export default GamaSource;
 

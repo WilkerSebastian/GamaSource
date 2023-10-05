@@ -28,6 +28,8 @@ class GamaSource {
     public static ctx:CanvasRenderingContext2D
     public static window:GameWindow
     public static UI:FrameComponent
+    public static globalEnv = new Map<string, any>()
+    public static ReferenceGame: GamaSource
 
     private static canvas:HTMLCanvasElement
 
@@ -35,7 +37,7 @@ class GamaSource {
     private time:TimeController
 
     private background:Sprite
-    public main = () => {}
+    private scenes = new Map<string, () => void>()
 
     constructor(config?:GamaSourceConfig) {
 
@@ -90,7 +92,21 @@ class GamaSource {
 
     private start() {
 
-        this.main()
+        GamaSource.ReferenceGame = this
+
+        const main = this.scenes.get("main")
+
+        if (main) {
+
+            main()
+            
+        } else {
+
+            console.error("Error the main scene not found!");
+            GamaSource.falied()
+            return
+
+        }
 
         Loader()
 
@@ -194,6 +210,7 @@ class GamaSource {
     }
 
     // métodos de controle
+
     public static loader(...assets:string[]) {
 
         let names:string[] = []
@@ -221,6 +238,41 @@ class GamaSource {
         })
 
         return names
+
+    }
+
+    public addScene(scene:string, performer:() => void) {
+
+        if(!this.scenes.get(scene)) {
+         
+            this.scenes.set(scene, performer)
+            return
+
+        }
+
+        console.error("Scene overwriting is not allowed!");
+        GamaSource.falied()
+
+    }
+
+    public changeScene(scene:string) {
+
+        const sc = this.scenes.get(scene)
+
+        if(sc) {
+
+            GamaSource.UI.setChildrens([])
+            GamaSource.GameObjects = []
+
+            sc()
+
+            GamaSource.GameObjects.forEach((g) => g.start())            
+
+            return
+
+        }
+
+        console.warn(`The scene ${scene} was not found`);
 
     }
 
