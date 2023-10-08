@@ -1,13 +1,13 @@
 {
   "name": "gamasource",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "source": "src/GamaSource.ts",
   "main": "dist/GamaSource.js",
   "module": "dist/esm/GamaSource.js",
   "types": "dist/GamaSource.d.ts",
   "license": "MIT",
   "bin": {
-    "gamma": "bin/script.js"
+    "gamasource": "bin/script.js"
   },
   "scripts": {
     "build": "parcel build"
