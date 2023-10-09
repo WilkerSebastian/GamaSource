@@ -28,4 +28,9 @@ npm install gamasource
 
 ## Como usar 
 
+Você pode criar um template de projeto usando o comando abaixo
+```bash
+npx gamasource create ./game
+```
+
 Por enquanto está numa versão muito inicial para ser usada e documentada, mas exemplos dexarei disponivel na pasta example do repositório.

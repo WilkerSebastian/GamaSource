@@ -83,7 +83,7 @@ gamma --help || -h // view the commands
 
             const template = path.join(path.dirname(__filename), "template")
 
-            shell.exec(`cp -r ${template}/* ${args[3]}`)
+            shell.cp('-r', `${template}/*`, args[3])
 
             fs.writeFileSync(path.resolve(args[3]) + "/package.json", `
 {
@@ -105,7 +105,7 @@ gamma --help || -h // view the commands
 
             console.log("Execute to start your project: \n" +
             "cd " + args[3] + "\n" +
-            "npm run dev");
+            exec);
 
             return
             
