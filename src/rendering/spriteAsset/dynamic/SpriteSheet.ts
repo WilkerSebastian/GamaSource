@@ -6,23 +6,24 @@ import GamaSource, { GameMath } from "../../../GamaSource";
 
 export default class SpriteSheet extends StaticSprite{
 
+    private gameFrame;
+    private staggerFrames:number
     private slices:Slice[]
-    private index = 0
 
-    constructor(source: string , reference:Vector2 | GameObject, width:number, height:number, slices:Slice[]) {
+    constructor(source: string , reference:Vector2 | GameObject, width:number, height:number, slices:Slice[], staggerFrames?:number) {
         super(source, reference, width, height)
         this.slices = slices
         
+        this.gameFrame = 0;
+        this.staggerFrames = staggerFrames ?? this.slices.length / 2
+
     }
 
     public render(): void {
 
-        this.index = GameMath.parseInt(GamaSource.globalEnv.get("deltaTime")) + this.index;
+        const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 
 
-        if(this.index >= this.slices.length) 
-            this.index = 0
-
-        const slice = this.slices[this.index]
+        const slice = this.slices[index];
         
         if (this.reference instanceof GameObject) {
 
@@ -37,6 +38,8 @@ export default class SpriteSheet extends StaticSprite{
                 this.width,
                 this.height
             )
+
+            this.gameFrame++;
             
             return
 
@@ -53,6 +56,8 @@ export default class SpriteSheet extends StaticSprite{
             this.width,
             this.height
         )
+
+        this.gameFrame++;
 
     }
 

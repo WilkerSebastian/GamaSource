@@ -46,7 +46,7 @@ class GamaSource {
 
         GamaSource.window = new GameWindow()
 
-        const source = config?.background ?? "#787878"
+        const source = config?.background ?? "#F2F2F2"
 
         if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) {
 
@@ -88,6 +88,7 @@ class GamaSource {
         GamaSource.canvas = document.querySelector<HTMLCanvasElement>("#game") as HTMLCanvasElement
 
         GamaSource.ctx = GamaSource.canvas.getContext("2d") as CanvasRenderingContext2D
+        GamaSource.ctx.imageSmoothingEnabled = false
 
     }
 
@@ -120,7 +121,7 @@ class GamaSource {
     private update() {
 
         GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())
-        GamaSource.globalEnv.set("FPS", this.time.getFrameInterval())
+        GamaSource.globalEnv.set("latency", this.time.getFrameInterval())
 
         GamaSource.GameObjects.forEach((g) => g.gameUpdate())
 

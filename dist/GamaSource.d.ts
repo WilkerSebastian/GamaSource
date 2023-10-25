@@ -204,7 +204,7 @@ interface Slice {
     height: number;
 }
 export class SpriteSheet extends StaticSprite {
-    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number, slices: Slice[]);
+    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number, slices: Slice[], staggerFrames?: number);
     render(): void;
 }
 export class AnimationController {
@@ -214,13 +214,13 @@ export class AnimationController {
         width: number;
         height: number;
         slices: Slice[];
-    }): void;
+    }, staggerFrames?: number): void;
     render(): void;
     static load(json: object, anim: {
         reference: GameObject | Vector2;
         width: number;
         height: number;
-    }): AnimationController;
+    }, staggerFrames?: number): AnimationController;
 }
 export class GamaSource {
     static LOAD: number;

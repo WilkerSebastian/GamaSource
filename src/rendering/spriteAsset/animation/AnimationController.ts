@@ -21,7 +21,7 @@ export default class AnimationController {
 
     };
 
-    public addAnimation(name:string, source:string, animation:{ width:number, height:number, slices:Slice[]}) {
+    public addAnimation(name:string, source:string, animation:{width:number, height:number, slices:Slice[]}, staggerFrames?:number) {
 
         const controller = this.mapper.get(name)
 
@@ -33,7 +33,8 @@ export default class AnimationController {
                 this.reference,
                 animation.width,
                 animation.height,
-                animation.slices
+                animation.slices,
+                staggerFrames
             ))
     
             return
@@ -71,7 +72,7 @@ export default class AnimationController {
 
     }
 
-    public static load(json:object, anim:{reference:GameObject | Vector2, width:number, height:number}) {
+    public static load(json:object, anim:{reference:GameObject | Vector2, width:number, height:number}, staggerFrames?:number) {
 
         const j = new JsonAnimation(json)
 
@@ -87,7 +88,7 @@ export default class AnimationController {
                     height: anim.height,
                     slices: a.slices
 
-                })
+                }, staggerFrames);
 
             })
 

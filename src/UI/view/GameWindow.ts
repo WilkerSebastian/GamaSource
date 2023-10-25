@@ -1,3 +1,5 @@
+import GamaSource from "../../GamaSource"
+
 export default class GameWindow {
 
     public HEIGHT:number
@@ -33,6 +35,8 @@ export default class GameWindow {
                 e()
 
             })
+
+            GamaSource.ctx.imageSmoothingEnabled = false
 
         })
 

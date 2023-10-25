@@ -167,6 +167,7 @@ var $0e52282bd7cacc2f$export$2e2bcd8739ae039 = ()=>{
 };
 
 
+
 class $58cc35928f5b21f0$export$2e2bcd8739ae039 {
     static #_ = (()=>{
         this.EVENTS = new Array();
@@ -187,6 +188,7 @@ class $58cc35928f5b21f0$export$2e2bcd8739ae039 {
             $58cc35928f5b21f0$export$2e2bcd8739ae039.EVENTS.forEach((e)=>{
                 e();
             });
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.imageSmoothingEnabled = false;
         });
     }
     getScale() {
@@ -654,20 +656,22 @@ class $77becdb398fdbf11$export$2e2bcd8739ae039 {
 
 
 class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$export$2e2bcd8739ae039) {
-    constructor(source, reference, width, height, slices){
+    constructor(source, reference, width, height, slices, staggerFrames){
         super(source, reference, width, height);
-        this.index = 0;
         this.slices = slices;
+        this.gameFrame = 0;
+        this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
     render() {
-        this.index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).globalEnv.get("deltaTime")) + this.index;
-        if (this.index >= this.slices.length) this.index = 0;
-        const slice = this.slices[this.index];
+        const index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
+        const slice = this.slices[index];
         if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.transform.x, this.reference.transform.y, this.width, this.height);
+            this.gameFrame++;
             return;
         }
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.x, this.reference.y, this.width, this.height);
+        this.gameFrame++;
     }
 }
 
@@ -681,10 +685,10 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
     set(anim) {
         this.currentAnimation = anim;
     }
-    addAnimation(name, source, animation) {
+    addAnimation(name, source, animation, staggerFrames) {
         const controller = this.mapper.get(name);
         if (!controller) {
-            this.mapper.set(name, new (0, $c34584e0283e73c1$export$2e2bcd8739ae039)(source, this.reference, animation.width, animation.height, animation.slices));
+            this.mapper.set(name, new (0, $c34584e0283e73c1$export$2e2bcd8739ae039)(source, this.reference, animation.width, animation.height, animation.slices, staggerFrames));
             return;
         }
         console.warn("Animation overwriting is not allowed!");
@@ -701,7 +705,7 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
         const animation = this.getCurrentAnimation();
         animation.render();
     }
-    static load(json, anim) {
+    static load(json, anim, staggerFrames) {
         const j = new (0, $77becdb398fdbf11$export$2e2bcd8739ae039)(json);
         const animation = new $3fba0ef90143f197$export$2e2bcd8739ae039(anim.reference);
         if (j.animations) {
@@ -710,7 +714,7 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
                     width: anim.width,
                     height: anim.height,
                     slices: a.slices
-                });
+                }, staggerFrames);
             });
             animation.set(j.animations[0].name);
             return animation;
@@ -740,7 +744,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     constructor(config){
         this.scenes = new Map();
         $f8bbed27444dc2b3$export$d36076abcf594543.window = new (0, $58cc35928f5b21f0$export$2e2bcd8739ae039)();
-        const source = config?.background ?? "#787878";
+        const source = config?.background ?? "#F2F2F2";
         if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $c4d1796e1253327f$export$2e2bcd8739ae039)(new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0), $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT, source);
         else {
             const name = $f8bbed27444dc2b3$export$d36076abcf594543.loader(source)[0];
@@ -765,6 +769,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED;
         $f8bbed27444dc2b3$export$d36076abcf594543.canvas = document.querySelector("#game");
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx = $f8bbed27444dc2b3$export$d36076abcf594543.canvas.getContext("2d");
+        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.imageSmoothingEnabled = false;
     }
     // métodos de incialização
     start() {
@@ -781,7 +786,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     }
     update() {
         $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());
-        $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("FPS", this.time.getFrameInterval());
+        $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("latency", this.time.getFrameInterval());
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameUpdate());
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameUpdate();
     }
