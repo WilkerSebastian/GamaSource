@@ -107,6 +107,9 @@ class $94db9bb1e19ed727$export$2e2bcd8739ae039 {
 
 
 class $64d48ff8d4d06d3a$var$GameTime {
+    static #_ = (()=>{
+        this.SECOND = 1000;
+    })();
 }
 var $64d48ff8d4d06d3a$export$2e2bcd8739ae039 = $64d48ff8d4d06d3a$var$GameTime;
 
@@ -639,6 +642,88 @@ class $82182a7e02a00cea$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$exp
 }
 
 
+
+class $77becdb398fdbf11$export$2e2bcd8739ae039 {
+    constructor(json){
+        this.animations = json.animations;
+    }
+}
+
+
+
+
+
+class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$export$2e2bcd8739ae039) {
+    constructor(source, reference, width, height, slices){
+        super(source, reference, width, height);
+        this.index = 0;
+        this.slices = slices;
+    }
+    render() {
+        this.index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).globalEnv.get("deltaTime")) + this.index;
+        if (this.index >= this.slices.length) this.index = 0;
+        const slice = this.slices[this.index];
+        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.transform.x, this.reference.transform.y, this.width, this.height);
+            return;
+        }
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.x, this.reference.y, this.width, this.height);
+    }
+}
+
+
+class $3fba0ef90143f197$export$2e2bcd8739ae039 {
+    constructor(reference){
+        this.mapper = new Map();
+        this.currentAnimation = null;
+        this.reference = reference;
+    }
+    set(anim) {
+        this.currentAnimation = anim;
+    }
+    addAnimation(name, source, animation) {
+        const controller = this.mapper.get(name);
+        if (!controller) {
+            this.mapper.set(name, new (0, $c34584e0283e73c1$export$2e2bcd8739ae039)(source, this.reference, animation.width, animation.height, animation.slices));
+            return;
+        }
+        console.warn("Animation overwriting is not allowed!");
+    }
+    getCurrentAnimation() {
+        if (this.currentAnimation) {
+            const animation = this.mapper.get(this.currentAnimation);
+            if (animation) return animation;
+        }
+        console.error("Failed to render animation: " + this.currentAnimation);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
+    }
+    render() {
+        const animation = this.getCurrentAnimation();
+        animation.render();
+    }
+    static load(json, anim) {
+        const j = new (0, $77becdb398fdbf11$export$2e2bcd8739ae039)(json);
+        const animation = new $3fba0ef90143f197$export$2e2bcd8739ae039(anim.reference);
+        if (j.animations) {
+            j.animations.forEach((a)=>{
+                animation.addAnimation(a.name, a.source, {
+                    width: anim.width,
+                    height: anim.height,
+                    slices: a.slices
+                });
+            });
+            animation.set(j.animations[0].name);
+            return animation;
+        }
+        console.error("Failed to load json animtaion");
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
+        return animation;
+    }
+}
+
+
+
+
 class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -695,6 +780,8 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
     }
     update() {
+        $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());
+        $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("FPS", this.time.getFrameInterval());
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameUpdate());
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameUpdate();
     }
@@ -777,5 +864,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText};
 //# sourceMappingURL=GamaSource.js.map

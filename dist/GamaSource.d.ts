@@ -23,7 +23,7 @@ export abstract class Sprite {
 }
 export class GameObject {
     transform: Vector2;
-    protected sprite: Sprite | null;
+    protected sprite: Sprite | AnimationController | null;
     protected visible: boolean;
     layer: number;
     tag: string;
@@ -181,6 +181,46 @@ export class FrameText extends FrameComponent {
     getFontSize(): number;
     setFont(font: string): void;
     getFont(): string;
+}
+export class JsonAnimation {
+    animations: [
+        {
+            name: string;
+            slices: [{
+                x: number;
+                y: number;
+                width: number;
+                height: number;
+            }];
+            source: string;
+        }
+    ];
+    constructor(json: any);
+}
+interface Slice {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+export class SpriteSheet extends StaticSprite {
+    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number, slices: Slice[]);
+    render(): void;
+}
+export class AnimationController {
+    constructor(reference: GameObject | Vector2);
+    set(anim: string): void;
+    addAnimation(name: string, source: string, animation: {
+        width: number;
+        height: number;
+        slices: Slice[];
+    }): void;
+    render(): void;
+    static load(json: object, anim: {
+        reference: GameObject | Vector2;
+        width: number;
+        height: number;
+    }): AnimationController;
 }
 export class GamaSource {
     static LOAD: number;

@@ -1,11 +1,11 @@
-import GamaSource from "../GamaSource"
+import GamaSource, { AnimationController } from "../GamaSource"
 import Vector2 from "../math/vector/Vector2"
 import Sprite from "../rendering/Sprite"
 
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0)
-    protected sprite: Sprite | null = null
+    protected sprite: Sprite | AnimationController | null = null
     protected visible:boolean = true
     public layer:number = 1
     public tag:string = "not defined"

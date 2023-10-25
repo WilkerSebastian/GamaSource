@@ -44,7 +44,7 @@ export default class TimeController {
 
     public getDeltaTime(currentTime?:number) {
 
-        if (currentTime) {
+        if (currentTime) {;
          
             return (currentTime - this.lastFrameTime) / Time.SECOND
 

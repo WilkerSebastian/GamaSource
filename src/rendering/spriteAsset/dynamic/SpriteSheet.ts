@@ -2,7 +2,7 @@ import Vector2 from "../../../math/vector/Vector2";
 import GameObject from "../../../gameObject/GameObject" 
 import StaticSprite from "../static/StaticSprite";
 import Slice from "./Slice";
-import GamaSource from "../../../GamaSource";
+import GamaSource, { GameMath } from "../../../GamaSource";
 
 export default class SpriteSheet extends StaticSprite{
 
@@ -17,11 +17,13 @@ export default class SpriteSheet extends StaticSprite{
 
     public render(): void {
 
-        if(this.index == this.slices.length) 
+        this.index = GameMath.parseInt(GamaSource.globalEnv.get("deltaTime")) + this.index;
+
+        if(this.index >= this.slices.length) 
             this.index = 0
 
         const slice = this.slices[this.index]
-
+        
         if (this.reference instanceof GameObject) {
 
             GamaSource.ctx.drawImage(

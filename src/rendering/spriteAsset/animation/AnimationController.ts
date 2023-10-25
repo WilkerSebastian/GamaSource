@@ -1,13 +1,13 @@
 import GamaSource, { GameObject, Vector2 } from "../../../GamaSource";
+import JsonAnimation from "../../../asset/data/JsonAnimation";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";
 
-export default abstract class AnimationController {
+export default class AnimationController {
 
     private mapper = new Map<string, SpriteSheet>()
     private currentAnimation:string | null = null
     private reference:GameObject | Vector2
-    private source?:string
 
     constructor(reference:GameObject | Vector2) {
 
@@ -15,37 +15,27 @@ export default abstract class AnimationController {
 
     }
 
-    public abstract create(): void
+    public set(anim:string) {
 
-    public setSource(source:string) {
+        this.currentAnimation = anim
 
-        this.source = source
+    };
 
-    }
-
-    public addAnimation(name:string, animation:{width:number, height:number, slices:Slice[]}) {
+    public addAnimation(name:string, source:string, animation:{ width:number, height:number, slices:Slice[]}) {
 
         const controller = this.mapper.get(name)
 
         if (!controller) {
 
-            if (this.source) {
              
-                this.mapper.set(name, new SpriteSheet(
-                    this.source,
-                    this.reference,
-                    animation.width,
-                    animation.height,
-                    animation.slices
-                ))
+            this.mapper.set(name, new SpriteSheet(
+                source,
+                this.reference,
+                animation.width,
+                animation.height,
+                animation.slices
+            ))
     
-                return
-
-            }
-
-            console.error("The source of animation not found!")
-            GamaSource.falied()
-
             return
             
         }
@@ -78,6 +68,39 @@ export default abstract class AnimationController {
         const animation =  this.getCurrentAnimation() as SpriteSheet
 
         animation.render()
+
+    }
+
+    public static load(json:object, anim:{reference:GameObject | Vector2, width:number, height:number}) {
+
+        const j = new JsonAnimation(json)
+
+        const animation = new AnimationController(anim.reference);
+
+        if (j.animations) {      
+            
+            j.animations.forEach(a => {
+
+                animation.addAnimation(a.name, a.source, {
+
+                    width: anim.width,
+                    height: anim.height,
+                    slices: a.slices
+
+                })
+
+            })
+
+            animation.set(j.animations[0].name);
+
+            return animation
+
+        }
+
+        console.error("Failed to load json animtaion")
+        GamaSource.falied()
+
+        return animation
 
     }
 

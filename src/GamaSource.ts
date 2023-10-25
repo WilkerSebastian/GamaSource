@@ -19,6 +19,9 @@ import Mouse from "./input/Mouse"
 import FrameComponent from "./UI/FrameComponent"
 import FramePanel from "./UI/components/FramePanel"
 import FrameText from "./UI/components/FrameText"
+import AnimationController from "./rendering/spriteAsset/animation/AnimationController"
+import JsonAnimation from "./asset/data/JsonAnimation"
+import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
 
 class GamaSource {
 
@@ -116,6 +119,9 @@ class GamaSource {
 
     private update() {
 
+        GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())
+        GamaSource.globalEnv.set("FPS", this.time.getFrameInterval())
+
         GamaSource.GameObjects.forEach((g) => g.gameUpdate())
 
         GamaSource.UI.FrameUpdate()
@@ -146,7 +152,7 @@ class GamaSource {
          
             if (GamaSource.state != GamaSourceState.CLOSED && GamaSource.state != GamaSourceState.CRASHED) {
 
-                requestAnimationFrame((currentTime) => this.loop(currentTime))
+                requestAnimationFrame((currentTime) => this.loop(currentTime));
 
                 this.time.DeltaTime = this.time.getDeltaTime(currentTime)
 
@@ -295,6 +301,9 @@ export {
     ShapeSprite, 
     SquareSprite, 
     StaticSprite,
+    SpriteSheet,
+    AnimationController,
+    JsonAnimation,
     GameCanvas, 
     GameWindow,
     GameMath,
