@@ -22,6 +22,8 @@ import FrameText from "./UI/components/FrameText"
 import AnimationController from "./rendering/spriteAsset/animation/AnimationController"
 import JsonAnimation from "./asset/data/JsonAnimation"
 import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
+import RigidBody2D from "./math/collision/RigidBody2D"
+import BoxCollider2D from "./math/collision/BoxCollider2D"
 
 class GamaSource {
 
@@ -302,6 +304,8 @@ export {
     ShapeSprite, 
     SquareSprite, 
     StaticSprite,
+    RigidBody2D,
+    BoxCollider2D,
     SpriteSheet,
     AnimationController,
     JsonAnimation,

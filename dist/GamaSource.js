@@ -21,6 +21,8 @@ $parcel$export(module.exports, "Sprite", () => $966979a7503d5337$export$2e2bcd87
 $parcel$export(module.exports, "ShapeSprite", () => $b3c2a48e0c9708a8$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "SquareSprite", () => $16a63ba451fb476c$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "StaticSprite", () => $0a3ada9b62f29c2d$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "RigidBody2D", () => $f491ddee2072e755$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "BoxCollider2D", () => $f47f1bf7853bb150$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "SpriteSheet", () => $93dfe24f042b46bc$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "AnimationController", () => $c77491ef4f4406ab$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "JsonAnimation", () => $fc3d5595fa537972$export$2e2bcd8739ae039);
@@ -100,8 +102,21 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     }
     start() {}
     update() {}
+    onCollision() {
+        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider);
+        objs.forEach((obj)=>{
+            if (this.collider?.isCollided(obj.collider)) this.onCollisionBetween(obj);
+        });
+    }
+    onCollisionBetween(gameObject) {}
     gameUpdate() {
-        if (this.visible) this.update();
+        if (this.visible) {
+            if (this.collider) {
+                this.collider.update(this.transform);
+                this.onCollision();
+            }
+            this.update();
+        }
     }
     render() {
         if (this.sprite && this.visible) this.sprite.render();
@@ -109,6 +124,7 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     constructor(){
         this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         this.sprite = null;
+        this.collider = null;
         this.visible = true;
         this.layer = 1;
         this.tag = "not defined";
@@ -758,6 +774,44 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
 }
 
 
+
+
+
+class $f491ddee2072e755$export$2e2bcd8739ae039 {
+    constructor(position, mass = 1, gravity){
+        this.position = position;
+        this.velocity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.mass = mass;
+        this.gravity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, gravity);
+    }
+    applyForce(force) {
+        const acceleration = force.multiply(1 / this.mass);
+        this.velocity = this.velocity.add(acceleration);
+    }
+    update() {
+        this.applyForce(this.gravity);
+        this.position = this.position.add(this.velocity);
+    }
+}
+
+
+
+class $f47f1bf7853bb150$export$2e2bcd8739ae039 {
+    constructor(position, width, height){
+        this.position = position;
+        this.width = width;
+        this.height = height;
+    }
+    isCollided(box) {
+        return this.position.x < box.position.x + box.width && this.position.x + this.width > box.position.x && this.position.y < box.position.y + box.height && this.position.y + this.height > box.position.y;
+    }
+    over(box) {
+        return box.position.add(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(box.width, box.height)).subtract(this.position.add(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.width, this.height))).normalize();
+    }
+    update(position) {
+        this.position = position;
+    }
+}
 
 
 class $be9b019dcf88b1d2$export$d36076abcf594543 {
