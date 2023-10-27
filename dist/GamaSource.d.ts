@@ -239,8 +239,10 @@ export class RigidBody2D {
     velocity: Vector2;
     mass: number;
     gravity: Vector2;
-    constructor(mass: number | undefined, gravity: number);
+    frictionCoefficient: number;
+    constructor(mass: number | undefined, gravity: number, friction: number);
     applyForce(force: Vector2): void;
+    applyFriction(): void;
     update(obj: GameObject): void;
 }
 export class GamaSource {

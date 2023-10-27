@@ -55,6 +55,8 @@ export default class GameObject {
 
                     const over = this.collider.resolveCollision(obj.collider)
 
+                    this.physics.applyFriction()
+
                     if (over.x != this.collider.position.x) {
                       
                         this.physics.velocity.x = 0;

@@ -73,8 +73,15 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
         objs.forEach((obj)=>{
             if (this.collider?.isCollided(obj.collider)) {
                 if (this.physics && obj.collider) {
-                    this.physics.velocity.set(0, 0);
-                    this.physics.position = this.collider.resolveCollision(obj.collider);
+                    const over = this.collider.resolveCollision(obj.collider);
+                    this.physics.applyFriction();
+                    if (over.x != this.collider.position.x) {
+                        this.physics.velocity.x = 0;
+                        this.physics.position = over;
+                        return;
+                    }
+                    this.physics.velocity.y = 0;
+                    this.physics.position = over;
                 }
                 this.onCollisionBetween(obj);
             }
@@ -752,15 +759,20 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
 
 
 class $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 {
-    constructor(mass = 1, gravity){
+    constructor(mass = 1, gravity, friction){
         this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.velocity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.mass = mass;
         this.gravity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, gravity);
+        this.frictionCoefficient = friction;
     }
     applyForce(force) {
         const acceleration = force.multiply(1 / this.mass);
         this.velocity = this.velocity.add(acceleration);
+    }
+    applyFriction() {
+        const friction = this.velocity.multiply(-this.frictionCoefficient);
+        this.applyForce(friction);
     }
     update(obj) {
         this.applyForce(this.gravity);

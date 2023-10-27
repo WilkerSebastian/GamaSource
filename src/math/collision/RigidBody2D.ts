@@ -7,17 +7,26 @@ export default class RigidBody2D {
     public velocity: Vector2;
     public mass: number;
     public gravity: Vector2;
+    public frictionCoefficient:number
 
-    constructor(mass: number = 1, gravity:number) {
+    constructor(mass: number = 1, gravity:number, friction:number) {
         this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
         this.mass = mass;
         this.gravity = new Vector2(0, gravity);
+        this.frictionCoefficient = friction;
     }
 
     public applyForce(force: Vector2) {
         const acceleration = force.multiply(1 / this.mass);
         this.velocity = this.velocity.add(acceleration);
+    }
+
+    public applyFriction() {
+
+        const friction = this.velocity.multiply(-this.frictionCoefficient);
+        this.applyForce(friction);
+
     }
 
     public update(obj:GameObject) {
