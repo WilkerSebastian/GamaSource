@@ -53,8 +53,18 @@ export default class GameObject {
 
                 if (this.physics && obj.collider) {
 
-                    this.physics.velocity.set(0, 0);
-                    this.physics.position = this.collider.resolveCollision(obj.collider)
+                    const over = this.collider.resolveCollision(obj.collider)
+
+                    if (over.x != this.collider.position.x) {
+                      
+                        this.physics.velocity.x = 0;
+                        this.physics.position = over
+                        return
+
+                    } 
+
+                    this.physics.velocity.y = 0;
+                    this.physics.position = over
 
                 }
 
