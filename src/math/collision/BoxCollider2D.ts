@@ -6,9 +6,9 @@ export default class BoxCollider2D {
     public width:number;
     public height:number;
 
-    constructor(position:Vector2, width:number, height:number) {
+    constructor(width:number, height:number) {
 
-        this.position = position
+        this.position = new Vector2(0, 0)
         this.width = width
         this.height = height
 
@@ -20,6 +20,34 @@ export default class BoxCollider2D {
                 this.position.x + this.width > box.position.x &&
                 this.position.y < box.position.y + box.height &&
                 this.position.y + this.height > box.position.y)
+
+    }
+
+    public resolveCollision(box: BoxCollider2D) {
+
+        const dx = (this.position.x + this.width / 2) - (box.position.x + box.width / 2);
+        const dy = (this.position.y + this.height / 2) - (box.position.y + box.height / 2);
+
+        const overlapX = (this.width + box.width) / 2 - Math.abs(dx);
+        const overlapY = (this.height + box.height) / 2 - Math.abs(dy);
+
+        if (overlapX > 0 && overlapY > 0) {
+
+            if (overlapX < overlapY) {
+                
+                if (dx > 0)
+                    return new Vector2(this.position.x + overlapX, this.position.y);
+
+                return new Vector2(this.position.x - overlapX, this.position.y);
+            } 
+
+            if (dy > 0) 
+                return new Vector2(this.position.x, this.position.y + overlapY);
+
+            return new Vector2(this.position.x, this.position.y - overlapY);
+        }
+
+        return this.position
 
     }
 

@@ -69,9 +69,15 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     start() {}
     update() {}
     onCollision() {
-        const objs = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider);
+        const objs = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider && obj != this);
         objs.forEach((obj)=>{
-            if (this.collider?.isCollided(obj.collider)) this.onCollisionBetween(obj);
+            if (this.collider?.isCollided(obj.collider)) {
+                if (this.physics && obj.collider) {
+                    this.physics.velocity.set(0, 0);
+                    this.physics.position = this.collider.resolveCollision(obj.collider);
+                }
+                this.onCollisionBetween(obj);
+            }
         });
     }
     onCollisionBetween(gameObject) {}
@@ -82,6 +88,7 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
                 this.onCollision();
             }
             this.update();
+            if (this.physics) this.physics.update(this);
         }
     }
     render() {
@@ -91,6 +98,7 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
         this.transform = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.sprite = null;
         this.collider = null;
+        this.physics = null;
         this.visible = true;
         this.layer = 1;
         this.tag = "not defined";
@@ -744,8 +752,8 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
 
 
 class $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 {
-    constructor(position, mass = 1, gravity){
-        this.position = position;
+    constructor(mass = 1, gravity){
+        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.velocity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.mass = mass;
         this.gravity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, gravity);
@@ -754,25 +762,38 @@ class $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 {
         const acceleration = force.multiply(1 / this.mass);
         this.velocity = this.velocity.add(acceleration);
     }
-    update() {
+    update(obj) {
         this.applyForce(this.gravity);
         this.position = this.position.add(this.velocity);
+        obj.transform.set(this.position.x, this.position.y);
     }
 }
 
 
 
 class $b5035cf9b274c60a$export$2e2bcd8739ae039 {
-    constructor(position, width, height){
-        this.position = position;
+    constructor(width, height){
+        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.width = width;
         this.height = height;
     }
     isCollided(box) {
         return this.position.x < box.position.x + box.width && this.position.x + this.width > box.position.x && this.position.y < box.position.y + box.height && this.position.y + this.height > box.position.y;
     }
-    over(box) {
-        return box.position.add(new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(box.width, box.height)).subtract(this.position.add(new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.width, this.height))).normalize();
+    resolveCollision(box) {
+        const dx = this.position.x + this.width / 2 - (box.position.x + box.width / 2);
+        const dy = this.position.y + this.height / 2 - (box.position.y + box.height / 2);
+        const overlapX = (this.width + box.width) / 2 - Math.abs(dx);
+        const overlapY = (this.height + box.height) / 2 - Math.abs(dy);
+        if (overlapX > 0 && overlapY > 0) {
+            if (overlapX < overlapY) {
+                if (dx > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x + overlapX, this.position.y);
+                return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x - overlapX, this.position.y);
+            }
+            if (dy > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y + overlapY);
+            return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y - overlapY);
+        }
+        return this.position;
     }
     update(position) {
         this.position = position;

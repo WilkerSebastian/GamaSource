@@ -1,4 +1,4 @@
-import GamaSource, { AnimationController } from "../GamaSource"
+import GamaSource, { AnimationController, RigidBody2D } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Vector2 from "../math/vector/Vector2"
 import Sprite from "../rendering/Sprite"
@@ -8,6 +8,7 @@ export default class GameObject {
     public transform:Vector2 = new Vector2(0, 0);
     protected sprite: Sprite | AnimationController | null = null
     public collider: BoxCollider2D | null = null
+    public physics: RigidBody2D | null = null
     protected visible:boolean = true
     public layer:number = 1
     public tag:string = "not defined"
@@ -40,18 +41,22 @@ export default class GameObject {
 
     public start() {}
 
-    public update() {
-
-
-    }
+    public update() {}
 
     private onCollision() {
 
-        const objs = GamaSource.GameObjects.filter(obj => obj.collider)
+        const objs = GamaSource.GameObjects.filter(obj => obj.collider && obj != this)
 
         objs.forEach(obj => {
 
             if (this.collider?.isCollided(obj.collider as BoxCollider2D)) {
+
+                if (this.physics && obj.collider) {
+
+                    this.physics.velocity.set(0, 0);
+                    this.physics.position = this.collider.resolveCollision(obj.collider)
+
+                }
 
                 this.onCollisionBetween(obj);
 
@@ -78,6 +83,12 @@ export default class GameObject {
             }
 
             this.update()
+
+            if (this.physics) {
+                
+                this.physics.update(this)
+
+            }
 
         }
 

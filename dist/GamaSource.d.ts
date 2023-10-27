@@ -18,9 +18,9 @@ export class BoxCollider2D {
     position: Vector2;
     width: number;
     height: number;
-    constructor(position: Vector2, width: number, height: number);
+    constructor(width: number, height: number);
     isCollided(box: BoxCollider2D): boolean;
-    over(box: BoxCollider2D): Vector2;
+    resolveCollision(box: BoxCollider2D): Vector2;
     update(position: Vector2): void;
 }
 export abstract class Sprite {
@@ -34,6 +34,7 @@ export class GameObject {
     transform: Vector2;
     protected sprite: Sprite | AnimationController | null;
     collider: BoxCollider2D | null;
+    physics: RigidBody2D | null;
     protected visible: boolean;
     layer: number;
     tag: string;
@@ -238,9 +239,9 @@ export class RigidBody2D {
     velocity: Vector2;
     mass: number;
     gravity: Vector2;
-    constructor(position: Vector2, mass: number | undefined, gravity: number);
+    constructor(mass: number | undefined, gravity: number);
     applyForce(force: Vector2): void;
-    update(): void;
+    update(obj: GameObject): void;
 }
 export class GamaSource {
     static LOAD: number;

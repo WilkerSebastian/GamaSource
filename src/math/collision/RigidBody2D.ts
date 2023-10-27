@@ -1,3 +1,4 @@
+import { GameObject } from "../../GamaSource";
 import Vector2 from "../vector/Vector2";
 
 export default class RigidBody2D {
@@ -7,8 +8,8 @@ export default class RigidBody2D {
     public mass: number;
     public gravity: Vector2;
 
-    constructor(position: Vector2, mass: number = 1, gravity:number) {
-        this.position = position;
+    constructor(mass: number = 1, gravity:number) {
+        this.position = new Vector2(0, 0);
         this.velocity = new Vector2(0, 0);
         this.mass = mass;
         this.gravity = new Vector2(0, gravity);
@@ -19,11 +20,13 @@ export default class RigidBody2D {
         this.velocity = this.velocity.add(acceleration);
     }
 
-    public update() {
+    public update(obj:GameObject) {
         
         this.applyForce(this.gravity);
 
         this.position = this.position.add(this.velocity);
+
+        obj.transform.set(this.position.x, this.position.y)
 
     }
 }
