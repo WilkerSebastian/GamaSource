@@ -125,7 +125,8 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     gameUpdate() {
         if (this.visible) {
             if (this.collider) {
-                this.collider.update(this.transform);
+                if (this.sprite instanceof (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039) || this.sprite instanceof (0, $93dfe24f042b46bc$export$2e2bcd8739ae039) || this.sprite instanceof (0, $c77491ef4f4406ab$export$2e2bcd8739ae039)) this.collider.update(this.transform, this.sprite.getSize());
+                else this.collider.update(this.transform);
                 this.onCollision();
             }
             this.update();
@@ -323,11 +324,17 @@ class $157157e820ac0459$export$2e2bcd8739ae039 {
 
 
 class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
-    constructor(source, reference, width, height){
-        super(reference, width, height);
+    constructor(source, reference, pixelRatio){
+        super(reference, 0, 0);
         this.scale = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1);
         this.rotation = 0;
         const image = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(source);
+        if (typeof pixelRatio == "number") this.pixelRatio = pixelRatio / 100;
+        else {
+            this.pixelRatio = 1;
+            this.width = pixelRatio.width;
+            this.height = pixelRatio.height;
+        }
         if (!image) {
             console.error("Error on instace of StaticSprite " + source);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
@@ -335,6 +342,22 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
             return;
         }
         this.image = image;
+        if (typeof pixelRatio != "number") {
+            this.setWidth(this.image.getSource().width);
+            this.setHeight(this.image.getSource().height);
+        }
+    }
+    setWidth(width) {
+        this.width = width * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
+    }
+    setHeight(height) {
+        this.height = height * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
     }
     getImage() {
         return this.image;
@@ -723,15 +746,20 @@ class $fc3d5595fa537972$export$2e2bcd8739ae039 {
 
 
 class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039) {
-    constructor(source, reference, width, height, slices, staggerFrames){
-        super(source, reference, width, height);
+    constructor(source, reference, pixelRatio, slices, staggerFrames){
+        super(source, reference, pixelRatio);
         this.slices = slices;
+        const slice = slices[0];
+        this.setWidth(slice.width);
+        this.setHeight(slice.height);
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
     render() {
         const index = (0, $5a334b166dfa1be5$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
+        this.setWidth(slice.width);
+        this.setHeight(slice.height);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
         else (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
@@ -758,7 +786,7 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
     addAnimation(name, source, animation, staggerFrames) {
         const controller = this.mapper.get(name);
         if (!controller) {
-            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, this.reference, animation.width, animation.height, animation.slices, staggerFrames));
+            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, this.reference, animation.pixelRatio, animation.slices, staggerFrames));
             return;
         }
         console.warn("Animation overwriting is not allowed!");
@@ -783,8 +811,7 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
         if (j.animations) {
             j.animations.forEach((a)=>{
                 animation.addAnimation(a.name, a.source, {
-                    width: anim.width,
-                    height: anim.height,
+                    pixelRatio: anim.pixelRatio,
                     slices: a.slices
                 }, staggerFrames);
             });
@@ -794,6 +821,16 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
         console.error("Failed to load json animtaion");
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
         return animation;
+    }
+    setWidth(width) {
+        console.warn("AnimationController does not implement setWidth");
+    }
+    setHeight(height) {
+        console.warn("AnimationController does not implement setHeight");
+    }
+    getSize() {
+        const animation = this.getCurrentAnimation();
+        return animation.getSize();
     }
 }
 
@@ -829,8 +866,8 @@ class $f491ddee2072e755$export$2e2bcd8739ae039 {
 class $f47f1bf7853bb150$export$2e2bcd8739ae039 {
     constructor(width, height){
         this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.width = width;
-        this.height = height;
+        this.width = width ?? 0;
+        this.height = height ?? 0;
     }
     isCollided(box) {
         return this.position.x < box.position.x + box.width && this.position.x + this.width > box.position.x && this.position.y < box.position.y + box.height && this.position.y + this.height > box.position.y;
@@ -850,8 +887,12 @@ class $f47f1bf7853bb150$export$2e2bcd8739ae039 {
         }
         return this.position;
     }
-    update(position) {
+    update(position, size) {
         this.position = position;
+        if (size) {
+            this.width = size.width;
+            this.height = size.height;
+        }
     }
 }
 
@@ -876,7 +917,10 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $16a63ba451fb476c$export$2e2bcd8739ae039)(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT, source);
         else {
             const name = $be9b019dcf88b1d2$export$d36076abcf594543.loader(source)[0];
-            this.background = new (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039)(name, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT);
+            this.background = new (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039)(name, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), {
+                width: $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH,
+                height: $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT
+            });
         }
         $be9b019dcf88b1d2$export$d36076abcf594543.UI = new (0, $7a794ae910495cf5$export$2e2bcd8739ae039)({
             x: 0,

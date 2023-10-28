@@ -6,11 +6,11 @@ export default class BoxCollider2D {
     public width:number;
     public height:number;
 
-    constructor(width:number, height:number) {
+    constructor(width?:number, height?:number) {
 
         this.position = new Vector2(0, 0)
-        this.width = width
-        this.height = height
+        this.width = width ?? 0
+        this.height = height ?? 0
 
     }
 
@@ -51,9 +51,16 @@ export default class BoxCollider2D {
 
     }
 
-    public update(position:Vector2) {
+    public update(position:Vector2, size?:{width:number, height:number}) {
 
         this.position = position
+
+        if (size) {
+         
+            this.width = size.width
+            this.height = size.height
+
+        }
 
     }
 

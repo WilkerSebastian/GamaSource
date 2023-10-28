@@ -2,7 +2,7 @@ Arguments:
   /home/wilker/.nvm/versions/node/v20.4.0/bin/node /home/wilker/.bun/bin/yarn publish
 
 PATH: 
-  /home/wilker/.bun/bin:~/bin/jdk-20.0.2/bin:/home/wilker/.bun/bin:~/bin/jdk-20.0.2/bin:/home/wilker/.nvm/versions/node/v20.4.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/wilker/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  /home/wilker/.bun/bin:~/bin/jdk-20.0.2/bin:/home/wilker/.nvm/versions/node/v20.4.0/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/wilker/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 
 Yarn version: 
   1.22.19
@@ -29,7 +29,7 @@ Trace:
 npm manifest: 
   {
     "name": "gamasource",
-    "version": "0.2.6-realese",
+    "version": "0.3.1",
     "source": "src/GamaSource.ts",
     "main": "dist/GamaSource.js",
     "module": "dist/esm/GamaSource.js",

@@ -19,21 +19,17 @@ export class BoxCollider2D {
     position: Vector2;
     width: number;
     height: number;
-    constructor(width: number, height: number);
+    constructor(width?: number, height?: number);
     isCollided(box: BoxCollider2D): boolean;
     resolveCollision(box: BoxCollider2D): Vector2;
-    update(position: Vector2): void;
-}
-export abstract class Sprite {
-    reference: Vector2 | GameObject;
-    width: number;
-    height: number;
-    constructor(reference: Vector2 | GameObject, width: number, height: number);
-    abstract render(): void;
+    update(position: Vector2, size?: {
+        width: number;
+        height: number;
+    }): void;
 }
 export class GameObject {
     transform: Vector2;
-    protected sprite: StaticSprite | ShapeSprite | AnimationController | null;
+    protected sprite: StaticSprite | ShapeSprite | SpriteSheet | AnimationController | null;
     collider: BoxCollider2D | null;
     physics: RigidBody2D | null;
     protected visible: boolean;
@@ -76,6 +72,13 @@ export class GameWindow {
     addEvent(ev: () => void): void;
     getScale(): number;
 }
+export abstract class Sprite {
+    reference: Vector2 | GameObject;
+    width: number;
+    height: number;
+    constructor(reference: Vector2 | GameObject, width: number, height: number);
+    abstract render(): void;
+}
 export abstract class ShapeSprite extends Sprite {
     color: string;
     constructor(reference: Vector2 | GameObject, width: number, height: number, color: string);
@@ -88,10 +91,27 @@ declare class GameImage {
     constructor(path: string);
     getSource(): HTMLImageElement;
 }
-export class StaticSprite extends Sprite {
+interface SizeSprite {
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+}
+export class StaticSprite extends Sprite implements SizeSprite {
     scale: Vector2;
     rotation: number;
-    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number);
+    constructor(source: string, reference: Vector2 | GameObject, pixelRatio: number | {
+        width: number;
+        height: number;
+    });
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
     getImage(): GameImage;
     render(): void;
 }
@@ -219,25 +239,29 @@ interface Slice {
     height: number;
 }
 export class SpriteSheet extends StaticSprite {
-    constructor(source: string, reference: Vector2 | GameObject, width: number, height: number, slices: Slice[], staggerFrames?: number);
+    constructor(source: string, reference: Vector2 | GameObject, pixelRatio: number, slices: Slice[], staggerFrames?: number);
     render(): void;
 }
-export class AnimationController {
+export class AnimationController implements SizeSprite {
     scale: Vector2;
     rotation: number;
     constructor(reference: GameObject | Vector2);
     set(anim: string): void;
     addAnimation(name: string, source: string, animation: {
-        width: number;
-        height: number;
+        pixelRatio: number;
         slices: Slice[];
     }, staggerFrames?: number): void;
     render(): void;
     static load(json: object, anim: {
         reference: GameObject | Vector2;
+        pixelRatio: number;
+    }, staggerFrames?: number): AnimationController;
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
         width: number;
         height: number;
-    }, staggerFrames?: number): AnimationController;
+    };
 }
 export class RigidBody2D {
     position: Vector2;

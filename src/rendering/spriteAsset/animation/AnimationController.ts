@@ -1,9 +1,10 @@
 import GamaSource, { GameObject, Vector2 } from "../../../GamaSource";
 import JsonAnimation from "../../../asset/data/JsonAnimation";
+import SizeSprite from "../SizeSprite";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";
 
-export default class AnimationController {
+export default class AnimationController implements SizeSprite {
 
     private mapper = new Map<string, SpriteSheet>()
     private currentAnimation:string | null = null
@@ -23,7 +24,7 @@ export default class AnimationController {
 
     };
 
-    public addAnimation(name:string, source:string, animation:{width:number, height:number, slices:Slice[]}, staggerFrames?:number) {
+    public addAnimation(name:string, source:string, animation:{pixelRatio: number, slices:Slice[]}, staggerFrames?:number) {
 
         const controller = this.mapper.get(name)
 
@@ -33,8 +34,7 @@ export default class AnimationController {
             this.mapper.set(name, new SpriteSheet(
                 source,
                 this.reference,
-                animation.width,
-                animation.height,
+                animation.pixelRatio,
                 animation.slices,
                 staggerFrames
             ))
@@ -77,7 +77,7 @@ export default class AnimationController {
 
     }
 
-    public static load(json:object, anim:{reference:GameObject | Vector2, width:number, height:number}, staggerFrames?:number) {
+    public static load(json:object, anim:{reference:GameObject | Vector2, pixelRatio: number}, staggerFrames?:number) {
 
         const j = new JsonAnimation(json)
 
@@ -89,8 +89,7 @@ export default class AnimationController {
 
                 animation.addAnimation(a.name, a.source, {
 
-                    width: anim.width,
-                    height: anim.height,
+                    pixelRatio: anim.pixelRatio,
                     slices: a.slices
 
                 }, staggerFrames);
@@ -107,6 +106,26 @@ export default class AnimationController {
         GamaSource.falied()
 
         return animation
+
+    }
+
+    public setWidth(width:number) {
+        
+        console.warn("AnimationController does not implement setWidth");
+
+    }
+
+    public setHeight(height:number) {
+        
+        console.warn("AnimationController does not implement setHeight");
+
+    }
+
+    public getSize() {
+        
+        const animation =  this.getCurrentAnimation() as SpriteSheet
+
+        return animation.getSize()
 
     }
 

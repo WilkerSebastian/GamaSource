@@ -1,12 +1,11 @@
-import GamaSource, { AnimationController, RigidBody2D, ShapeSprite, StaticSprite } from "../GamaSource"
+import GamaSource, { AnimationController, RigidBody2D, ShapeSprite, SpriteSheet, StaticSprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Vector2 from "../math/vector/Vector2"
-import Sprite from "../rendering/Sprite"
 
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0);
-    protected sprite: StaticSprite | ShapeSprite | AnimationController | null = null
+    protected sprite: StaticSprite | ShapeSprite | SpriteSheet | AnimationController | null = null
     public collider: BoxCollider2D | null = null
     public physics: RigidBody2D | null = null
     protected visible:boolean = true
@@ -88,8 +87,17 @@ export default class GameObject {
         if (this.visible) {
             
             if (this.collider) {
+
+                if (this.sprite instanceof StaticSprite || this.sprite instanceof SpriteSheet ||this.sprite instanceof AnimationController ) {
+                    
+                    this.collider.update(this.transform, this.sprite.getSize())
+
+                } else {
+
+                    this.collider.update(this.transform)
+
+                }
                 
-                this.collider.update(this.transform)
                 this.onCollision()
 
             }

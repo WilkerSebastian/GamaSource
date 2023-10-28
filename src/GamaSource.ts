@@ -58,7 +58,7 @@ class GamaSource {
 
             const name = GamaSource.loader(source)[0]
 
-            this.background = new StaticSprite(name, new Vector2(0,0), GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
+            this.background = new StaticSprite(name, new Vector2(0,0), {width:GamaSource.window.WIDTH, height:GamaSource.window.HEIGHT})
     
         }
 
