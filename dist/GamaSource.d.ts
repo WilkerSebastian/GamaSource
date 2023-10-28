@@ -2,6 +2,7 @@ export default GamaSourceState;
 export class GamaSourceConfig {
     maxFPS?: number;
     background?: string;
+    imageSmoothingEnabled?: boolean;
 }
 export class Vector2 {
     x: number;
@@ -32,7 +33,7 @@ export abstract class Sprite {
 }
 export class GameObject {
     transform: Vector2;
-    protected sprite: Sprite | AnimationController | null;
+    protected sprite: StaticSprite | ShapeSprite | AnimationController | null;
     collider: BoxCollider2D | null;
     physics: RigidBody2D | null;
     protected visible: boolean;
@@ -88,6 +89,8 @@ declare class GameImage {
     getSource(): HTMLImageElement;
 }
 export class StaticSprite extends Sprite {
+    scale: Vector2;
+    rotation: number;
     constructor(source: string, reference: Vector2 | GameObject, width: number, height: number);
     getImage(): GameImage;
     render(): void;
@@ -220,6 +223,8 @@ export class SpriteSheet extends StaticSprite {
     render(): void;
 }
 export class AnimationController {
+    scale: Vector2;
+    rotation: number;
     constructor(reference: GameObject | Vector2);
     set(anim: string): void;
     addAnimation(name: string, source: string, animation: {

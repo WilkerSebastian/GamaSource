@@ -24,26 +24,22 @@ export default class SpriteSheet extends StaticSprite{
         const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 
 
         const slice = this.slices[index];
-        
+
+        GamaSource.ctx.save()
+
         if (this.reference instanceof GameObject) {
 
-            GamaSource.ctx.drawImage(
-                this.getImage().getSource() as HTMLImageElement,
-                slice.x,
-                slice.y,
-                slice.width,
-                slice.height,
-                this.reference.transform.x,
-                this.reference.transform.y,
-                this.width,
-                this.height
-            )
-
-            this.gameFrame++;
+            GamaSource.ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2)
             
-            return
+        } else {
+
+            GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
 
         }
+
+        GamaSource.ctx.rotate(GameMath.degressToRadian(this.rotation))
+
+        GamaSource.ctx.scale(this.scale.x, this.scale.y)
 
         GamaSource.ctx.drawImage(
             this.getImage().getSource() as HTMLImageElement,
@@ -51,11 +47,13 @@ export default class SpriteSheet extends StaticSprite{
             slice.y,
             slice.width,
             slice.height,
-            this.reference.x,
-            this.reference.y,
-            this.width,
+            -this.width / 2, 
+            -this.height / 2, 
+            this.width, 
             this.height
         )
+
+        GamaSource.ctx.restore()
 
         this.gameFrame++;
 

@@ -1,4 +1,4 @@
-import GamaSource, { AnimationController, RigidBody2D } from "../GamaSource"
+import GamaSource, { AnimationController, RigidBody2D, ShapeSprite, StaticSprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Vector2 from "../math/vector/Vector2"
 import Sprite from "../rendering/Sprite"
@@ -6,7 +6,7 @@ import Sprite from "../rendering/Sprite"
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0);
-    protected sprite: Sprite | AnimationController | null = null
+    protected sprite: StaticSprite | ShapeSprite | AnimationController | null = null
     public collider: BoxCollider2D | null = null
     public physics: RigidBody2D | null = null
     protected visible:boolean = true

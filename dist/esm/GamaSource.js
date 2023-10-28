@@ -291,6 +291,8 @@ class $f5702f0cdcfb7649$export$2e2bcd8739ae039 {
 class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$export$2e2bcd8739ae039) {
     constructor(source, reference, width, height){
         super(reference, width, height);
+        this.scale = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(1, 1);
+        this.rotation = 0;
         const image = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(source);
         if (!image) {
             console.error("Error on instace of StaticSprite " + source);
@@ -304,11 +306,13 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         return this.image;
     }
     render() {
-        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
-            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.transform.x, this.reference.transform.y, this.width, this.height);
-            return;
-        }
-        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), this.reference.x, this.reference.y, this.width, this.height);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
+        else (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.rotate((0, $4c348eb6c64c4710$export$2e2bcd8739ae039).degressToRadian(this.rotation));
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), -this.width / 2, -this.height / 2, this.width, this.height);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
     }
 }
 
@@ -694,12 +698,13 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
     render() {
         const index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
-        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
-            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.transform.x, this.reference.transform.y, this.width, this.height);
-            this.gameFrame++;
-            return;
-        }
-        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, this.reference.x, this.reference.y, this.width, this.height);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+        if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
+        else (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.rotate((0, $4c348eb6c64c4710$export$2e2bcd8739ae039).degressToRadian(this.rotation));
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, -this.width / 2, -this.height / 2, this.width, this.height);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
         this.gameFrame++;
     }
 }
@@ -709,6 +714,8 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
     constructor(reference){
         this.mapper = new Map();
         this.currentAnimation = null;
+        this.scale = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(1, 1);
+        this.rotation = 0;
         this.reference = reference;
     }
     set(anim) {
@@ -732,6 +739,8 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
     }
     render() {
         const animation = this.getCurrentAnimation();
+        animation.scale = this.scale;
+        animation.rotation = this.rotation;
         animation.render();
     }
     static load(json, anim, staggerFrames) {
@@ -854,7 +863,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED;
         $f8bbed27444dc2b3$export$d36076abcf594543.canvas = document.querySelector("#game");
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx = $f8bbed27444dc2b3$export$d36076abcf594543.canvas.getContext("2d");
-        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.imageSmoothingEnabled = false;
+        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.imageSmoothingEnabled = config?.imageSmoothingEnabled ?? false;
     }
     // métodos de incialização
     start() {

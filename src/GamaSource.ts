@@ -90,7 +90,7 @@ class GamaSource {
         GamaSource.canvas = document.querySelector<HTMLCanvasElement>("#game") as HTMLCanvasElement
 
         GamaSource.ctx = GamaSource.canvas.getContext("2d") as CanvasRenderingContext2D
-        GamaSource.ctx.imageSmoothingEnabled = false
+        GamaSource.ctx.imageSmoothingEnabled = config?.imageSmoothingEnabled ?? false
 
     }
 

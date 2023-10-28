@@ -8,6 +8,8 @@ export default class AnimationController {
     private mapper = new Map<string, SpriteSheet>()
     private currentAnimation:string | null = null
     private reference:GameObject | Vector2
+    public scale = new Vector2(1,1)
+    public rotation = 0
 
     constructor(reference:GameObject | Vector2) {
 
@@ -67,6 +69,9 @@ export default class AnimationController {
     public render() {
 
         const animation =  this.getCurrentAnimation() as SpriteSheet
+
+        animation.scale = this.scale
+        animation.rotation = this.rotation
 
         animation.render()
 
