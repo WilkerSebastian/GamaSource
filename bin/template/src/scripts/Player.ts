@@ -7,7 +7,7 @@ export default class Player extends GameObject {
     start() {
         
         this.transform.set(350, 350)
-        this.sprite = new StaticSprite("atomic.png", this, 200, 150)
+        this.sprite = new StaticSprite("atomic.png", this, 38)
 
     }
 
