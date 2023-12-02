@@ -32,6 +32,7 @@ $parcel$export(module.exports, "GameMath", () => $5a334b166dfa1be5$export$2e2bcd
 $parcel$export(module.exports, "FrameComponent", () => $7a794ae910495cf5$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FramePanel", () => $b204872e9decb3de$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FrameText", () => $fcb37ed2e27d49de$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "Camera", () => $c34811bf1dee0ba3$export$2e2bcd8739ae039);
 class $a7f36dda3f4a8094$var$GamaSourceState {
     static #_ = (()=>{
         this.CLOSED = 0;
@@ -273,6 +274,18 @@ class $966979a7503d5337$export$2e2bcd8739ae039 {
         this.width = width;
         this.height = height;
     }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    }
 }
 
 
@@ -342,15 +355,17 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
             return;
         }
         this.image = image;
-        if (typeof pixelRatio != "number") {
+        if (typeof pixelRatio == "number") {
             this.setWidth(this.image.getSource().width);
             this.setHeight(this.image.getSource().height);
         }
     }
     setWidth(width) {
+        console.log(width, this.pixelRatio, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale());
         this.width = width * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
     }
     setHeight(height) {
+        console.log(height, this.pixelRatio, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale());
         this.height = height * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
     }
     getSize() {
@@ -897,6 +912,27 @@ class $f47f1bf7853bb150$export$2e2bcd8739ae039 {
 }
 
 
+
+
+class $c34811bf1dee0ba3$export$2e2bcd8739ae039 extends (0, $093225c56a233e0f$export$2e2bcd8739ae039) {
+    followObject() {
+        if (this.target && this.target.sprite) {
+            this.transform.x = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH / 2 - this.target.transform.x - this.target.sprite.getSize().width / 2;
+            this.transform.y = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT / 2 - this.target.transform.y - this.target.sprite.getSize().height / 2;
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.transform.x, this.transform.y);
+        }
+    }
+    reset() {}
+    setTarget(target) {
+        this.target = target;
+    }
+    constructor(...args){
+        super(...args);
+        this.target = null;
+    }
+}
+
+
 class $be9b019dcf88b1d2$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -909,6 +945,9 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     })();
     static #_3 = (()=>{
         this.globalEnv = new Map();
+    })();
+    static #_4 = (()=>{
+        this.Camera = new (0, $c34811bf1dee0ba3$export$2e2bcd8739ae039)();
     })();
     constructor(config){
         this.scenes = new Map();
@@ -965,11 +1004,12 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     render() {
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.clearRect(0, 0, $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT);
         this.background.render();
-        $be9b019dcf88b1d2$export$d36076abcf594543.ctx.beginPath();
+        $be9b019dcf88b1d2$export$d36076abcf594543.ctx.save();
+        $be9b019dcf88b1d2$export$d36076abcf594543.Camera.followObject();
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>{
             g.render();
         });
-        $be9b019dcf88b1d2$export$d36076abcf594543.ctx.closePath();
+        $be9b019dcf88b1d2$export$d36076abcf594543.ctx.restore();
         $be9b019dcf88b1d2$export$d36076abcf594543.UI.FrameRender();
     }
     loop(currentTime) {

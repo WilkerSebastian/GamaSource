@@ -29,7 +29,7 @@ export class BoxCollider2D {
 }
 export class GameObject {
     transform: Vector2;
-    protected sprite: StaticSprite | ShapeSprite | SpriteSheet | AnimationController | null;
+    sprite: Sprite | AnimationController | null;
     collider: BoxCollider2D | null;
     physics: RigidBody2D | null;
     protected visible: boolean;
@@ -72,11 +72,25 @@ export class GameWindow {
     addEvent(ev: () => void): void;
     getScale(): number;
 }
-export abstract class Sprite {
+interface SizeSprite {
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+}
+export abstract class Sprite implements SizeSprite {
     reference: Vector2 | GameObject;
     width: number;
     height: number;
     constructor(reference: Vector2 | GameObject, width: number, height: number);
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
     abstract render(): void;
 }
 export abstract class ShapeSprite extends Sprite {
@@ -90,14 +104,6 @@ export class SquareSprite extends ShapeSprite {
 declare class GameImage {
     constructor(path: string);
     getSource(): HTMLImageElement;
-}
-interface SizeSprite {
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    getSize(): {
-        width: number;
-        height: number;
-    };
 }
 export class StaticSprite extends Sprite implements SizeSprite {
     scale: Vector2;
@@ -274,6 +280,11 @@ export class RigidBody2D {
     applyFriction(): void;
     update(obj: GameObject): void;
 }
+export class Camera extends GameObject {
+    followObject(): void;
+    reset(): void;
+    setTarget(target: GameObject): void;
+}
 export class GamaSource {
     static LOAD: number;
     static ASSETS: Map<string, GameImage | GameAudio>;
@@ -283,6 +294,7 @@ export class GamaSource {
     static UI: FrameComponent;
     static globalEnv: Map<string, any>;
     static ReferenceGame: GamaSource;
+    static Camera: Camera;
     constructor(config?: GamaSourceConfig);
     run(): void;
     static stop(): void;

@@ -1,11 +1,11 @@
-import GamaSource, { AnimationController, RigidBody2D, ShapeSprite, SpriteSheet, StaticSprite } from "../GamaSource"
+import GamaSource, { AnimationController, RigidBody2D, Sprite, SpriteSheet, StaticSprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Vector2 from "../math/vector/Vector2"
 
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0);
-    protected sprite: StaticSprite | ShapeSprite | SpriteSheet | AnimationController | null = null
+    public sprite: Sprite | AnimationController | null = null
     public collider: BoxCollider2D | null = null
     public physics: RigidBody2D | null = null
     protected visible:boolean = true

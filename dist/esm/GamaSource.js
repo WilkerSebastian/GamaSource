@@ -239,6 +239,18 @@ class $b9476ce5e7489a8e$export$2e2bcd8739ae039 {
         this.width = width;
         this.height = height;
     }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    }
 }
 
 
@@ -308,15 +320,17 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
             return;
         }
         this.image = image;
-        if (typeof pixelRatio != "number") {
+        if (typeof pixelRatio == "number") {
             this.setWidth(this.image.getSource().width);
             this.setHeight(this.image.getSource().height);
         }
     }
     setWidth(width) {
+        console.log(width, this.pixelRatio, (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.getScale());
         this.width = width * this.pixelRatio * (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.getScale();
     }
     setHeight(height) {
+        console.log(height, this.pixelRatio, (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.getScale());
         this.height = height * this.pixelRatio * (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.getScale();
     }
     getSize() {
@@ -863,6 +877,27 @@ class $b5035cf9b274c60a$export$2e2bcd8739ae039 {
 }
 
 
+
+
+class $acd5a054dcfb562a$export$2e2bcd8739ae039 extends (0, $e9381f474ff620cc$export$2e2bcd8739ae039) {
+    followObject() {
+        if (this.target && this.target.sprite) {
+            this.transform.x = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH / 2 - this.target.transform.x - this.target.sprite.getSize().width / 2;
+            this.transform.y = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.HEIGHT / 2 - this.target.transform.y - this.target.sprite.getSize().height / 2;
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.transform.x, this.transform.y);
+        }
+    }
+    reset() {}
+    setTarget(target) {
+        this.target = target;
+    }
+    constructor(...args){
+        super(...args);
+        this.target = null;
+    }
+}
+
+
 class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -875,6 +910,9 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     })();
     static #_3 = (()=>{
         this.globalEnv = new Map();
+    })();
+    static #_4 = (()=>{
+        this.Camera = new (0, $acd5a054dcfb562a$export$2e2bcd8739ae039)();
     })();
     constructor(config){
         this.scenes = new Map();
@@ -931,11 +969,12 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     render() {
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.clearRect(0, 0, $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT);
         this.background.render();
-        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.beginPath();
+        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.save();
+        $f8bbed27444dc2b3$export$d36076abcf594543.Camera.followObject();
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>{
             g.render();
         });
-        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.closePath();
+        $f8bbed27444dc2b3$export$d36076abcf594543.ctx.restore();
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameRender();
     }
     loop(currentTime) {
@@ -1007,5 +1046,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera};
 //# sourceMappingURL=GamaSource.js.map

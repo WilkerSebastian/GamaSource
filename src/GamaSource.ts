@@ -24,6 +24,7 @@ import JsonAnimation from "./asset/data/JsonAnimation"
 import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
 import RigidBody2D from "./math/collision/RigidBody2D"
 import BoxCollider2D from "./math/collision/BoxCollider2D"
+import Camera from "./gameObject/Camera"
 
 class GamaSource {
 
@@ -35,6 +36,7 @@ class GamaSource {
     public static UI:FrameComponent
     public static globalEnv = new Map<string, any>()
     public static ReferenceGame: GamaSource
+    public static Camera = new Camera()
 
     private static canvas:HTMLCanvasElement
 
@@ -137,13 +139,17 @@ class GamaSource {
 
         this.background.render()
 
-        GamaSource.ctx.beginPath()
+        GamaSource.ctx.save()
+        
+        GamaSource.Camera.followObject()
+
         GamaSource.GameObjects.forEach((g) => {
             
             g.render()
             
         })
-        GamaSource.ctx.closePath()
+        
+        GamaSource.ctx.restore()
 
         GamaSource.UI.FrameRender()
 
@@ -314,5 +320,6 @@ export {
     GameMath,
     FrameComponent,
     FramePanel,
-    FrameText
+    FrameText,
+    Camera
 };
