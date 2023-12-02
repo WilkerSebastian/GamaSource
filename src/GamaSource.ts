@@ -36,7 +36,7 @@ class GamaSource {
     public static UI:FrameComponent
     public static globalEnv = new Map<string, any>()
     public static ReferenceGame: GamaSource
-    public static Camera = new Camera()
+    public static Camera: Camera | null = null
 
     private static canvas:HTMLCanvasElement
 
@@ -94,6 +94,16 @@ class GamaSource {
         GamaSource.ctx = GamaSource.canvas.getContext("2d") as CanvasRenderingContext2D
         GamaSource.ctx.imageSmoothingEnabled = config?.imageSmoothingEnabled ?? false
 
+        if (config?.camera) {
+
+            GamaSource.Camera = new config.camera()
+            
+        } else {
+
+            GamaSource.Camera = new Camera()
+
+        }
+
     }
 
     // métodos de incialização
@@ -141,7 +151,11 @@ class GamaSource {
 
         GamaSource.ctx.save()
         
-        GamaSource.Camera.followObject()
+        if (GamaSource.Camera) {
+         
+            GamaSource.Camera.followObject()
+
+        }
 
         GamaSource.GameObjects.forEach((g) => {
             
