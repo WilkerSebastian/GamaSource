@@ -1,36 +1,72 @@
 import GamaSource from "../../GamaSource"
-import ratio from "../../define/ratio"
+import GameImage from "../../asset/image/GameImage"
 import FrameComponent from "../FrameComponent"
+import FramePanelConfig from "../config/FramePanelConfig"
 
 export default class FramePanel extends FrameComponent {
 
-    protected source: string
+    protected source: string | GameImage
     protected rounded: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined
     protected border: {
         color?:string
         size?:number
     }
 
-    constructor(frame: {x:ratio, y:ratio, width:ratio, height:ratio, visible?:boolean, father?:FrameComponent, source?:string, rounded?:number | DOMPointInit | Iterable<number | DOMPointInit>, border?: {color?:string,size?:number}}) {
+    constructor(frame: FramePanelConfig) {
         super(frame)
-        this.source = frame.source ?? "#fff"
+
+        this.source = "#fff"
+
+        if (frame.source) {
+         
+            const possibleImage = GamaSource.ASSETS.get(frame.source)
+
+            if (possibleImage instanceof GameImage)
+                this.source = possibleImage
+            else
+                this.source = frame.source
+
+        }
+
         this.rounded = frame.rounded ?? 0
         this.border = frame.border ?? {}
     }
 
     protected render(): void {
 
-        if (this.border.color) {
-            GamaSource.ctx.strokeStyle = this.border.color
-        }
-
         if(this.border.size) {
 
+            GamaSource.ctx.strokeStyle = this.border.color ?? "#fff"
             GamaSource.ctx.save()
             GamaSource.ctx.scale(1 + (this.border.size / 100),1 + (this.border.size / 100))
             GamaSource.ctx.strokeRect(this.getPosition().x, this.getPosition().y, this.width, this.height)
             GamaSource.ctx.restore()
         
+        }
+
+        if (this.source instanceof GameImage) {
+
+            GamaSource.ctx.save();
+            if (typeof this.rounded == "number") {
+                if (this.rounded > 0) {
+                    const radius = (this.rounded / 100) * Math.min(this.width, this.height) / 2;
+
+                    GamaSource.ctx.beginPath(); 
+                    GamaSource.ctx.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2, true);
+                    GamaSource.ctx.closePath();
+                    GamaSource.ctx.clip();   
+                }
+            }
+            GamaSource.ctx.drawImage(
+                this.source.getSource(),
+                this.position.x,
+                this.position.y,
+                this.width,
+                this.height
+            )
+            GamaSource.ctx.restore();
+            
+            return
         }
         
         GamaSource.ctx.beginPath()

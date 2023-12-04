@@ -1,5 +1,6 @@
 import { Mouse, Vector2 } from "../GamaSource"
 import ratio from "../define/ratio"
+import FrameConfig from "./config/FrameConfig"
 
 export default class FrameComponent {
 
@@ -10,7 +11,7 @@ export default class FrameComponent {
     protected height:number = 0
     protected visible = false
 
-    constructor(frame: {x:ratio, y:ratio, width:ratio, height:ratio, visible?:boolean, father?:FrameComponent}) {
+    constructor(frame:FrameConfig) {
 
         if (frame.father) {
             

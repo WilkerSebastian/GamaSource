@@ -632,6 +632,12 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     getHeight() {
         return this.height;
     }
+    getX() {
+        return this.position.x;
+    }
+    getY() {
+        return this.position.y;
+    }
     FrameRender() {
         if (this.visible) {
             this.render();
@@ -664,20 +670,41 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
 
 
 
+
 class $b204872e9decb3de$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$export$2e2bcd8739ae039) {
     constructor(frame){
         super(frame);
-        this.source = frame.source ?? "#fff";
+        this.source = "#fff";
+        if (frame.source) {
+            const possibleImage = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(frame.source);
+            if (possibleImage instanceof (0, $157157e820ac0459$export$2e2bcd8739ae039)) this.source = possibleImage;
+            else this.source = frame.source;
+        }
         this.rounded = frame.rounded ?? 0;
         this.border = frame.border ?? {};
     }
     render() {
-        if (this.border.color) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.strokeStyle = this.border.color;
         if (this.border.size) {
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.strokeStyle = this.border.color ?? "#fff";
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.scale(1 + this.border.size / 100, 1 + this.border.size / 100);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.strokeRect(this.getPosition().x, this.getPosition().y, this.width, this.height);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
+        }
+        if (this.source instanceof (0, $157157e820ac0459$export$2e2bcd8739ae039)) {
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+            if (typeof this.rounded == "number") {
+                if (this.rounded > 0) {
+                    const radius = this.rounded / 100 * Math.min(this.width, this.height) / 2;
+                    (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.beginPath();
+                    (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.arc(this.width / 2, this.height / 2, radius, 0, Math.PI * 2, true);
+                    (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.closePath();
+                    (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.clip();
+                }
+            }
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.source.getSource(), this.position.x, this.position.y, this.width, this.height);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
+            return;
         }
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.beginPath();
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = this.source;

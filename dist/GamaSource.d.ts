@@ -149,19 +149,20 @@ export abstract class Mouse {
     static getButtonPressed(button: string | number): boolean | undefined;
 }
 type ratio = number | `${number}%`;
+declare class FrameConfig {
+    x: ratio;
+    y: ratio;
+    width: ratio;
+    height: ratio;
+    visible?: boolean;
+    father?: FrameComponent;
+}
 export class FrameComponent {
     protected position: Vector2;
     protected width: number;
     protected height: number;
     protected visible: boolean;
-    constructor(frame: {
-        x: ratio;
-        y: ratio;
-        width: ratio;
-        height: ratio;
-        visible?: boolean;
-        father?: FrameComponent;
-    });
+    constructor(frame: FrameConfig);
     setX(x: ratio): void;
     sety(y: ratio): void;
     setWidth(width: ratio): void;
@@ -175,6 +176,8 @@ export class FrameComponent {
     getPosition(): Vector2;
     getWidth(): number;
     getHeight(): number;
+    getX(): number;
+    getY(): number;
     FrameRender(): void;
     protected onClick(): void;
     FrameUpdate(): void;
@@ -184,41 +187,32 @@ export class FrameComponent {
     protected start(): void;
     protected render(): void;
 }
+declare class FramePanelConfig extends FrameConfig {
+    source?: string;
+    rounded?: number | DOMPointInit | Iterable<number | DOMPointInit>;
+    border?: {
+        color?: string;
+        size?: number;
+    };
+}
 export class FramePanel extends FrameComponent {
-    protected source: string;
+    protected source: string | GameImage;
     protected rounded: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined;
     protected border: {
         color?: string;
         size?: number;
     };
-    constructor(frame: {
-        x: ratio;
-        y: ratio;
-        width: ratio;
-        height: ratio;
-        visible?: boolean;
-        father?: FrameComponent;
-        source?: string;
-        rounded?: number | DOMPointInit | Iterable<number | DOMPointInit>;
-        border?: {
-            color?: string;
-            size?: number;
-        };
-    });
+    constructor(frame: FramePanelConfig);
     protected render(): void;
 }
+declare class FrameTextConfig extends FrameConfig {
+    text?: string;
+    fontSize?: ratio;
+    font?: string;
+    color?: string;
+}
 export class FrameText extends FrameComponent {
-    constructor(frame: {
-        x: ratio;
-        y: ratio;
-        width: ratio;
-        text?: string;
-        visible?: boolean;
-        father?: FrameComponent;
-        fontSize?: ratio;
-        font?: string;
-        color?: string;
-    });
+    constructor(frame: FrameTextConfig);
     protected render(): void;
     setText(text: string): void;
     getText(): string;

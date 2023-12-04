@@ -1,6 +1,7 @@
 import GamaSource from "../../GamaSource";
 import ratio from "../../define/ratio";
 import FrameComponent from "../FrameComponent";
+import FrameTextConfig from "../config/FrameTextConfig";
 
 export default class FrameText extends FrameComponent {
 
@@ -9,7 +10,7 @@ export default class FrameText extends FrameComponent {
     private font:string = ""
     private color:string
 
-    constructor(frame: {x:ratio, y:ratio,width:ratio, text?:string, visible?:boolean, father?:FrameComponent, fontSize?:ratio,font?:string, color?:string}) {
+    constructor(frame: FrameTextConfig) {
         super({
             x:frame.x,
             y:frame.y,
