@@ -3,6 +3,7 @@ export class GamaSourceConfig {
     maxFPS?: number;
     background?: string;
     imageSmoothingEnabled?: boolean;
+    camera?: typeof Camera;
 }
 export class Vector2 {
     x: number;
@@ -141,6 +142,7 @@ declare class GameAudio {
     getSource(): HTMLAudioElement;
 }
 export abstract class Mouse {
+    static transform: Vector2;
     static initialize(): void;
     static addEventClick(ev: (mouse: MouseEvent) => void): void;
     static hasPressed(): boolean;
@@ -174,10 +176,12 @@ export class FrameComponent {
     getWidth(): number;
     getHeight(): number;
     FrameRender(): void;
+    protected onClick(): void;
     FrameUpdate(): void;
     protected update(): void;
     getChildrens(): FrameComponent[];
     setChildrens(childrens: FrameComponent[]): void;
+    protected start(): void;
     protected render(): void;
 }
 export class FramePanel extends FrameComponent {

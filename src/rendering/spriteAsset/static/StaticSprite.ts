@@ -52,15 +52,11 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
     public setWidth(width:number) {
         
-        console.log(width, this.pixelRatio, GamaSource.window.getScale());
-        
         this.width = width * this.pixelRatio * GamaSource.window.getScale()
 
     }
 
     public setHeight(height:number) {
-        
-        console.log(height, this.pixelRatio, GamaSource.window.getScale());
         
         this.height = height * this.pixelRatio * GamaSource.window.getScale()
 

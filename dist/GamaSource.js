@@ -361,11 +361,9 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
         }
     }
     setWidth(width) {
-        console.log(width, this.pixelRatio, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale());
         this.width = width * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
     }
     setHeight(height) {
-        console.log(height, this.pixelRatio, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale());
         this.height = height * this.pixelRatio * (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.getScale();
     }
     getSize() {
@@ -562,6 +560,8 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         if (frame.father) this.setFather(frame.father);
         this.setBounds(frame.x, frame.y, frame.width, frame.height);
         this.visible = frame.visible ?? false;
+        this.start();
+        (0, $eb2672c705c386be$export$2e2bcd8739ae039).addEventClick((ev)=>this.hasClicked(ev));
     }
     setX(x) {
         const px = parseInt(x.toString());
@@ -640,6 +640,10 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
             });
         }
     }
+    onClick() {}
+    hasClicked(ev) {
+        if (this.position.x < ev.clientX + 1 && this.position.x + this.width > ev.clientX && this.position.y < ev.clientY + 1 && this.position.y + this.height > ev.clientY) this.onClick();
+    }
     FrameUpdate() {
         this.update();
         this.childrens.forEach((e)=>{
@@ -653,6 +657,7 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     setChildrens(childrens) {
         this.childrens = childrens;
     }
+    start() {}
     render() {}
 }
 
@@ -946,9 +951,6 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     static #_3 = (()=>{
         this.globalEnv = new Map();
     })();
-    static #_4 = (()=>{
-        this.Camera = new (0, $c34811bf1dee0ba3$export$2e2bcd8739ae039)();
-    })();
     constructor(config){
         this.scenes = new Map();
         $be9b019dcf88b1d2$export$d36076abcf594543.window = new (0, $d56f756e1dc733a9$export$2e2bcd8739ae039)();
@@ -981,6 +983,8 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         $be9b019dcf88b1d2$export$d36076abcf594543.canvas = document.querySelector("#game");
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx = $be9b019dcf88b1d2$export$d36076abcf594543.canvas.getContext("2d");
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.imageSmoothingEnabled = config?.imageSmoothingEnabled ?? false;
+        if (config?.camera) $be9b019dcf88b1d2$export$d36076abcf594543.Camera = new config.camera();
+        else $be9b019dcf88b1d2$export$d36076abcf594543.Camera = new (0, $c34811bf1dee0ba3$export$2e2bcd8739ae039)();
     }
     // métodos de incialização
     start() {
@@ -1005,7 +1009,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.clearRect(0, 0, $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT);
         this.background.render();
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.save();
-        $be9b019dcf88b1d2$export$d36076abcf594543.Camera.followObject();
+        if ($be9b019dcf88b1d2$export$d36076abcf594543.Camera) $be9b019dcf88b1d2$export$d36076abcf594543.Camera.followObject();
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>{
             g.render();
         });

@@ -1,4 +1,4 @@
-import { Vector2 } from "../GamaSource"
+import { Mouse, Vector2 } from "../GamaSource"
 import ratio from "../define/ratio"
 
 export default class FrameComponent {
@@ -20,6 +20,10 @@ export default class FrameComponent {
 
         this.setBounds(frame.x, frame.y, frame.width, frame.height)
         this.visible = frame.visible ?? false
+
+        this.start()
+
+        Mouse.addEventClick((ev) => this.hasClicked(ev))
 
     }
 
@@ -178,6 +182,24 @@ export default class FrameComponent {
 
     }
 
+    protected onClick() {
+
+
+    }
+
+    private hasClicked(ev: MouseEvent) {
+         
+        if ((this.position.x < ev.clientX + 1 &&
+            this.position.x + this.width > ev.clientX &&
+            this.position.y < ev.clientY + 1 &&
+            this.position.y + this.height > ev.clientY)) {
+                
+            this.onClick()
+    
+        }
+
+    }
+
     public FrameUpdate() {
 
         this.update()
@@ -207,10 +229,14 @@ export default class FrameComponent {
 
     }
 
-    protected render() {
+    protected start() {
 
 
     };
 
+    protected render() {
+
+
+    };
 
 }

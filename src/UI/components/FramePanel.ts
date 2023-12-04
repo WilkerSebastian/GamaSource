@@ -15,9 +15,7 @@ export default class FramePanel extends FrameComponent {
         super(frame)
         this.source = frame.source ?? "#fff"
         this.rounded = frame.rounded ?? 0
-
         this.border = frame.border ?? {}
-
     }
 
     protected render(): void {

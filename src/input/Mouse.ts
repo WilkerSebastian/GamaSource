@@ -3,7 +3,7 @@ import { Vector2 } from "../GamaSource";
 export default abstract class Mouse {
 
     private static events = new Array<(mouse:MouseEvent) => void>
-    private static transform:Vector2 = new Vector2(0, 0)
+    public static transform:Vector2 = new Vector2(0, 0)
     private static mapper = new Map<string, boolean>
     private static pressed = false
 

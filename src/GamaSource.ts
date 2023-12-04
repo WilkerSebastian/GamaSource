@@ -36,7 +36,7 @@ class GamaSource {
     public static UI:FrameComponent
     public static globalEnv = new Map<string, any>()
     public static ReferenceGame: GamaSource
-    public static Camera: Camera | null = null
+    public static Camera:Camera
 
     private static canvas:HTMLCanvasElement
 
