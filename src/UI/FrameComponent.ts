@@ -162,6 +162,18 @@ export default class FrameComponent {
 
     }
 
+    public getX() {
+
+        return this.position.x
+
+    }
+
+    public getY() {
+
+        return this.position.y
+
+    }
+
     public FrameRender() {
 
         if (this.visible) {
