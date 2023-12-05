@@ -25,6 +25,7 @@ import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
 import RigidBody2D from "./math/collision/RigidBody2D"
 import BoxCollider2D from "./math/collision/BoxCollider2D"
 import Camera from "./gameObject/Camera"
+import FrameButton from "./UI/components/FrameButton"
 
 class GamaSource {
 
@@ -37,8 +38,7 @@ class GamaSource {
     public static globalEnv = new Map<string, any>()
     public static ReferenceGame: GamaSource
     public static Camera:Camera
-
-    private static canvas:HTMLCanvasElement
+    public static canvas:HTMLCanvasElement
 
     private static state:GamaSourceState
     private time:TimeController
@@ -337,5 +337,6 @@ export {
     FrameComponent,
     FramePanel,
     FrameText,
+    FrameButton,
     Camera
 };

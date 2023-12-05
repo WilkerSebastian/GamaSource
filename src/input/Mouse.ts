@@ -1,4 +1,4 @@
-import { Vector2 } from "../GamaSource";
+import GamaSource, { Vector2 } from "../GamaSource";
 
 export default abstract class Mouse {
 
@@ -63,6 +63,12 @@ export default abstract class Mouse {
         } 
 
         return this.mapper.get(button)
+
+    }
+
+    public static setPointer(pointer:boolean) {
+
+        GamaSource.canvas.style.cursor = pointer ? "pointer" : "default"
 
     }
 

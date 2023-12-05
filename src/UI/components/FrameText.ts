@@ -30,14 +30,20 @@ export default class FrameText extends FrameComponent {
     }
 
     protected render() {
+
+        GamaSource.ctx.save()
+
+        GamaSource.ctx.filter = `brightness(${this.brightness}%)`
         
         this.lines.forEach((line, index) => {
 
-            GamaSource.ctx.font = `${this.getFontSize()}px ${this.getFont()}`
+            GamaSource.ctx.font = `${this.getFontSize() * Math.max(this.getScaleX(), this.getScaleY())}px ${this.getFont()}`
             GamaSource.ctx.fillStyle = this.color
             GamaSource.ctx.fillText(line, this.getPosition().x, this.getPosition().y * (index + 1), this.getWidth())
 
         })
+
+        GamaSource.ctx.restore()
 
     }
 

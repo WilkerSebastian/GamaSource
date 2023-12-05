@@ -147,6 +147,7 @@ export abstract class Mouse {
     static addEventClick(ev: (mouse: MouseEvent) => void): void;
     static hasPressed(): boolean;
     static getButtonPressed(button: string | number): boolean | undefined;
+    static setPointer(pointer: boolean): void;
 }
 type ratio = number | `${number}%`;
 declare class FrameConfig {
@@ -158,6 +159,8 @@ declare class FrameConfig {
     father?: FrameComponent;
 }
 export class FrameComponent {
+    protected childrens: FrameComponent[];
+    protected brightness: number;
     protected position: Vector2;
     protected width: number;
     protected height: number;
@@ -191,6 +194,14 @@ export class FrameComponent {
     setChildrens(childrens: FrameComponent[]): void;
     protected start(): void;
     protected render(): void;
+    setBrightness(brightness: number): void;
+    getBrightness(brightness: number): number;
+    setScale(scale: Vector2): void;
+    setScaleX(x: number): void;
+    setScaleY(y: number): void;
+    getScale(): Vector2;
+    getScaleX(): number;
+    getScaleY(): number;
 }
 declare class FramePanelConfig extends FrameConfig {
     source?: string;
@@ -288,6 +299,16 @@ export class Camera extends GameObject {
     reset(): void;
     setTarget(target: GameObject): void;
 }
+declare class FrameButtonConfig extends FramePanelConfig {
+    text?: FrameTextConfig;
+}
+export class FrameButton extends FramePanel {
+    constructor(frame: FrameButtonConfig);
+    protected hover(): void;
+    protected outHover(): void;
+    getText(): FrameText | null;
+    setText(frame: FrameTextConfig | FrameText): void;
+}
 export class GamaSource {
     static LOAD: number;
     static ASSETS: Map<string, GameImage | GameAudio>;
@@ -298,6 +319,7 @@ export class GamaSource {
     static globalEnv: Map<string, any>;
     static ReferenceGame: GamaSource;
     static Camera: Camera;
+    static canvas: HTMLCanvasElement;
     constructor(config?: GamaSourceConfig);
     run(): void;
     static stop(): void;

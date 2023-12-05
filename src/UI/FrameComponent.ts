@@ -5,7 +5,9 @@ import FrameConfig from "./config/FrameConfig"
 export default class FrameComponent {
 
     private father:FrameComponent | null = null
-    private childrens = new Array<FrameComponent>()
+    protected childrens = new Array<FrameComponent>()
+    private scale = new Vector2(1,1);
+    protected brightness = 100
     protected position:Vector2 = new Vector2(0, 0)
     protected width:number = 0
     protected height:number = 0
@@ -314,7 +316,7 @@ export default class FrameComponent {
     }
 
     protected start() {
-
+        
 
     };
 
@@ -322,5 +324,37 @@ export default class FrameComponent {
 
 
     };
+
+    public setBrightness(brightness:number) {
+        this.brightness = brightness
+    }
+
+    public getBrightness(brightness:number) {
+        return this.brightness
+    }
+
+    public setScale(scale:Vector2) {
+        this.scale = scale
+    }
+
+    public setScaleX(x:number) {
+        this.scale.x = x
+    }
+
+    public setScaleY(y:number) {
+        this.scale.y = y
+    }
+
+    public getScale() {
+        return this.scale
+    }
+
+    public getScaleX() {
+        return this.scale.x
+    }
+
+    public getScaleY() {
+        return this.scale.y
+    }
 
 }

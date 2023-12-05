@@ -32,6 +32,7 @@ $parcel$export(module.exports, "GameMath", () => $5a334b166dfa1be5$export$2e2bcd
 $parcel$export(module.exports, "FrameComponent", () => $7a794ae910495cf5$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FramePanel", () => $b204872e9decb3de$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FrameText", () => $fcb37ed2e27d49de$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "FrameButton", () => $da9f1ee002beed60$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Camera", () => $c34811bf1dee0ba3$export$2e2bcd8739ae039);
 class $a7f36dda3f4a8094$var$GamaSourceState {
     static #_ = (()=>{
@@ -545,6 +546,9 @@ class $eb2672c705c386be$export$2e2bcd8739ae039 {
         if (typeof button == "number") return this.mapper.get("mouse" + button);
         return this.mapper.get(button);
     }
+    static setPointer(pointer) {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).canvas.style.cursor = pointer ? "pointer" : "default";
+    }
 }
 
 
@@ -553,6 +557,8 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     constructor(frame){
         this.father = null;
         this.childrens = new Array();
+        this.scale = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1);
+        this.brightness = 100;
         this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         this.width = 0;
         this.height = 0;
@@ -697,6 +703,30 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     }
     start() {}
     render() {}
+    setBrightness(brightness) {
+        this.brightness = brightness;
+    }
+    getBrightness(brightness) {
+        return this.brightness;
+    }
+    setScale(scale) {
+        this.scale = scale;
+    }
+    setScaleX(x) {
+        this.scale.x = x;
+    }
+    setScaleY(y) {
+        this.scale.y = y;
+    }
+    getScale() {
+        return this.scale;
+    }
+    getScaleX() {
+        return this.scale.x;
+    }
+    getScaleY() {
+        return this.scale.y;
+    }
 }
 
 
@@ -716,6 +746,9 @@ class $b204872e9decb3de$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
         this.border = frame.border ?? {};
     }
     render() {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.filter = `brightness(${this.brightness}%)`;
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.scale(this.getScaleX(), this.getScaleY());
         if (this.border.size) {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.strokeStyle = this.border.color ?? "#fff";
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
@@ -743,6 +776,7 @@ class $b204872e9decb3de$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.roundRect(this.getPosition().x, this.getPosition().y, this.getWidth(), this.getHeight(), this.rounded);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fill();
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.closePath();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
     }
 }
 
@@ -768,11 +802,14 @@ class $fcb37ed2e27d49de$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
         this.setText(frame.text ?? "");
     }
     render() {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.filter = `brightness(${this.brightness}%)`;
         this.lines.forEach((line, index)=>{
-            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.font = `${this.getFontSize()}px ${this.getFont()}`;
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.font = `${this.getFontSize() * Math.max(this.getScaleX(), this.getScaleY())}px ${this.getFont()}`;
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillText(line, this.getPosition().x, this.getPosition().y * (index + 1), this.getWidth());
         });
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
     }
     setText(text) {
         const lines = [];
@@ -993,6 +1030,65 @@ class $c34811bf1dee0ba3$export$2e2bcd8739ae039 extends (0, $093225c56a233e0f$exp
     constructor(...args){
         super(...args);
         this.target = null;
+    }
+}
+
+
+
+class $1a6a4de3ff7cd2fd$export$2e2bcd8739ae039 {
+    constructor(){
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+    }
+}
+
+
+class $8d6433bcce97b154$export$2e2bcd8739ae039 extends (0, $1a6a4de3ff7cd2fd$export$2e2bcd8739ae039) {
+}
+
+
+
+
+class $da9f1ee002beed60$export$2e2bcd8739ae039 extends (0, $b204872e9decb3de$export$2e2bcd8739ae039) {
+    constructor(frame){
+        super(frame);
+        this.isHover = true;
+        if (frame.text) {
+            frame.father = this;
+            this.add(new (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039)(frame.text));
+        }
+    }
+    hover() {
+        this.brightness = 95;
+        this.childrens[0].setBrightness(95);
+        this.setScale(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1.1, 1.1));
+        this.childrens[0].setScale(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1.1, 1.1));
+        (0, $eb2672c705c386be$export$2e2bcd8739ae039).setPointer(true);
+    }
+    outHover() {
+        this.brightness = 100;
+        this.childrens[0].setBrightness(100);
+        this.setScale(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1));
+        this.childrens[0].setScale(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1));
+        (0, $eb2672c705c386be$export$2e2bcd8739ae039).setPointer(false);
+    }
+    getText() {
+        const text = this.childrens[0];
+        if (!text || !(text instanceof (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039))) return null;
+        return text;
+    }
+    setText(frame) {
+        if (!(this.childrens[0] instanceof (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039))) {
+            this.childrens.push(frame instanceof (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039) ? frame : new (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039)(frame));
+            return;
+        }
+        if (frame instanceof (0, $8d6433bcce97b154$export$2e2bcd8739ae039)) {
+            this.childrens[0] = new (0, $fcb37ed2e27d49de$export$2e2bcd8739ae039)(frame);
+            return;
+        }
+        this.childrens[0] = frame;
     }
 }
 

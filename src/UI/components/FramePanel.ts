@@ -34,6 +34,12 @@ export default class FramePanel extends FrameComponent {
 
     protected render(): void {
 
+        GamaSource.ctx.save()
+
+        GamaSource.ctx.filter = `brightness(${this.brightness}%)`
+
+        GamaSource.ctx.scale(this.getScaleX(), this.getScaleY())
+
         if(this.border.size) {
 
             GamaSource.ctx.strokeStyle = this.border.color ?? "#fff"
@@ -74,6 +80,8 @@ export default class FramePanel extends FrameComponent {
         GamaSource.ctx.roundRect(this.getPosition().x, this.getPosition().y, this.getWidth(), this.getHeight(), this.rounded)
         GamaSource.ctx.fill()
         GamaSource.ctx.closePath()
+
+        GamaSource.ctx.restore()
 
     }
 
