@@ -24,7 +24,7 @@ export default class GameAudio {
 
     public pause() {
 
-        this.pause()
+        this.source.pause()
 
     }
 

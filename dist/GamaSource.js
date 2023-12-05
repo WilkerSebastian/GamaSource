@@ -33,6 +33,7 @@ $parcel$export(module.exports, "FrameComponent", () => $7a794ae910495cf5$export$
 $parcel$export(module.exports, "FramePanel", () => $b204872e9decb3de$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FrameText", () => $fcb37ed2e27d49de$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FrameButton", () => $da9f1ee002beed60$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "VideoPlayer", () => $ef82af96d1cfc111$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Camera", () => $c34811bf1dee0ba3$export$2e2bcd8739ae039);
 class $a7f36dda3f4a8094$var$GamaSourceState {
     static #_ = (()=>{
@@ -429,7 +430,7 @@ class $53e27565d1108d13$export$2e2bcd8739ae039 {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
     }
     pause() {
-        this.pause();
+        this.source.pause();
     }
     setLoop(loop) {
         this.source.loop = loop;
@@ -1093,6 +1094,87 @@ class $da9f1ee002beed60$export$2e2bcd8739ae039 extends (0, $b204872e9decb3de$exp
 }
 
 
+
+class $af110ff434171936$export$2e2bcd8739ae039 {
+    constructor(path){
+        this.source = document.createElement("video");
+        this.source.addEventListener("loadedmetadata", ()=>{
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).LOAD++;
+        });
+        this.source.src = path;
+        const name = path.split("/");
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
+    }
+    async playTo(start, end) {
+        const max_time = end ?? this.getDuration();
+        this.source.currentTime = start;
+        this.source.addEventListener("timeupdate", ()=>{
+            if (this.source.currentTime >= max_time) this.pause();
+        });
+        await this.play();
+    }
+    getDuration() {
+        return this.source.duration;
+    }
+    setVolume(volume) {
+        this.source.volume = volume / 100;
+    }
+    getVolume() {
+        return this.source.volume;
+    }
+    setAutoPlay(auto) {
+        this.source.autoplay = auto;
+    }
+    async play() {
+        await this.source.play();
+    }
+    pause() {
+        this.source.pause();
+    }
+    getSource() {
+        return this.source;
+    }
+}
+
+
+
+class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$export$2e2bcd8739ae039) {
+    constructor(frame){
+        super(frame);
+        this.source = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(frame.path);
+    }
+    setEventEnd(event) {
+        this.source.getSource().addEventListener("ended", ()=>event());
+    }
+    async playTo(start, end) {
+        this.visible = true;
+        await this.source.playTo(start, end);
+    }
+    async play() {
+        this.visible = true;
+        await this.source.play();
+    }
+    setAutoPlay(auto) {
+        this.setAutoPlay(auto);
+    }
+    pause() {
+        this.source.pause();
+    }
+    setVolume(volume) {
+        this.source.setVolume(volume);
+    }
+    getVolume() {
+        return this.source.getVolume();
+    }
+    getDuration() {
+        return this.source.getDuration();
+    }
+    render() {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.source.getSource(), this.position.x, this.position.y, this.width, this.height);
+    }
+}
+
+
 class $be9b019dcf88b1d2$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -1214,6 +1296,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
             if (!this.ASSETS.get(name[name.length - 1])) {
                 if (/\.(mp3|wav|flac|ogg)$/i.test(a)) new (0, $53e27565d1108d13$export$2e2bcd8739ae039)(a);
                 else if (/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(a)) new (0, $157157e820ac0459$export$2e2bcd8739ae039)(a);
+                else if (/\.(mp4|mov|avi|mkv|wmv|flv|webm|ogg)$/i.test(a)) new (0, $af110ff434171936$export$2e2bcd8739ae039)(a);
             }
         });
         return names;

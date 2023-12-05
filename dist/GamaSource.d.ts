@@ -309,9 +309,36 @@ export class FrameButton extends FramePanel {
     getText(): FrameText | null;
     setText(frame: FrameTextConfig | FrameText): void;
 }
+declare class GameVideo {
+    constructor(path: string);
+    playTo(start: number, end?: number): Promise<void>;
+    getDuration(): number;
+    setVolume(volume: number): void;
+    getVolume(): number;
+    setAutoPlay(auto: boolean): void;
+    play(): Promise<void>;
+    pause(): void;
+    getSource(): HTMLVideoElement;
+}
+declare class VideoPlayerConfig extends FrameConfig {
+    path: string;
+}
+export class VideoPlayer extends FrameComponent {
+    source: GameVideo;
+    constructor(frame: VideoPlayerConfig);
+    setEventEnd(event: () => void): void;
+    playTo(start: number, end?: number): Promise<void>;
+    play(): Promise<void>;
+    setAutoPlay(auto: boolean): void;
+    pause(): void;
+    setVolume(volume: number): void;
+    getVolume(): number;
+    getDuration(): number;
+    render(): void;
+}
 export class GamaSource {
     static LOAD: number;
-    static ASSETS: Map<string, GameImage | GameAudio>;
+    static ASSETS: Map<string, GameImage | GameAudio | GameVideo>;
     static GameObjects: GameObject[];
     static ctx: CanvasRenderingContext2D;
     static window: GameWindow;

@@ -26,11 +26,13 @@ import RigidBody2D from "./math/collision/RigidBody2D"
 import BoxCollider2D from "./math/collision/BoxCollider2D"
 import Camera from "./gameObject/Camera"
 import FrameButton from "./UI/components/FrameButton"
+import GameVideo from "./asset/video/GameVideo"
+import VideoPlayer from "./UI/video/VideoPlayer"
 
 class GamaSource {
 
     public static LOAD:number = 0
-    public static ASSETS = new Map<string , GameAudio | GameImage>
+    public static ASSETS = new Map<string , GameAudio | GameImage | GameVideo>
     public static GameObjects = new Array<GameObject>()
     public static ctx:CanvasRenderingContext2D
     public static window:GameWindow
@@ -262,6 +264,10 @@ class GamaSource {
     
                     new GameImage(a)
                     
+                } else if(/\.(mp4|mov|avi|mkv|wmv|flv|webm|ogg)$/i.test(a)) {
+
+                    new GameVideo(a)
+
                 }
 
             }
@@ -338,5 +344,6 @@ export {
     FramePanel,
     FrameText,
     FrameButton,
-    Camera
+    VideoPlayer,
+    Camera,
 };
