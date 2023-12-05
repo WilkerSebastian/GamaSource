@@ -11,6 +11,7 @@ export default class FrameComponent {
     protected height:number = 0
     protected isHover = false
     private hoverState = false
+    private clickState = false
     protected visible = false
 
     constructor(frame:FrameConfig) {
@@ -200,6 +201,12 @@ export default class FrameComponent {
 
     }
 
+    protected upClick() {
+
+
+
+    }
+
     private hasClicked(ev: MouseEvent) {
          
         if (this.position.x < ev.clientX + 1 &&
@@ -208,6 +215,7 @@ export default class FrameComponent {
             this.position.y + this.height > ev.clientY) {
                 
             this.onClick()
+            this.clickState = true
     
         }
 
@@ -254,6 +262,13 @@ export default class FrameComponent {
     public FrameUpdate() {
 
         this.update()
+
+        if (this.clickState && !Mouse.hasPressed()) {
+            
+            this.clickState = false
+            this.upClick()
+
+        }
         
         if (this.isHover) {
             

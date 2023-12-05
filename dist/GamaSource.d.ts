@@ -181,6 +181,7 @@ export class FrameComponent {
     getY(): number;
     FrameRender(): void;
     protected onClick(): void;
+    protected upClick(): void;
     protected hover(): void;
     protected outHover(): void;
     FrameUpdate(): void;

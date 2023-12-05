@@ -523,6 +523,7 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
         this.height = 0;
         this.isHover = false;
         this.hoverState = false;
+        this.clickState = false;
         this.visible = false;
         if (frame.father) this.setFather(frame.father);
         this.setBounds(frame.x, frame.y, frame.width, frame.height);
@@ -613,8 +614,12 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
         }
     }
     onClick() {}
+    upClick() {}
     hasClicked(ev) {
-        if (this.position.x < ev.clientX + 1 && this.position.x + this.width > ev.clientX && this.position.y < ev.clientY + 1 && this.position.y + this.height > ev.clientY) this.onClick();
+        if (this.position.x < ev.clientX + 1 && this.position.x + this.width > ev.clientX && this.position.y < ev.clientY + 1 && this.position.y + this.height > ev.clientY) {
+            this.onClick();
+            this.clickState = true;
+        }
     }
     hover() {}
     outHover() {}
@@ -633,11 +638,11 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
     }
     FrameUpdate() {
         this.update();
-        console.log(this.isHover);
-        if (this.isHover) {
-            console.log("lockheat");
-            this.hasHovered();
+        if (this.clickState && !(0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).hasPressed()) {
+            this.clickState = false;
+            this.upClick();
         }
+        if (this.isHover) this.hasHovered();
         this.childrens.forEach((e)=>{
             e.FrameUpdate();
         });
