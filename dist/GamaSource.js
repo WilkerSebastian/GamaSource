@@ -556,11 +556,12 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         this.width = 0;
         this.height = 0;
+        this.isHover = false;
+        this.hoverState = false;
         this.visible = false;
         if (frame.father) this.setFather(frame.father);
         this.setBounds(frame.x, frame.y, frame.width, frame.height);
         this.visible = frame.visible ?? false;
-        this.start();
         (0, $eb2672c705c386be$export$2e2bcd8739ae039).addEventClick((ev)=>this.hasClicked(ev));
     }
     setX(x) {
@@ -574,7 +575,7 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         }
         this.position.x = px;
     }
-    sety(y) {
+    setY(y) {
         const py = parseInt(y.toString());
         if (this.father) {
             if (typeof y == "string") {
@@ -603,7 +604,7 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     }
     setPosition(x, y) {
         this.setX(x);
-        this.sety(y);
+        this.setY(y);
     }
     setSize(width, height) {
         this.setWidth(width);
@@ -642,7 +643,7 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         if (this.visible) {
             this.render();
             this.childrens.forEach((e)=>{
-                if (e.visible) e.render();
+                if (e.visible) e.FrameRender();
             });
         }
     }
@@ -650,10 +651,36 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     hasClicked(ev) {
         if (this.position.x < ev.clientX + 1 && this.position.x + this.width > ev.clientX && this.position.y < ev.clientY + 1 && this.position.y + this.height > ev.clientY) this.onClick();
     }
+    hover() {}
+    outHover() {}
+    hasHovered() {
+        if (this.position.x < (0, $eb2672c705c386be$export$2e2bcd8739ae039).transform.x + 1 && this.position.x + this.width > (0, $eb2672c705c386be$export$2e2bcd8739ae039).transform.x && this.position.y < (0, $eb2672c705c386be$export$2e2bcd8739ae039).transform.y + 1 && this.position.y + this.height > (0, $eb2672c705c386be$export$2e2bcd8739ae039).transform.y) {
+            if (!this.hoverState) {
+                this.hover();
+                this.hoverState = true;
+            }
+            return;
+        }
+        if (this.hoverState) {
+            this.outHover();
+            this.hoverState = false;
+        }
+    }
     FrameUpdate() {
         this.update();
+        console.log(this.isHover);
+        if (this.isHover) {
+            console.log("lockheat");
+            this.hasHovered();
+        }
         this.childrens.forEach((e)=>{
-            e.update();
+            e.FrameUpdate();
+        });
+    }
+    FrameStart() {
+        this.start();
+        this.childrens.forEach((e)=>{
+            e.FrameStart();
         });
     }
     update() {}
@@ -1025,6 +1052,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         }
         (0, $6a34e6f6a90b2c9f$export$2e2bcd8739ae039)();
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
+        $be9b019dcf88b1d2$export$d36076abcf594543.UI.FrameStart();
     }
     update() {
         $be9b019dcf88b1d2$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());

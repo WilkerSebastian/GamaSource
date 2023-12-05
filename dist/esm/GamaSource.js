@@ -521,11 +521,12 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
         this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.width = 0;
         this.height = 0;
+        this.isHover = false;
+        this.hoverState = false;
         this.visible = false;
         if (frame.father) this.setFather(frame.father);
         this.setBounds(frame.x, frame.y, frame.width, frame.height);
         this.visible = frame.visible ?? false;
-        this.start();
         (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).addEventClick((ev)=>this.hasClicked(ev));
     }
     setX(x) {
@@ -539,7 +540,7 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
         }
         this.position.x = px;
     }
-    sety(y) {
+    setY(y) {
         const py = parseInt(y.toString());
         if (this.father) {
             if (typeof y == "string") {
@@ -568,7 +569,7 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
     }
     setPosition(x, y) {
         this.setX(x);
-        this.sety(y);
+        this.setY(y);
     }
     setSize(width, height) {
         this.setWidth(width);
@@ -607,7 +608,7 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
         if (this.visible) {
             this.render();
             this.childrens.forEach((e)=>{
-                if (e.visible) e.render();
+                if (e.visible) e.FrameRender();
             });
         }
     }
@@ -615,10 +616,36 @@ class $0d012e83fb7d1e90$export$2e2bcd8739ae039 {
     hasClicked(ev) {
         if (this.position.x < ev.clientX + 1 && this.position.x + this.width > ev.clientX && this.position.y < ev.clientY + 1 && this.position.y + this.height > ev.clientY) this.onClick();
     }
+    hover() {}
+    outHover() {}
+    hasHovered() {
+        if (this.position.x < (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).transform.x + 1 && this.position.x + this.width > (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).transform.x && this.position.y < (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).transform.y + 1 && this.position.y + this.height > (0, $a5c17bf62a97e3fd$export$2e2bcd8739ae039).transform.y) {
+            if (!this.hoverState) {
+                this.hover();
+                this.hoverState = true;
+            }
+            return;
+        }
+        if (this.hoverState) {
+            this.outHover();
+            this.hoverState = false;
+        }
+    }
     FrameUpdate() {
         this.update();
+        console.log(this.isHover);
+        if (this.isHover) {
+            console.log("lockheat");
+            this.hasHovered();
+        }
         this.childrens.forEach((e)=>{
-            e.update();
+            e.FrameUpdate();
+        });
+    }
+    FrameStart() {
+        this.start();
+        this.childrens.forEach((e)=>{
+            e.FrameStart();
         });
     }
     update() {}
@@ -990,6 +1017,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         }
         (0, $f589213aaea6faa3$export$2e2bcd8739ae039)();
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
+        $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameStart();
     }
     update() {
         $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());

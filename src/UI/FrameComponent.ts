@@ -9,6 +9,8 @@ export default class FrameComponent {
     protected position:Vector2 = new Vector2(0, 0)
     protected width:number = 0
     protected height:number = 0
+    protected isHover = false
+    private hoverState = false
     protected visible = false
 
     constructor(frame:FrameConfig) {
@@ -21,8 +23,6 @@ export default class FrameComponent {
 
         this.setBounds(frame.x, frame.y, frame.width, frame.height)
         this.visible = frame.visible ?? false
-
-        this.start()
 
         Mouse.addEventClick((ev) => this.hasClicked(ev))
 
@@ -49,7 +49,7 @@ export default class FrameComponent {
 
     }
 
-    public sety(y:ratio) {
+    public setY(y:ratio) {
 
         const py = parseInt(y.toString())
 
@@ -103,7 +103,7 @@ export default class FrameComponent {
     public setPosition(x:ratio, y:ratio) {
 
         this.setX(x)
-        this.sety(y)
+        this.setY(y)
 
     }
 
@@ -185,7 +185,7 @@ export default class FrameComponent {
 
                 if (e.visible) {
                     
-                    e.render()
+                    e.FrameRender()
 
                 }
 
@@ -202,10 +202,10 @@ export default class FrameComponent {
 
     private hasClicked(ev: MouseEvent) {
          
-        if ((this.position.x < ev.clientX + 1 &&
+        if (this.position.x < ev.clientX + 1 &&
             this.position.x + this.width > ev.clientX &&
             this.position.y < ev.clientY + 1 &&
-            this.position.y + this.height > ev.clientY)) {
+            this.position.y + this.height > ev.clientY) {
                 
             this.onClick()
     
@@ -213,15 +213,71 @@ export default class FrameComponent {
 
     }
 
+    protected hover() {
+
+
+
+    }
+
+    protected outHover() {
+
+
+
+    }
+
+    private hasHovered() {
+
+        if (this.position.x < Mouse.transform.x + 1 &&
+            this.position.x + this.width > Mouse.transform.x &&
+            this.position.y < Mouse.transform.y + 1 &&
+            this.position.y + this.height > Mouse.transform.y) {
+                
+            if (!this.hoverState) {
+             
+                this.hover()
+                this.hoverState = true
+
+            }
+            return
+    
+        } 
+        
+        if (this.hoverState) {
+         
+            this.outHover()
+            this.hoverState = false
+
+        }
+
+    } 
+
     public FrameUpdate() {
 
         this.update()
+        
+        if (this.isHover) {
+            
+            this.hasHovered()
+
+        }
 
         this.childrens.forEach((e) => {
 
-            e.update()
+            e.FrameUpdate()
 
         })
+
+    }
+
+    public FrameStart() {
+
+        this.start()
+
+        this.childrens.forEach(e => {
+            
+            e.FrameStart()
+
+        });
 
     }
 

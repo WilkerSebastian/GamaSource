@@ -130,6 +130,8 @@ class GamaSource {
 
         GamaSource.GameObjects.forEach((g) => g.start())
 
+        GamaSource.UI.FrameStart()
+
     }
 
     private update() {

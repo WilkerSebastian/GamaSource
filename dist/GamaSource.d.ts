@@ -161,10 +161,11 @@ export class FrameComponent {
     protected position: Vector2;
     protected width: number;
     protected height: number;
+    protected isHover: boolean;
     protected visible: boolean;
     constructor(frame: FrameConfig);
     setX(x: ratio): void;
-    sety(y: ratio): void;
+    setY(y: ratio): void;
     setWidth(width: ratio): void;
     setHeight(height: ratio): void;
     setPosition(x: ratio, y: ratio): void;
@@ -180,7 +181,10 @@ export class FrameComponent {
     getY(): number;
     FrameRender(): void;
     protected onClick(): void;
+    protected hover(): void;
+    protected outHover(): void;
     FrameUpdate(): void;
+    FrameStart(): void;
     protected update(): void;
     getChildrens(): FrameComponent[];
     setChildrens(childrens: FrameComponent[]): void;
