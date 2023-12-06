@@ -1,9 +1,10 @@
-import { Mouse, Vector2 } from "../GamaSource"
+import GamaSource, { Mouse, Vector2 } from "../GamaSource"
 import ratio from "../define/ratio"
 import FrameConfig from "./config/FrameConfig"
 
 export default class FrameComponent {
 
+    private static first = true
     private father:FrameComponent | null = null
     protected childrens = new Array<FrameComponent>()
     private scale = new Vector2(1,1);
@@ -21,6 +22,14 @@ export default class FrameComponent {
         if (frame.father) {
             
             this.setFather(frame.father)
+
+        } else if(!FrameComponent.first) {
+
+            this.setFather(GamaSource.UI)
+
+        } else {
+
+            FrameComponent.first = false
 
         }
 
@@ -316,7 +325,7 @@ export default class FrameComponent {
     }
 
     protected start() {
-        
+
 
     };
 

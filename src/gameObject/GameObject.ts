@@ -88,7 +88,7 @@ export default class GameObject {
             
             if (this.collider) {
 
-                if (this.sprite instanceof StaticSprite || this.sprite instanceof SpriteSheet ||this.sprite instanceof AnimationController ) {
+                if (this.sprite instanceof StaticSprite || this.sprite instanceof SpriteSheet || this.sprite instanceof AnimationController ) {
                     
                     this.collider.update(this.transform, this.sprite.getSize())
 

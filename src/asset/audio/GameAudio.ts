@@ -16,6 +16,8 @@ export default class GameAudio {
 
         this.source.src = path
 
+        this.setVolume(50)
+
         const name = path.split("/")
 
         GamaSource.ASSETS.set(name[name.length - 1], this)

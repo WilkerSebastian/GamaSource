@@ -1,4 +1,4 @@
-import GamaSource from "../GamaSource";
+import GamaSource, { Vector2 } from "../GamaSource";
 import GameObject from "./GameObject";
 
 export default class Camera extends GameObject {
@@ -20,10 +20,13 @@ export default class Camera extends GameObject {
 
     public reset() {
 
+        this.setTarget(null)
+        this.transform = new Vector2(0,0)
+        GamaSource.ctx.translate(this.transform.x, this.transform.y);
 
     }
 
-    public setTarget(target:GameObject) {
+    public setTarget(target:GameObject | null) {
 
         this.target = target;
 

@@ -555,6 +555,9 @@ class $eb2672c705c386be$export$2e2bcd8739ae039 {
 
 
 class $7a794ae910495cf5$export$2e2bcd8739ae039 {
+    static #_ = (()=>{
+        this.first = true;
+    })();
     constructor(frame){
         this.father = null;
         this.childrens = new Array();
@@ -568,6 +571,8 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         this.clickState = false;
         this.visible = false;
         if (frame.father) this.setFather(frame.father);
+        else if (!$7a794ae910495cf5$export$2e2bcd8739ae039.first) this.setFather((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).UI);
+        else $7a794ae910495cf5$export$2e2bcd8739ae039.first = false;
         this.setBounds(frame.x, frame.y, frame.width, frame.height);
         this.visible = frame.visible ?? false;
         (0, $eb2672c705c386be$export$2e2bcd8739ae039).addEventClick((ev)=>this.hasClicked(ev));
@@ -1024,7 +1029,11 @@ class $c34811bf1dee0ba3$export$2e2bcd8739ae039 extends (0, $093225c56a233e0f$exp
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.transform.x, this.transform.y);
         }
     }
-    reset() {}
+    reset() {
+        this.setTarget(null);
+        this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.transform.x, this.transform.y);
+    }
     setTarget(target) {
         this.target = target;
     }

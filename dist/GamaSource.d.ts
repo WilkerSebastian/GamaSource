@@ -297,7 +297,7 @@ export class RigidBody2D {
 export class Camera extends GameObject {
     followObject(): void;
     reset(): void;
-    setTarget(target: GameObject): void;
+    setTarget(target: GameObject | null): void;
 }
 declare class FrameButtonConfig extends FramePanelConfig {
     text?: FrameTextConfig;
