@@ -356,6 +356,10 @@ export class GamaSource {
     static loader(...assets: string[]): string[];
     addScene(scene: string, performer: () => void): void;
     changeScene(scene: string): void;
+    static addScene(scene: string, performer: () => void): void;
+    static changeScene(scene: string): void;
+    static getCurrentScene(): any;
+    getCurrentScene(): any;
 }
 export default GamaSource;
 

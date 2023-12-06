@@ -389,6 +389,7 @@ class $13749c1ad70c82ef$export$2e2bcd8739ae039 {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).LOAD++;
         });
         this.source.src = path;
+        this.setVolume(50);
         const name = path.split("/");
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
     }
@@ -1074,6 +1075,7 @@ class $8ef0dd47308bf20d$export$2e2bcd8739ae039 {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).LOAD++;
         });
         this.source.src = path;
+        this.setVolume(50);
         const name = path.split("/");
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.set(name[name.length - 1], this);
     }
@@ -1160,8 +1162,10 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_3 = (()=>{
         this.globalEnv = new Map();
     })();
-    constructor(config){
+    static #_4 = (()=>{
         this.scenes = new Map();
+    })();
+    constructor(config){
         $f8bbed27444dc2b3$export$d36076abcf594543.window = new (0, $58cc35928f5b21f0$export$2e2bcd8739ae039)();
         const source = config?.background ?? "#F2F2F2";
         if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $c4d1796e1253327f$export$2e2bcd8739ae039)(new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0), $f8bbed27444dc2b3$export$d36076abcf594543.window.WIDTH, $f8bbed27444dc2b3$export$d36076abcf594543.window.HEIGHT, source);
@@ -1198,7 +1202,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     // métodos de incialização
     start() {
         $f8bbed27444dc2b3$export$d36076abcf594543.ReferenceGame = this;
-        const main = this.scenes.get("main");
+        const main = $f8bbed27444dc2b3$export$d36076abcf594543.scenes.get("main");
         if (main) main();
         else {
             console.error("Error the main scene not found!");
@@ -1248,16 +1252,16 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         requestAnimationFrame((currentTime)=>this.loop(currentTime));
     }
     static stop() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED;
+        this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED;
     }
     static resume() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).RUNNING;
+        this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).RUNNING;
     }
     static exit() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED;
+        this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED;
     }
     static falied() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CRASHED;
+        this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CRASHED;
     }
     // métodos de controle
     static loader(...assets) {
@@ -1267,30 +1271,43 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
             names.push(name[name.length - 1]);
             if (!this.ASSETS.get(name[name.length - 1])) {
                 if (/\.(mp3|wav|flac|ogg)$/i.test(a)) new (0, $13749c1ad70c82ef$export$2e2bcd8739ae039)(a);
-                else if (/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(a)) new (0, $f5702f0cdcfb7649$export$2e2bcd8739ae039)(a);
+                else if (/\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(a)) new (0, $f5702f0cdcfb7649$export$2e2bcd8739ae039)(a);
                 else if (/\.(mp4|mov|avi|mkv|wmv|flv|webm|ogg)$/i.test(a)) new (0, $8ef0dd47308bf20d$export$2e2bcd8739ae039)(a);
             }
         });
         return names;
     }
     addScene(scene, performer) {
+        $f8bbed27444dc2b3$export$d36076abcf594543.addScene(scene, performer);
+    }
+    changeScene(scene) {
+        return $f8bbed27444dc2b3$export$d36076abcf594543.changeScene(scene);
+    }
+    static addScene(scene, performer) {
         if (!this.scenes.get(scene)) {
             this.scenes.set(scene, performer);
             return;
         }
         console.error("Scene overwriting is not allowed!");
-        $f8bbed27444dc2b3$export$d36076abcf594543.falied();
+        this.falied();
     }
-    changeScene(scene) {
+    static changeScene(scene) {
         const sc = this.scenes.get(scene);
         if (sc) {
-            $f8bbed27444dc2b3$export$d36076abcf594543.UI.setChildrens([]);
-            $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects = [];
+            this.UI.setChildrens([]);
+            this.GameObjects = [];
             sc();
-            $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
+            this.GameObjects.forEach((g)=>g.start());
+            this.globalEnv.set("current_scene", scene);
             return;
         }
         console.warn(`The scene ${scene} was not found`);
+    }
+    static getCurrentScene() {
+        return this.globalEnv.get("current_scene");
+    }
+    getCurrentScene() {
+        return $f8bbed27444dc2b3$export$d36076abcf594543.getCurrentScene();
     }
 }
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;

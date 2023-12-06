@@ -46,7 +46,7 @@ class GamaSource {
     private time:TimeController
 
     private background:Sprite
-    private scenes = new Map<string, () => void>()
+    private static scenes = new Map<string, () => void>()
 
     constructor(config?:GamaSourceConfig) {
 
@@ -114,7 +114,7 @@ class GamaSource {
 
         GamaSource.ReferenceGame = this
 
-        const main = this.scenes.get("main")
+        const main = GamaSource.scenes.get("main")
 
         if (main) {
 
@@ -221,24 +221,24 @@ class GamaSource {
 
     public static stop() {
 
-        GamaSource.state = GamaSourceState.STOPPED
+        this.state = GamaSourceState.STOPPED
 
     }
 
     public static resume() {
 
-        GamaSource.state = GamaSourceState.RUNNING
+        this.state = GamaSourceState.RUNNING
 
     }
 
     public static exit() {
 
-        GamaSource.state = GamaSourceState.CLOSED
+        this.state = GamaSourceState.CLOSED
 
     }
     public static falied() {
 
-        GamaSource.state = GamaSourceState.CRASHED
+        this.state = GamaSourceState.CRASHED
 
     }
 
@@ -280,6 +280,18 @@ class GamaSource {
 
     public addScene(scene:string, performer:() => void) {
 
+        GamaSource.addScene(scene, performer)
+
+    }
+
+    public changeScene(scene:string) {
+
+        return GamaSource.changeScene(scene)
+
+    }
+
+    public static addScene(scene:string, performer:() => void) {
+
         if(!this.scenes.get(scene)) {
          
             this.scenes.set(scene, performer)
@@ -288,28 +300,42 @@ class GamaSource {
         }
 
         console.error("Scene overwriting is not allowed!");
-        GamaSource.falied()
+        this.falied()
 
     }
 
-    public changeScene(scene:string) {
+    public static changeScene(scene:string) {
 
         const sc = this.scenes.get(scene)
 
         if(sc) {
 
-            GamaSource.UI.setChildrens([])
-            GamaSource.GameObjects = []
+            this.UI.setChildrens([])
+            this.GameObjects = []
 
             sc()
 
-            GamaSource.GameObjects.forEach((g) => g.start())            
+            this.GameObjects.forEach((g) => g.start())     
+            
+            this.globalEnv.set("current_scene", scene)
 
             return
 
         }
 
         console.warn(`The scene ${scene} was not found`);
+
+    }
+
+    public static getCurrentScene() {
+
+        return this.globalEnv.get("current_scene")
+
+    }
+
+    public getCurrentScene() {
+
+        return GamaSource.getCurrentScene()
 
     }
 
