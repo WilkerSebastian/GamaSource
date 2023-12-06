@@ -260,7 +260,7 @@ class GamaSource {
 
                     new GameAudio(a)
                     
-                } else if(/\.(jpg|jpeg|png|gif|bmp|svg)$/i.test(a)) {
+                } else if(/\.(jpg|jpeg|png|gif|bmp|svg|webp)$/i.test(a)) {
     
                     new GameImage(a)
                     
