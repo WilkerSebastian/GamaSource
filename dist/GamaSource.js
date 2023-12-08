@@ -35,6 +35,7 @@ $parcel$export(module.exports, "FrameText", () => $fcb37ed2e27d49de$export$2e2bc
 $parcel$export(module.exports, "FrameButton", () => $da9f1ee002beed60$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "VideoPlayer", () => $ef82af96d1cfc111$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Camera", () => $c34811bf1dee0ba3$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "Helpers", () => $a8dfe81a40550e4a$export$2e2bcd8739ae039);
 class $a7f36dda3f4a8094$var$GamaSourceState {
     static #_ = (()=>{
         this.CLOSED = 0;
@@ -120,11 +121,16 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
                     this.physics.velocity.y = 0;
                     this.physics.position = over;
                 }
+                if (!this.collidingObjects.includes(obj)) this.collidingObjects.push(obj);
                 this.onCollisionBetween(obj);
+            } else if (this.collidingObjects.includes(obj)) {
+                this.collidingObjects = this.collidingObjects.filter((o)=>o != obj);
+                this.onCollisionExit(obj);
             }
         });
     }
     onCollisionBetween(gameObject) {}
+    onCollisionExit(gameObject) {}
     gameUpdate() {
         if (this.visible) {
             if (this.collider) {
@@ -137,16 +143,21 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         }
     }
     render() {
-        if (this.sprite && this.visible) this.sprite.render();
+        if (this.sprite && this.visible) {
+            if (this.collider && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
+            this.sprite.render();
+            if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.position) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).position(this.transform);
+        }
     }
     constructor(){
         this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         this.sprite = null;
         this.collider = null;
         this.physics = null;
-        this.visible = true;
         this.layer = 1;
         this.tag = "not defined";
+        this.visible = true;
+        this.collidingObjects = new Array();
     }
 }
 
@@ -351,7 +362,6 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
             this.height = pixelRatio.height;
         }
         if (!image) {
-            console.log((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS);
             console.error("Error on instace of StaticSprite " + source);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
             this.image = new (0, $157157e820ac0459$export$2e2bcd8739ae039)("failed");
@@ -1187,6 +1197,62 @@ class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
 }
 
 
+
+class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
+    static show(helperConfig) {
+        $a8dfe81a40550e4a$export$2e2bcd8739ae039.config = helperConfig;
+    }
+    static preRender() {
+        if (this.config.grid) {
+            if (this.config.grid > 0) this.grid();
+        }
+    }
+    static render() {
+        if (this.config.FPS) this.FPS();
+    }
+    static collsion(box, collied) {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillRect(box.position.x, box.position.y, box.width, box.height);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static FPS() {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillRect((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH - 250, 0, 250, 75);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = "#fff";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.font = "25px ARIAL";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillText(`FPS: ${(0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).globalEnv.get("FPS")}`, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH - 180, 35);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static position(pos) {
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = "#000";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.font = "18px ARIAL";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillText(`x: ${pos.x}`, pos.x + 18, pos.y - 36);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillText(`y: ${pos.y}`, pos.x + 18, pos.y - 18);
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static grid() {
+        const gridSize = this.config.grid;
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.strokeStyle = "rgba(0,0,0, 0.1)";
+        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineWidth = 1;
+        for(let x = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * -10; x <= (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10; x += gridSize){
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.beginPath();
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.moveTo(x, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * -10);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo(x, (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT * 10);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
+        }
+        for(let y = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT * -10; y <= (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT * 10; y += gridSize){
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.beginPath();
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.moveTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * -10, y);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10, y);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
+        }
+    }
+}
+
+
 class $be9b019dcf88b1d2$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -1252,6 +1318,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         $be9b019dcf88b1d2$export$d36076abcf594543.UI.FrameStart();
     }
     update() {
+        $be9b019dcf88b1d2$export$d36076abcf594543.globalEnv.set("FPS", this.time.FPS);
         $be9b019dcf88b1d2$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());
         $be9b019dcf88b1d2$export$d36076abcf594543.globalEnv.set("latency", this.time.getFrameInterval());
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameUpdate());
@@ -1262,10 +1329,12 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
         this.background.render();
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.save();
         if ($be9b019dcf88b1d2$export$d36076abcf594543.Camera) $be9b019dcf88b1d2$export$d36076abcf594543.Camera.followObject();
+        (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).preRender();
         $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>{
             g.render();
         });
         $be9b019dcf88b1d2$export$d36076abcf594543.ctx.restore();
+        (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).render();
         $be9b019dcf88b1d2$export$d36076abcf594543.UI.FrameRender();
     }
     loop(currentTime) {

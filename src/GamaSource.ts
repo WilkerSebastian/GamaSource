@@ -28,6 +28,7 @@ import Camera from "./gameObject/Camera"
 import FrameButton from "./UI/components/FrameButton"
 import GameVideo from "./asset/video/GameVideo"
 import VideoPlayer from "./UI/video/VideoPlayer"
+import Helpers from "./helper/Helpers"
 
 class GamaSource {
 
@@ -138,6 +139,7 @@ class GamaSource {
 
     private update() {
 
+        GamaSource.globalEnv.set("FPS", this.time.FPS)
         GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())
         GamaSource.globalEnv.set("latency", this.time.getFrameInterval())
 
@@ -161,6 +163,8 @@ class GamaSource {
 
         }
 
+        Helpers.preRender()
+
         GamaSource.GameObjects.forEach((g) => {
             
             g.render()
@@ -168,6 +172,8 @@ class GamaSource {
         })
         
         GamaSource.ctx.restore()
+
+        Helpers.render()
 
         GamaSource.UI.FrameRender()
 
@@ -372,4 +378,5 @@ export {
     FrameButton,
     VideoPlayer,
     Camera,
+    Helpers
 };

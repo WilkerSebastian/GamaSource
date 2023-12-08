@@ -1,4 +1,4 @@
-import GamaSource, { AnimationController, RigidBody2D, Sprite, SpriteSheet, StaticSprite } from "../GamaSource"
+import GamaSource, { AnimationController, Helpers, RigidBody2D, Sprite, SpriteSheet, StaticSprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Vector2 from "../math/vector/Vector2"
 
@@ -8,9 +8,12 @@ export default class GameObject {
     public sprite: Sprite | AnimationController | null = null
     public collider: BoxCollider2D | null = null
     public physics: RigidBody2D | null = null
-    protected visible:boolean = true
     public layer:number = 1
     public tag:string = "not defined"
+
+    protected visible:boolean = true
+
+    private collidingObjects = new Array<GameObject>()
 
     public static create(obj: typeof GameObject) {
 
@@ -69,7 +72,15 @@ export default class GameObject {
 
                 }
 
+                if (!this.collidingObjects.includes(obj))
+                    this.collidingObjects.push(obj)
+
                 this.onCollisionBetween(obj);
+
+            } else if(this.collidingObjects.includes(obj)) {
+
+                this.collidingObjects = this.collidingObjects.filter(o => o != obj)
+                this.onCollisionExit(obj)
 
             }
 
@@ -78,6 +89,12 @@ export default class GameObject {
     }
 
     protected onCollisionBetween(gameObject:GameObject) {
+
+
+    }
+
+    protected onCollisionExit(gameObject:GameObject) {
+
 
 
     }
@@ -117,8 +134,20 @@ export default class GameObject {
     public render() {
 
         if (this.sprite && this.visible) {
-            
+ 
+            if (this.collider && Helpers.config.collision) {
+                
+                Helpers.collsion(this.collider, this.collidingObjects.length > 0)
+
+            }
+
             this.sprite.render()
+
+            if (Helpers.config.position) {
+                
+                Helpers.position(this.transform)
+
+            }
 
         }
 

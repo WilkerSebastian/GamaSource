@@ -33,9 +33,9 @@ export class GameObject {
     sprite: Sprite | AnimationController | null;
     collider: BoxCollider2D | null;
     physics: RigidBody2D | null;
-    protected visible: boolean;
     layer: number;
     tag: string;
+    protected visible: boolean;
     static create(obj: typeof GameObject): void;
     destroy(): void;
     static getElementByTag<T>(tag: string): T;
@@ -43,6 +43,7 @@ export class GameObject {
     start(): void;
     update(): void;
     protected onCollisionBetween(gameObject: GameObject): void;
+    protected onCollisionExit(gameObject: GameObject): void;
     gameUpdate(): void;
     render(): void;
 }
@@ -335,6 +336,21 @@ export class VideoPlayer extends FrameComponent {
     getVolume(): number;
     getDuration(): number;
     render(): void;
+}
+declare class HelperConfig {
+    collision?: boolean;
+    position?: boolean;
+    FPS?: boolean;
+    grid?: number;
+}
+export class Helpers {
+    static config: HelperConfig;
+    static show(helperConfig: HelperConfig): void;
+    static preRender(): void;
+    static render(): void;
+    static collsion(box: BoxCollider2D, collied?: boolean): void;
+    static position(pos: Vector2): void;
+    static grid(): void;
 }
 export class GamaSource {
     static LOAD: number;

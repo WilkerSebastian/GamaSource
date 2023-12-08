@@ -83,11 +83,16 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
                     this.physics.velocity.y = 0;
                     this.physics.position = over;
                 }
+                if (!this.collidingObjects.includes(obj)) this.collidingObjects.push(obj);
                 this.onCollisionBetween(obj);
+            } else if (this.collidingObjects.includes(obj)) {
+                this.collidingObjects = this.collidingObjects.filter((o)=>o != obj);
+                this.onCollisionExit(obj);
             }
         });
     }
     onCollisionBetween(gameObject) {}
+    onCollisionExit(gameObject) {}
     gameUpdate() {
         if (this.visible) {
             if (this.collider) {
@@ -100,16 +105,21 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
         }
     }
     render() {
-        if (this.sprite && this.visible) this.sprite.render();
+        if (this.sprite && this.visible) {
+            if (this.collider && (0, $88f08228c341c278$export$2e2bcd8739ae039).config.collision) (0, $88f08228c341c278$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
+            this.sprite.render();
+            if ((0, $88f08228c341c278$export$2e2bcd8739ae039).config.position) (0, $88f08228c341c278$export$2e2bcd8739ae039).position(this.transform);
+        }
     }
     constructor(){
         this.transform = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         this.sprite = null;
         this.collider = null;
         this.physics = null;
-        this.visible = true;
         this.layer = 1;
         this.tag = "not defined";
+        this.visible = true;
+        this.collidingObjects = new Array();
     }
 }
 
@@ -314,7 +324,6 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
             this.height = pixelRatio.height;
         }
         if (!image) {
-            console.log((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS);
             console.error("Error on instace of StaticSprite " + source);
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
             this.image = new (0, $f5702f0cdcfb7649$export$2e2bcd8739ae039)("failed");
@@ -1150,6 +1159,62 @@ class $ee458e2b852a09a8$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$exp
 }
 
 
+
+class $88f08228c341c278$export$2e2bcd8739ae039 {
+    static show(helperConfig) {
+        $88f08228c341c278$export$2e2bcd8739ae039.config = helperConfig;
+    }
+    static preRender() {
+        if (this.config.grid) {
+            if (this.config.grid > 0) this.grid();
+        }
+    }
+    static render() {
+        if (this.config.FPS) this.FPS();
+    }
+    static collsion(box, collied) {
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillRect(box.position.x, box.position.y, box.width, box.height);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static FPS() {
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillRect((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH - 250, 0, 250, 75);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = "#fff";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.font = "25px ARIAL";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillText(`FPS: ${(0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).globalEnv.get("FPS")}`, (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH - 180, 35);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static position(pos) {
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = "#000";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.font = "18px ARIAL";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillText(`x: ${pos.x}`, pos.x + 18, pos.y - 36);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillText(`y: ${pos.y}`, pos.x + 18, pos.y - 18);
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
+    }
+    static grid() {
+        const gridSize = this.config.grid;
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.strokeStyle = "rgba(0,0,0, 0.1)";
+        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.lineWidth = 1;
+        for(let x = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * -10; x <= (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * 10; x += gridSize){
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.beginPath();
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.moveTo(x, (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * -10);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.lineTo(x, (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.HEIGHT * 10);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.stroke();
+        }
+        for(let y = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.HEIGHT * -10; y <= (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.HEIGHT * 10; y += gridSize){
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.beginPath();
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.moveTo((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * -10, y);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.lineTo((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * 10, y);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.stroke();
+        }
+    }
+}
+
+
 class $f8bbed27444dc2b3$export$d36076abcf594543 {
     static #_ = (()=>{
         this.LOAD = 0;
@@ -1215,6 +1280,7 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameStart();
     }
     update() {
+        $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("FPS", this.time.FPS);
         $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("deltaTime", this.time.getDeltaTime());
         $f8bbed27444dc2b3$export$d36076abcf594543.globalEnv.set("latency", this.time.getFrameInterval());
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameUpdate());
@@ -1225,10 +1291,12 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         this.background.render();
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.save();
         if ($f8bbed27444dc2b3$export$d36076abcf594543.Camera) $f8bbed27444dc2b3$export$d36076abcf594543.Camera.followObject();
+        (0, $88f08228c341c278$export$2e2bcd8739ae039).preRender();
         $f8bbed27444dc2b3$export$d36076abcf594543.GameObjects.forEach((g)=>{
             g.render();
         });
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.restore();
+        (0, $88f08228c341c278$export$2e2bcd8739ae039).render();
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameRender();
     }
     loop(currentTime) {
@@ -1314,5 +1382,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
 //# sourceMappingURL=GamaSource.js.map
