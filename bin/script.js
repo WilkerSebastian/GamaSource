@@ -15,14 +15,14 @@ function main() {
         if (args[2] == "--help" || args[2] == "-h") {
 
             console.log(`
-                GamaSource v${gama.version}
+    GamaSource v${gama.version}
 
-                gamma create <path> // create a template project, default use npm
-                gamma create <path> -<package> // create a template project, use package(-npm, -yarn, -pnpm, -bun)
-                gamma build // compile a gamma source project to executable binary, according to the specifications of a game.config.json or default config
-                gamma build -<package> // gamma build and use package(-npm, -yarn, -pnpm, -bun)
-                gamma --version || -v // view the version of GamaSource
-                gamma --help || -h // view the commands
+    create <path> // create a template project, default use npm
+    create <path> -<package> // create a template project, use package(-npm, -yarn, -pnpm, -bun)
+    build // compile a gamma source project to executable binary, according to the specifications of a game.config.json or default config
+    build -<package> // gamma build and use package(-npm, -yarn, -pnpm, -bun)
+    --version || -v // view the version of GamaSource
+    --help || -h // view the commands
             `);
             return
             
@@ -62,12 +62,13 @@ function main() {
 
             } catch(e) {
                 
+                console.log(path.resolve("./game.config.json"));
                 console.log("WARNING: configuration file not found, continuing to use compilation default values");
 
             }
 
             
-            pack_electron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=bin --overwrite`
+            pack_electron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=${config.out} --overwrite`
 
             fs.writeFileSync(path.join(path.dirname(__filename), "/electron/package.json"), JSON.stringify(pack_electron))
 
@@ -163,17 +164,18 @@ function main() {
             shell.cp('-r', `${template}/*`, args[3])
 
             fs.writeFileSync(path.resolve(args[3]) + "/package.json", `
-                {
-                    "name": "${name}",
-                    "private": true,
-                    "version": "0.0.0",
-                    "type": "module",
-                    "scripts": {
-                        "dev": "vite",
-                        "build": "tsc && vite build",
-                        "preview": "vite preview"
-                    }
-                }            
+{
+    "name": "${name}",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "make": "npm run build && gamasource build"
+    }
+}            
             `,)
 
             shell.exec(`cd ${args[3]} && ${module}`)
