@@ -50,15 +50,11 @@ function main() {
                 out: "bin"
             }
 
+            let config_extern
+
             try {
 
-                let config_extern = JSON.parse(fs.readFileSync(path.resolve("./game.config.json")).toString("utf-8"))
-
-                config.name = config_extern.name ?? "app"
-                config.arch = config_extern.arch ? config_extern.arch.join(',') : "x64"
-                config.icon = config_extern.icon ?? path.resolve("./dist/favicon.ico")
-                config.platform = config_extern.platform ? config_extern.platform.join(',') : "darwin,linux,win32"
-                config.out = config_extern.out ?? "bin"
+                config_extern = JSON.parse(fs.readFileSync(path.resolve("./game.config.json")).toString("utf-8"))
 
             } catch(e) {
                 
@@ -67,6 +63,11 @@ function main() {
 
             }
 
+            config.name = config_extern.name ?? "app"
+            config.arch = config_extern.arch ? config_extern.arch.join(',') : "x64"
+            config.icon = config_extern.icon ?? path.resolve("./dist/favicon.ico")
+            config.platform = config_extern.platform ? config_extern.platform.join(',') : "darwin,linux,win32"
+            config.out = config_extern.out ?? "bin"
             
             pack_electron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=${config.out} --overwrite`
 
