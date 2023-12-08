@@ -314,6 +314,7 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
             this.height = pixelRatio.height;
         }
         if (!image) {
+            console.log((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS);
             console.error("Error on instace of StaticSprite " + source);
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
             this.image = new (0, $f5702f0cdcfb7649$export$2e2bcd8739ae039)("failed");

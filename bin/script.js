@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const shell = require ("shelljs")
+const os = require("os")
 const path = require ('path')
 const gama = require ("../package.json")
 
@@ -14,21 +15,102 @@ function main() {
         if (args[2] == "--help" || args[2] == "-h") {
 
             console.log(`
-GamaSource v${gama.version}
+                GamaSource v${gama.version}
 
-gamma create <path> // create a template project, default use npm
-gamma create <path> -<package> // create a template project, use package(-npm, -yarn, -pnpm, -bun)
-gamma --version || -v // view the version of GamaSource
-gamma --help || -h // view the commands
+                gamma create <path> // create a template project, default use npm
+                gamma create <path> -<package> // create a template project, use package(-npm, -yarn, -pnpm, -bun)
+                gamma build // compile a gamma source project to executable binary, according to the specifications of a game.config.json or default config
+                gamma build -<package> // gamma build and use package(-npm, -yarn, -pnpm, -bun)
+                gamma --version || -v // view the version of GamaSource
+                gamma --help || -h // view the commands
             `);
             return
             
         }
-        if (args[2] == "--version" || args[2] == "-v") {
+        else if (args[2] == "--version" || args[2] == "-v") {
 
             console.log(`v${gama.version}`);
             return
             
+        }
+        else if (args[2] == "build") {
+
+            console.log("starting project compilation");
+            console.time("complete in")
+
+            const tmp = os.tmpdir()
+
+            const pack_electron = JSON.parse(fs.readFileSync(path.join(path.dirname(__filename), "/electron/package.json")).toString("utf-8"))
+        
+            let config = {
+                name: "app",
+                arch: "x64",
+                icon: path.resolve("./dist/favicon.ico"),
+                platform: "darwin,linux,win32",
+                out: "bin"
+            }
+
+            try {
+
+                let config_extern = JSON.parse(fs.readFileSync(path.resolve("./game.config.json")).toString("utf-8"))
+
+                config.name = config_extern.name ?? "app"
+                config.arch = config_extern.arch ? config_extern.arch.join(',') : "x64"
+                config.icon = config_extern.icon ?? path.resolve("./dist/favicon.ico")
+                config.platform = config_extern.platform ? config_extern.platform.join(',') : "darwin,linux,win32"
+                config.out = config_extern.out ?? "bin"
+
+            } catch(e) {
+                
+                console.log("WARNING: configuration file not found, continuing to use compilation default values");
+
+            }
+
+            
+            pack_electron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=bin --overwrite`
+
+            fs.writeFileSync(path.join(path.dirname(__filename), "/electron/package.json"), JSON.stringify(pack_electron))
+
+            shell.cp("-r", path.join(path.dirname(__filename), "/electron"), tmp)
+
+            const tmp_electron = path.join(tmp, "/electron")
+
+            const module = "npm install"
+
+            if (args[4] == "-yarn")
+                module = "yarn"
+
+            else if (args[4] == "-pnpm")
+                module = "pnpm install"
+            
+            else if (args[4] == "-bun")
+                module = "bun install"
+
+            shell.exec(`cd ${tmp_electron} && ${module}`)
+
+            shell.cp("-r", path.resolve("dist"), tmp_electron)
+
+            const exec = "npm run make"
+
+            if (args[4] == "-yarn")
+                exec = "yarn make"
+
+            else if (args[4] == "-pnpm")
+                exec = "pnpm make"
+            
+            else if (args[4] == "-bun")
+                exec = "bun make"
+
+            shell.exec(`cd ${tmp_electron} && ${exec}`)
+
+            shell.cp("-r",path.join(`${tmp_electron}`, config.out), path.resolve("./"))
+
+            shell.rm("-rf", tmp_electron)
+
+            console.log("compilation finished output in folder" + config.out);
+            console.timeEnd("complete in")
+            return
+
         }
     
     } else if(args.length == 4 || args.length == 5) {
@@ -56,27 +138,22 @@ gamma --help || -h // view the commands
 
             if(args.length == 5) {
 
-                if (args[4] == "yarn") {
+                if (args[4] == "-yarn") {
 
                     module = "yarn add -D typescript vite && yarn add gamasource"
                     exec = "yarn dev"
                     
                 }
-                if (args[4] == "pnpm") {
+                 else if (args[4] == "-pnpm") {
 
                     module = "pnpm add -D typescript vite && pnpm add gamasource"
                     exec = "pnpm run dev"
                     
-                }if (args[4] == "bun") {
+                } else if (args[4] == "-bun") {
 
                     module = "bun add -D typescript vite && bun add gamasource"
                     exec = "bun run dev"
                     
-                } else {
-
-                    console.log(`${module.split(" ")[0]} not found!`);
-                    return
-
                 }
 
             }
@@ -86,17 +163,17 @@ gamma --help || -h // view the commands
             shell.cp('-r', `${template}/*`, args[3])
 
             fs.writeFileSync(path.resolve(args[3]) + "/package.json", `
-{
-    "name": "${name}",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "tsc && vite build",
-        "preview": "vite preview"
-    }
-}            
+                {
+                    "name": "${name}",
+                    "private": true,
+                    "version": "0.0.0",
+                    "type": "module",
+                    "scripts": {
+                        "dev": "vite",
+                        "build": "tsc && vite build",
+                        "preview": "vite preview"
+                    }
+                }            
             `,)
 
             shell.exec(`cd ${args[3]} && ${module}`)
