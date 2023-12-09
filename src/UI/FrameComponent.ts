@@ -135,9 +135,11 @@ export default class FrameComponent {
 
     public add(frame:FrameComponent) {
 
-        if (!this.father) {
+        if (!frame.father) {
          
             frame.setFather(this)
+
+            frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight())
 
         }
 
@@ -338,7 +340,7 @@ export default class FrameComponent {
         this.brightness = brightness
     }
 
-    public getBrightness(brightness:number) {
+    public getBrightness() {
         return this.brightness
     }
 
