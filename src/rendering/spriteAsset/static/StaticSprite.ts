@@ -10,8 +10,8 @@ export default class StaticSprite extends Sprite implements SizeSprite {
     public scale = new Vector2(1,1)
     public rotation = 0
 
-    constructor(source: string, reference:Vector2 | GameObject, pixelRatio: number | {width:number, height:number}) {
-        super(reference, 0,0);
+    constructor(source: string, pixelRatio: number | {width:number, height:number}, reference?:Vector2 | GameObject) {
+        super(0, 0, reference);
 
         const image = GamaSource.ASSETS.get(source) as GameImage | undefined
 
@@ -74,19 +74,23 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
     }
 
-    public render(): void {
+    public render(reference?: GameObject | Vector2): void {
+
+        if (!this.reference && reference)
+            this.reference = reference
+
+        else if(!this.reference)
+            this.reference = new Vector2(0,0)
+
 
         GamaSource.ctx.save()
 
-        if (this.reference instanceof GameObject) {
-
+        if (this.reference instanceof GameObject)
             GamaSource.ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2)
             
-        } else {
-
+        else if(this.reference instanceof Vector2)
             GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
 
-        }
 
         GamaSource.ctx.rotate(GameMath.degressToRadian(this.rotation))
 

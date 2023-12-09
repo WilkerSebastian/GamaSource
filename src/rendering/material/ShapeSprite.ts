@@ -6,9 +6,9 @@ export default abstract class ShapeSprite extends Sprite {
 
     public color:string
 
-    constructor(reference:Vector2 | GameObject, width:number, height:number, color:string) {
+    constructor(width:number, height:number, color:string, reference?:Vector2 | GameObject) {
 
-        super(reference, width, height)
+        super(width, height, reference)
         this.color = color
 
     }

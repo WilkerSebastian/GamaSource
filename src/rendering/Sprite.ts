@@ -4,11 +4,11 @@ import SizeSprite from "./spriteAsset/SizeSprite";
 
 export default abstract class Sprite implements SizeSprite {
 
-    public reference: Vector2 | GameObject = new Vector2(0,0)
+    public reference?: Vector2 | GameObject
     public width = 0;
     public height = 0;
 
-    constructor(reference:Vector2 | GameObject, width:number, height:number) {
+    constructor(width:number, height:number, reference?:Vector2 | GameObject) {
 
         this.reference = reference
         this.width = width
@@ -25,6 +25,6 @@ export default abstract class Sprite implements SizeSprite {
         return { width:this.width, height:this.height}
     }
 
-    public abstract render():void
+    public abstract render(reference?:GameObject | Vector2):void
 
 }

@@ -83,25 +83,25 @@ interface SizeSprite {
     };
 }
 export abstract class Sprite implements SizeSprite {
-    reference: Vector2 | GameObject;
+    reference?: Vector2 | GameObject;
     width: number;
     height: number;
-    constructor(reference: Vector2 | GameObject, width: number, height: number);
+    constructor(width: number, height: number, reference?: Vector2 | GameObject);
     setWidth(width: number): void;
     setHeight(height: number): void;
     getSize(): {
         width: number;
         height: number;
     };
-    abstract render(): void;
+    abstract render(reference?: GameObject | Vector2): void;
 }
 export abstract class ShapeSprite extends Sprite {
     color: string;
-    constructor(reference: Vector2 | GameObject, width: number, height: number, color: string);
+    constructor(width: number, height: number, color: string, reference?: Vector2 | GameObject);
 }
 export class SquareSprite extends ShapeSprite {
-    constructor(reference: Vector2 | GameObject, width: number, height: number, color: string);
-    render(): void;
+    constructor(width: number, height: number, color: string, reference?: Vector2 | GameObject);
+    render(reference?: GameObject | Vector2): void;
 }
 declare class GameImage {
     constructor(path: string);
@@ -110,10 +110,10 @@ declare class GameImage {
 export class StaticSprite extends Sprite implements SizeSprite {
     scale: Vector2;
     rotation: number;
-    constructor(source: string, reference: Vector2 | GameObject, pixelRatio: number | {
+    constructor(source: string, pixelRatio: number | {
         width: number;
         height: number;
-    });
+    }, reference?: Vector2 | GameObject);
     setWidth(width: number): void;
     setHeight(height: number): void;
     getSize(): {
@@ -121,7 +121,7 @@ export class StaticSprite extends Sprite implements SizeSprite {
         height: number;
     };
     getImage(): GameImage;
-    render(): void;
+    render(reference?: GameObject | Vector2): void;
 }
 export abstract class GameMath {
     static standard: Math;
@@ -260,19 +260,19 @@ interface Slice {
     height: number;
 }
 export class SpriteSheet extends StaticSprite {
-    constructor(source: string, reference: Vector2 | GameObject, pixelRatio: number, slices: Slice[], staggerFrames?: number);
-    render(): void;
+    constructor(source: string, pixelRatio: number, slices: Slice[], staggerFrames?: number, reference?: Vector2 | GameObject);
+    render(reference?: Vector2 | GameObject): void;
 }
 export class AnimationController implements SizeSprite {
     scale: Vector2;
     rotation: number;
-    constructor(reference: GameObject | Vector2);
+    constructor(reference?: GameObject | Vector2);
     set(anim: string): void;
     addAnimation(name: string, source: string, animation: {
         pixelRatio: number;
         slices: Slice[];
     }, staggerFrames?: number): void;
-    render(): void;
+    render(reference?: GameObject | Vector2): void;
     static load(json: object, anim: {
         reference: GameObject | Vector2;
         pixelRatio: number;

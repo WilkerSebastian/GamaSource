@@ -10,8 +10,8 @@ export default class SpriteSheet extends StaticSprite{
     private staggerFrames:number
     private slices:Slice[]
 
-    constructor(source: string , reference:Vector2 | GameObject, pixelRatio: number, slices:Slice[], staggerFrames?:number) {
-        super(source, reference, pixelRatio)
+    constructor(source: string, pixelRatio: number, slices:Slice[], staggerFrames?:number, reference?:Vector2 | GameObject) {
+        super(source, pixelRatio, reference)
         this.slices = slices
 
         const slice = slices[0]
@@ -24,7 +24,13 @@ export default class SpriteSheet extends StaticSprite{
 
     }
 
-    public render(): void {
+    public render(reference?:Vector2 | GameObject): void {
+
+        if (!this.reference && reference)
+            this.reference = reference
+
+        else if(!this.reference)
+            this.reference = new Vector2(0,0)
 
         const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 
 
@@ -35,15 +41,11 @@ export default class SpriteSheet extends StaticSprite{
 
         GamaSource.ctx.save()
 
-        if (this.reference instanceof GameObject) {
-
+        if (this.reference instanceof GameObject)
             GamaSource.ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2)
             
-        } else {
-
+        else if (this.reference instanceof Vector2)
             GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
-
-        }
 
         GamaSource.ctx.rotate(GameMath.degressToRadian(this.rotation))
 

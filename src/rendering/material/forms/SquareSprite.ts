@@ -5,24 +5,31 @@ import ShapeSprite from "../ShapeSprite";
 
 export default class SquareSprite extends ShapeSprite {
 
-    constructor(reference:Vector2 | GameObject, width:number, height:number, color:string) {
+    constructor(width:number, height:number, color:string, reference?:Vector2 | GameObject) {
 
-        super(reference, width, height, color)
+        super(width, height, color, reference)
 
     }
 
-    public render() {
+    public render(reference?: GameObject | Vector2) {
+
+        if (!this.reference && reference)
+            this.reference = reference
+
+        else if(!this.reference)
+            this.reference = new Vector2(0,0)
 
         if (this.reference instanceof GameObject) {
         
             GamaSource.ctx.fillStyle = this.color
             GamaSource.ctx.fillRect(this.reference.transform.x, this.reference.transform.y, this.width, this.height)
 
-            return 
-        }
+        } else if (this.reference instanceof Vector2) {
 
-        GamaSource.ctx.fillStyle = this.color
-        GamaSource.ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height)
+            GamaSource.ctx.fillStyle = this.color
+            GamaSource.ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height)
+
+        }
 
     }
 

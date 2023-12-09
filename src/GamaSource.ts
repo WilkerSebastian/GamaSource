@@ -57,13 +57,13 @@ class GamaSource {
 
         if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) {
 
-            this.background = new SquareSprite(new Vector2(0,0), GamaSource.window.WIDTH, GamaSource.window.HEIGHT, source)
+            this.background = new SquareSprite(GamaSource.window.WIDTH, GamaSource.window.HEIGHT, source)
             
         } else {
 
             const name = GamaSource.loader(source)[0]
 
-            this.background = new StaticSprite(name, new Vector2(0,0), {width:GamaSource.window.WIDTH, height:GamaSource.window.HEIGHT})
+            this.background = new StaticSprite(name, {width:GamaSource.window.WIDTH, height:GamaSource.window.HEIGHT})
     
         }
 

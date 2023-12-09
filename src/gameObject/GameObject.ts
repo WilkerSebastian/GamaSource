@@ -141,7 +141,7 @@ export default class GameObject {
 
             }
 
-            this.sprite.render()
+            this.sprite.render(this)
 
             if (Helpers.config.position) {
                 

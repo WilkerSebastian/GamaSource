@@ -145,7 +145,7 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     render() {
         if (this.sprite && this.visible) {
             if (this.collider && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
-            this.sprite.render();
+            this.sprite.render(this);
             if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.position) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).position(this.transform);
         }
     }
@@ -277,10 +277,8 @@ class $d56f756e1dc733a9$export$2e2bcd8739ae039 {
 
 
 
-
 class $966979a7503d5337$export$2e2bcd8739ae039 {
-    constructor(reference, width, height){
-        this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+    constructor(width, height, reference){
         this.width = 0;
         this.height = 0;
         this.reference = reference;
@@ -304,8 +302,8 @@ class $966979a7503d5337$export$2e2bcd8739ae039 {
 
 
 class $b3c2a48e0c9708a8$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
-    constructor(reference, width, height, color){
-        super(reference, width, height);
+    constructor(width, height, color, reference){
+        super(width, height, reference);
         this.color = color;
     }
 }
@@ -314,18 +312,21 @@ class $b3c2a48e0c9708a8$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
 
 
 
+
 class $16a63ba451fb476c$export$2e2bcd8739ae039 extends (0, $b3c2a48e0c9708a8$export$2e2bcd8739ae039) {
-    constructor(reference, width, height, color){
-        super(reference, width, height, color);
+    constructor(width, height, color, reference){
+        super(width, height, color, reference);
     }
-    render() {
+    render(reference) {
+        if (!this.reference && reference) this.reference = reference;
+        else if (!this.reference) this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillRect(this.reference.transform.x, this.reference.transform.y, this.width, this.height);
-            return;
+        } else if (this.reference instanceof (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)) {
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height);
         }
-        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
-        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height);
     }
 }
 
@@ -350,8 +351,8 @@ class $157157e820ac0459$export$2e2bcd8739ae039 {
 
 
 class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
-    constructor(source, reference, pixelRatio){
-        super(reference, 0, 0);
+    constructor(source, pixelRatio, reference){
+        super(0, 0, reference);
         this.scale = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1);
         this.rotation = 0;
         const image = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(source);
@@ -388,10 +389,12 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
     getImage() {
         return this.image;
     }
-    render() {
+    render(reference) {
+        if (!this.reference && reference) this.reference = reference;
+        else if (!this.reference) this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
-        else (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
+        else if (this.reference instanceof (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.rotate((0, $5a334b166dfa1be5$export$2e2bcd8739ae039).degressToRadian(this.rotation));
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.image.getSource(), -this.width / 2, -this.height / 2, this.width, this.height);
@@ -879,9 +882,10 @@ class $fc3d5595fa537972$export$2e2bcd8739ae039 {
 
 
 
+
 class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039) {
-    constructor(source, reference, pixelRatio, slices, staggerFrames){
-        super(source, reference, pixelRatio);
+    constructor(source, pixelRatio, slices, staggerFrames, reference){
+        super(source, pixelRatio, reference);
         this.slices = slices;
         const slice = slices[0];
         this.setWidth(slice.width);
@@ -889,14 +893,16 @@ class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$exp
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
-    render() {
+    render(reference) {
+        if (!this.reference && reference) this.reference = reference;
+        else if (!this.reference) this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         const index = (0, $5a334b166dfa1be5$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
         this.setWidth(slice.width);
         this.setHeight(slice.height);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
-        else (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
+        else if (this.reference instanceof (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.rotate((0, $5a334b166dfa1be5$export$2e2bcd8739ae039).degressToRadian(this.rotation));
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, -this.width / 2, -this.height / 2, this.width, this.height);
@@ -920,7 +926,7 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
     addAnimation(name, source, animation, staggerFrames) {
         const controller = this.mapper.get(name);
         if (!controller) {
-            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, this.reference, animation.pixelRatio, animation.slices, staggerFrames));
+            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, animation.pixelRatio, animation.slices, staggerFrames, this.reference));
             return;
         }
         console.warn("Animation overwriting is not allowed!");
@@ -933,11 +939,13 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
         console.error("Failed to render animation: " + this.currentAnimation);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
     }
-    render() {
+    render(reference) {
+        if (!this.reference && reference) this.reference = reference;
+        else if (!this.reference) this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         const animation = this.getCurrentAnimation();
         animation.scale = this.scale;
         animation.rotation = this.rotation;
-        animation.render();
+        animation.render(this.reference);
     }
     static load(json, anim, staggerFrames) {
         const j = new (0, $fc3d5595fa537972$export$2e2bcd8739ae039)(json);
@@ -1272,10 +1280,10 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     constructor(config){
         $be9b019dcf88b1d2$export$d36076abcf594543.window = new (0, $d56f756e1dc733a9$export$2e2bcd8739ae039)();
         const source = config?.background ?? "#F2F2F2";
-        if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $16a63ba451fb476c$export$2e2bcd8739ae039)(new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT, source);
+        if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) this.background = new (0, $16a63ba451fb476c$export$2e2bcd8739ae039)($be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH, $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT, source);
         else {
             const name = $be9b019dcf88b1d2$export$d36076abcf594543.loader(source)[0];
-            this.background = new (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039)(name, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0), {
+            this.background = new (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039)(name, {
                 width: $be9b019dcf88b1d2$export$d36076abcf594543.window.WIDTH,
                 height: $be9b019dcf88b1d2$export$d36076abcf594543.window.HEIGHT
             });

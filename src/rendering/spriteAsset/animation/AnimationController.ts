@@ -8,11 +8,11 @@ export default class AnimationController implements SizeSprite {
 
     private mapper = new Map<string, SpriteSheet>()
     private currentAnimation:string | null = null
-    private reference:GameObject | Vector2
+    private reference?:GameObject | Vector2
     public scale = new Vector2(1,1)
     public rotation = 0
 
-    constructor(reference:GameObject | Vector2) {
+    constructor(reference?:GameObject | Vector2) {
 
         this.reference = reference
 
@@ -33,10 +33,10 @@ export default class AnimationController implements SizeSprite {
              
             this.mapper.set(name, new SpriteSheet(
                 source,
-                this.reference,
                 animation.pixelRatio,
                 animation.slices,
-                staggerFrames
+                staggerFrames,
+                this.reference
             ))
     
             return
@@ -66,14 +66,20 @@ export default class AnimationController implements SizeSprite {
 
     }
 
-    public render() {
+    public render(reference?: GameObject | Vector2) {
+
+        if (!this.reference && reference)
+            this.reference = reference
+
+        else if(!this.reference)
+            this.reference = new Vector2(0,0)
 
         const animation =  this.getCurrentAnimation() as SpriteSheet
 
         animation.scale = this.scale
         animation.rotation = this.rotation
 
-        animation.render()
+        animation.render(this.reference)
 
     }
 
