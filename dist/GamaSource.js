@@ -99,15 +99,52 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj != this);
     }
     static getElementByTag(tag) {
-        return (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag)[0];
+        const obj = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag)[0];
+        return obj ? obj : null;
     }
     static getAllElementsByTag(tag) {
         return (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag);
     }
+    addNode(obj, ...args) {
+        const node = new obj();
+        node.arguments = args;
+        node.setRoot(this);
+        node.transform = this.transform;
+        this.nodes.push(node);
+    }
+    getNode(index) {
+        return this.nodes[index] ? this.nodes[index] : null;
+    }
+    getNodeByTag(tag) {
+        const node = this.nodes.filter((node)=>node.tag == tag)[0];
+        return node ? node : null;
+    }
+    getNodesByTag(tag) {
+        return this.nodes.filter((node)=>node.tag == tag);
+    }
+    getNodes() {
+        return this.nodes;
+    }
+    setRoot(obj) {
+        this.root = obj;
+    }
+    getRoot() {
+        return this.root ?? this;
+    }
+    getArgument(index) {
+        return this.arguments[index];
+    }
+    getArguments() {
+        return this.arguments;
+    }
+    gameStart() {
+        this.start();
+        for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameStart();
+    }
     start() {}
     update() {}
     onCollision() {
-        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider && obj != this);
+        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider && obj != this && obj != this.root);
         objs.forEach((obj)=>{
             if (this.collider?.isCollided(obj.collider)) {
                 if (this.physics && obj.collider) {
@@ -131,6 +168,7 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     }
     onCollisionBetween(gameObject) {}
     onCollisionExit(gameObject) {}
+    fixedUpdate() {}
     gameUpdate() {
         if (this.visible) {
             if (this.collider) {
@@ -139,13 +177,18 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
                 this.onCollision();
             }
             this.update();
-            if (this.physics) this.physics.update(this);
+            if (this.physics) {
+                this.physics.update(this);
+                this.fixedUpdate();
+            }
+            for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
         }
     }
     render() {
         if (this.sprite && this.visible) {
             if (this.collider && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
             this.sprite.render(this);
+            for(let i = 0; i < this.nodes.length; i++)this.nodes[i].render();
             if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.position) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).position(this.transform);
         }
     }
@@ -157,6 +200,9 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         this.layer = 1;
         this.tag = "not defined";
         this.visible = true;
+        this.arguments = new Array();
+        this.root = null;
+        this.nodes = new Array();
         this.collidingObjects = new Array();
     }
 }
@@ -643,7 +689,10 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
         this.setSize(width, height);
     }
     add(frame) {
-        if (!this.father) frame.setFather(this);
+        if (!frame.father) {
+            frame.setFather(this);
+            frame.setBounds(frame.getX(), frame.getY(), frame.getWidth(), frame.getHeight());
+        }
         this.childrens.push(frame);
     }
     setFather(frame) {
@@ -727,7 +776,7 @@ class $7a794ae910495cf5$export$2e2bcd8739ae039 {
     setBrightness(brightness) {
         this.brightness = brightness;
     }
-    getBrightness(brightness) {
+    getBrightness() {
         return this.brightness;
     }
     setScale(scale) {
@@ -1330,7 +1379,7 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
             return;
         }
         (0, $6a34e6f6a90b2c9f$export$2e2bcd8739ae039)();
-        $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>g.start());
+        $be9b019dcf88b1d2$export$d36076abcf594543.GameObjects.forEach((g)=>g.gameStart());
         $be9b019dcf88b1d2$export$d36076abcf594543.UI.FrameStart();
     }
     update() {

@@ -13,6 +13,9 @@ export default class GameObject {
 
     protected visible:boolean = true
 
+    private arguments = new Array<any>()
+    private root:GameObject | null = null
+    private nodes = new Array<GameObject>()
     private collidingObjects = new Array<GameObject>()
 
     public static create(obj: typeof GameObject) {
@@ -31,13 +34,86 @@ export default class GameObject {
 
     public static getElementByTag<T>(tag:string) {
 
-        return GamaSource.GameObjects.filter(obj => obj.tag == tag)[0] as T
+        const obj =  GamaSource.GameObjects.filter(obj => obj.tag == tag)[0]
+
+        return obj ? obj as T : null
 
     }
 
     public static getAllElementsByTag<T>(tag:string) {
 
-        return GamaSource.GameObjects.filter(obj => obj.tag == tag) as T
+        return GamaSource.GameObjects.filter(obj => obj.tag == tag) as T[]
+
+    }
+
+    protected addNode(obj: typeof GameObject, ...args:any[]) {
+
+        const node = new obj()
+
+        node.arguments = args
+        node.setRoot(this)
+        node.transform = this.transform
+
+        this.nodes.push(node)
+
+    }
+
+    public getNode<T>(index:number) {
+
+        return this.nodes[index] ? this.nodes[index] as T : null
+
+    }
+
+    public getNodeByTag<T>(tag:string) {
+
+        const node = this.nodes.filter(node => node.tag == tag)[0] 
+
+        return node ? node as T : null 
+
+    }
+
+    public getNodesByTag<T>(tag:string) {
+
+        return this.nodes.filter(node => node.tag == tag) as T[]
+
+    }
+
+    public getNodes() {
+
+        return this.nodes
+
+    }
+
+    protected setRoot(obj:GameObject) {
+
+        this.root = obj
+
+    }
+
+    protected getRoot() {
+
+        return this.root ?? this
+
+    }
+
+    protected getArgument(index:number) {
+
+        return this.arguments[index]
+
+    }
+
+    protected getArguments() {
+
+        return this.arguments
+
+    }
+
+    public gameStart() {
+
+        this.start()
+
+        for (let i = 0; i < this.nodes.length; i++)
+            this.nodes[i].gameStart()
 
     }
 
@@ -47,7 +123,7 @@ export default class GameObject {
 
     private onCollision() {
 
-        const objs = GamaSource.GameObjects.filter(obj => obj.collider && obj != this)
+        const objs = GamaSource.GameObjects.filter(obj => obj.collider && obj != this && obj != this.root)
 
         objs.forEach(obj => {
 
@@ -99,6 +175,11 @@ export default class GameObject {
 
     }
 
+    protected fixedUpdate() {
+
+
+    }
+
     public gameUpdate() {
 
         if (this.visible) {
@@ -122,10 +203,14 @@ export default class GameObject {
             this.update()
 
             if (this.physics) {
-                
+    
                 this.physics.update(this)
+                this.fixedUpdate()
 
             }
+
+            for (let i = 0; i < this.nodes.length; i++)
+                this.nodes[i].gameUpdate()
 
         }
 
@@ -135,19 +220,16 @@ export default class GameObject {
 
         if (this.sprite && this.visible) {
  
-            if (this.collider && Helpers.config.collision) {
-                
+            if (this.collider && Helpers.config.collision) 
                 Helpers.collsion(this.collider, this.collidingObjects.length > 0)
-
-            }
 
             this.sprite.render(this)
 
-            if (Helpers.config.position) {
-                
-                Helpers.position(this.transform)
+            for (let i = 0; i < this.nodes.length; i++)
+                this.nodes[i].render()
 
-            }
+            if (Helpers.config.position)
+                Helpers.position(this.transform)
 
         }
 

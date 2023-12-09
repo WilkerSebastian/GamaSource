@@ -131,7 +131,7 @@ class GamaSource {
 
         Loader()
 
-        GamaSource.GameObjects.forEach((g) => g.start())
+        GamaSource.GameObjects.forEach((g) => g.gameStart())
 
         GamaSource.UI.FrameStart()
 

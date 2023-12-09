@@ -38,12 +38,23 @@ export class GameObject {
     protected visible: boolean;
     static create(obj: typeof GameObject): void;
     destroy(): void;
-    static getElementByTag<T>(tag: string): T;
-    static getAllElementsByTag<T>(tag: string): T;
+    static getElementByTag<T>(tag: string): T | null;
+    static getAllElementsByTag<T>(tag: string): T[];
+    protected addNode(obj: typeof GameObject, ...args: any[]): void;
+    getNode<T>(index: number): T | null;
+    getNodeByTag<T>(tag: string): T | null;
+    getNodesByTag<T>(tag: string): T[];
+    getNodes(): GameObject[];
+    protected setRoot(obj: GameObject): void;
+    protected getRoot(): GameObject;
+    protected getArgument(index: number): any;
+    protected getArguments(): any[];
+    gameStart(): void;
     start(): void;
     update(): void;
     protected onCollisionBetween(gameObject: GameObject): void;
     protected onCollisionExit(gameObject: GameObject): void;
+    protected fixedUpdate(): void;
     gameUpdate(): void;
     render(): void;
 }
@@ -196,7 +207,7 @@ export class FrameComponent {
     protected start(): void;
     protected render(): void;
     setBrightness(brightness: number): void;
-    getBrightness(brightness: number): number;
+    getBrightness(): number;
     setScale(scale: Vector2): void;
     setScaleX(x: number): void;
     setScaleY(y: number): void;
