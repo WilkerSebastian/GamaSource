@@ -3,7 +3,14 @@ import HelperConfig from "../define/HelperConfig";
 
 export default class Helpers {
 
-    public static config:HelperConfig
+    public static config:HelperConfig = {
+
+        collision:false,
+        FPS:false,
+        grid: undefined,
+        position: false
+
+    }
 
     public static show(helperConfig:HelperConfig) {
 

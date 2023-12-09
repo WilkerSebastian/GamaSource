@@ -1207,6 +1207,14 @@ class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
 
 
 class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
+    static #_ = (()=>{
+        this.config = {
+            collision: false,
+            FPS: false,
+            grid: undefined,
+            position: false
+        };
+    })();
     static show(helperConfig) {
         $a8dfe81a40550e4a$export$2e2bcd8739ae039.config = helperConfig;
     }
