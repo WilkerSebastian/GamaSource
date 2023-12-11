@@ -336,7 +336,9 @@ declare class GameVideo {
     getSource(): HTMLVideoElement;
 }
 declare class VideoPlayerConfig extends FrameConfig {
-    path: string;
+    source: string;
+    volume?: number;
+    autoPlay?: boolean;
 }
 export class VideoPlayer extends FrameComponent {
     source: GameVideo;
@@ -365,6 +367,17 @@ export class Helpers {
     static collsion(box: BoxCollider2D, collied?: boolean): void;
     static position(pos: Vector2): void;
     static grid(): void;
+}
+export class AudioPlayer {
+    constructor(source: string, volume?: number, autoPlay?: boolean);
+    setEventEnd(event: () => void): void;
+    playTo(start: number, end?: number): Promise<void>;
+    play(): Promise<void>;
+    setAutoPlay(auto: boolean): void;
+    pause(): void;
+    setVolume(volume: number): void;
+    getVolume(): number;
+    getDuration(): number;
 }
 export class GamaSource {
     static LOAD: number;

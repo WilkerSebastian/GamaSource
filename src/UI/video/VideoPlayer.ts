@@ -8,7 +8,21 @@ export default class VideoPlayer extends FrameComponent {
 
     constructor(frame:VideoPlayerConfig) {
         super(frame)
-        this.source = GamaSource.ASSETS.get(frame.path) as GameVideo
+
+        const video = GamaSource.ASSETS.get(frame.source) as GameVideo | undefined
+
+        if (video) {
+            
+            this.source = video
+            this.setAutoPlay(frame.autoPlay ?? false)
+            this.setVolume(frame.volume ?? 50)
+            return
+
+        }
+
+        this.source = new GameVideo("not found")
+        console.error(`The video ${frame.source} was not found`);
+
     }
 
     public setEventEnd(event:() => void) {
@@ -30,7 +44,7 @@ export default class VideoPlayer extends FrameComponent {
     }
 
     public setAutoPlay(auto:boolean) {
-        this.setAutoPlay(auto)
+        this.source.setAutoPlay(auto)
     }
 
     public pause() {

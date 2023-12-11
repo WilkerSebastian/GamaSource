@@ -1193,10 +1193,19 @@ class $8ef0dd47308bf20d$export$2e2bcd8739ae039 {
 
 
 
+
 class $ee458e2b852a09a8$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$export$2e2bcd8739ae039) {
     constructor(frame){
         super(frame);
-        this.source = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(frame.path);
+        const video = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(frame.source);
+        if (video) {
+            this.source = video;
+            this.setAutoPlay(frame.autoPlay ?? false);
+            this.setVolume(frame.volume ?? 50);
+            return;
+        }
+        this.source = new (0, $8ef0dd47308bf20d$export$2e2bcd8739ae039)("not found");
+        console.error(`The video ${frame.source} was not found`);
     }
     setEventEnd(event) {
         this.source.getSource().addEventListener("ended", ()=>event());
@@ -1210,7 +1219,7 @@ class $ee458e2b852a09a8$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$exp
         await this.source.play();
     }
     setAutoPlay(auto) {
-        this.setAutoPlay(auto);
+        this.source.setAutoPlay(auto);
     }
     pause() {
         this.source.pause();
@@ -1290,6 +1299,47 @@ class $88f08228c341c278$export$2e2bcd8739ae039 {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.lineTo((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.stroke();
         }
+    }
+}
+
+
+
+
+class $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 {
+    constructor(source, volume, autoPlay){
+        const audio = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(source);
+        if (audio) {
+            this.source = audio;
+            this.setVolume(volume ?? 50);
+            this.setAutoPlay(autoPlay ?? false);
+            return;
+        }
+        this.source = new (0, $13749c1ad70c82ef$export$2e2bcd8739ae039)("not found");
+        console.error(`The video ${source} was not found`);
+    }
+    setEventEnd(event) {
+        this.source.getSource().addEventListener("ended", ()=>event());
+    }
+    async playTo(start, end) {
+        await this.source.playTo(start, end);
+    }
+    async play() {
+        await this.source.play();
+    }
+    setAutoPlay(auto) {
+        this.source.setAutoPlay(auto);
+    }
+    pause() {
+        this.source.pause();
+    }
+    setVolume(volume) {
+        this.source.setVolume(volume);
+    }
+    getVolume() {
+        return this.source.getVolume();
+    }
+    getDuration() {
+        return this.source.getDuration();
     }
 }
 
@@ -1461,5 +1511,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 as AudioPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
 //# sourceMappingURL=GamaSource.js.map

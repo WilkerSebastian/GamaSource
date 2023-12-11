@@ -34,6 +34,7 @@ $parcel$export(module.exports, "FramePanel", () => $b204872e9decb3de$export$2e2b
 $parcel$export(module.exports, "FrameText", () => $fcb37ed2e27d49de$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "FrameButton", () => $da9f1ee002beed60$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "VideoPlayer", () => $ef82af96d1cfc111$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "AudioPlayer", () => $8bbbb81ee087ca20$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Camera", () => $c34811bf1dee0ba3$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "Helpers", () => $a8dfe81a40550e4a$export$2e2bcd8739ae039);
 class $a7f36dda3f4a8094$var$GamaSourceState {
@@ -1231,10 +1232,19 @@ class $af110ff434171936$export$2e2bcd8739ae039 {
 
 
 
+
 class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$export$2e2bcd8739ae039) {
     constructor(frame){
         super(frame);
-        this.source = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(frame.path);
+        const video = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(frame.source);
+        if (video) {
+            this.source = video;
+            this.setAutoPlay(frame.autoPlay ?? false);
+            this.setVolume(frame.volume ?? 50);
+            return;
+        }
+        this.source = new (0, $af110ff434171936$export$2e2bcd8739ae039)("not found");
+        console.error(`The video ${frame.source} was not found`);
     }
     setEventEnd(event) {
         this.source.getSource().addEventListener("ended", ()=>event());
@@ -1248,7 +1258,7 @@ class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
         await this.source.play();
     }
     setAutoPlay(auto) {
-        this.setAutoPlay(auto);
+        this.source.setAutoPlay(auto);
     }
     pause() {
         this.source.pause();
@@ -1328,6 +1338,47 @@ class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
         }
+    }
+}
+
+
+
+
+class $8bbbb81ee087ca20$export$2e2bcd8739ae039 {
+    constructor(source, volume, autoPlay){
+        const audio = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(source);
+        if (audio) {
+            this.source = audio;
+            this.setVolume(volume ?? 50);
+            this.setAutoPlay(autoPlay ?? false);
+            return;
+        }
+        this.source = new (0, $53e27565d1108d13$export$2e2bcd8739ae039)("not found");
+        console.error(`The video ${source} was not found`);
+    }
+    setEventEnd(event) {
+        this.source.getSource().addEventListener("ended", ()=>event());
+    }
+    async playTo(start, end) {
+        await this.source.playTo(start, end);
+    }
+    async play() {
+        await this.source.play();
+    }
+    setAutoPlay(auto) {
+        this.source.setAutoPlay(auto);
+    }
+    pause() {
+        this.source.pause();
+    }
+    setVolume(volume) {
+        this.source.setVolume(volume);
+    }
+    getVolume() {
+        return this.source.getVolume();
+    }
+    getDuration() {
+        return this.source.getDuration();
     }
 }
 

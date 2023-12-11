@@ -29,6 +29,7 @@ import FrameButton from "./UI/components/FrameButton"
 import GameVideo from "./asset/video/GameVideo"
 import VideoPlayer from "./UI/video/VideoPlayer"
 import Helpers from "./helper/Helpers"
+import AudioPlayer from "./asset/audio/AudioPlayer"
 
 class GamaSource {
 
@@ -377,6 +378,7 @@ export {
     FrameText,
     FrameButton,
     VideoPlayer,
+    AudioPlayer,
     Camera,
     Helpers
 };

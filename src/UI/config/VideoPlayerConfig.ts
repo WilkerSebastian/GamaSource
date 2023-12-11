@@ -2,6 +2,8 @@ import FrameConfig from "./FrameConfig";
 
 export default class VideoPlayerConfig extends FrameConfig {
 
-    path:string = ""
+    source:string = ""
+    volume?:number
+    autoPlay?:boolean
 
 }
