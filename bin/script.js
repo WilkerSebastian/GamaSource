@@ -172,7 +172,7 @@ function main() {
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "tsc && vite build -c vite.config.ts",
         "preview": "vite preview",
         "make": "npm run build && gamasource build"
     }
