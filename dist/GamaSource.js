@@ -482,7 +482,7 @@ class $5a334b166dfa1be5$export$2e2bcd8739ae039 {
 class $53e27565d1108d13$export$2e2bcd8739ae039 {
     constructor(path){
         this.source = new Audio();
-        this.source.addEventListener("load", ()=>{
+        this.source.addEventListener("loadeddata", ()=>{
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).LOAD++;
         });
         this.source.src = path;
@@ -496,11 +496,25 @@ class $53e27565d1108d13$export$2e2bcd8739ae039 {
     setLoop(loop) {
         this.source.loop = loop;
     }
+    async playTo(start, end) {
+        const max_time = end ?? this.getDuration();
+        this.source.currentTime = start;
+        this.source.addEventListener("timeupdate", ()=>{
+            if (this.source.currentTime >= max_time) this.pause();
+        });
+        await this.play();
+    }
+    getDuration() {
+        return this.source.duration;
+    }
     setVolume(volume) {
         this.source.volume = volume / 100;
     }
     getVolume() {
         return this.source.volume;
+    }
+    setAutoPlay(auto) {
+        this.source.autoplay = auto;
     }
     async play() {
         await this.source.play();

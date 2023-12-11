@@ -148,8 +148,11 @@ declare class GameAudio {
     constructor(path: string);
     pause(): void;
     setLoop(loop: boolean): void;
+    playTo(start: number, end?: number): Promise<void>;
+    getDuration(): number;
     setVolume(volume: number): void;
     getVolume(): number;
+    setAutoPlay(auto: boolean): void;
     play(): Promise<void>;
     getSource(): HTMLAudioElement;
 }
