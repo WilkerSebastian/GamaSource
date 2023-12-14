@@ -251,6 +251,10 @@ class GamaSource {
 
     // métodos de controle
 
+    public loader(...assets:string[]) {
+        GamaSource.loader(...assets)
+    }
+
     public static loader(...assets:string[]) {
 
         let names:string[] = []
