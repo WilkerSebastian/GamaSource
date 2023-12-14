@@ -409,6 +409,7 @@ export class GamaSource {
     static resume(): void;
     static exit(): void;
     static falied(): void;
+    loader(...assets: string[]): void;
     static loader(...assets: string[]): string[];
     addScene(scene: string, performer: () => void): void;
     changeScene(scene: string): void;

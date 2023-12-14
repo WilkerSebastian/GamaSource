@@ -1537,6 +1537,9 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).CRASHED;
     }
     // métodos de controle
+    loader(...assets) {
+        $f8bbed27444dc2b3$export$d36076abcf594543.loader(...assets);
+    }
     static loader(...assets) {
         let names = [];
         assets.forEach((a)=>{
