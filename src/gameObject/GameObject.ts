@@ -1,13 +1,18 @@
 import GamaSource, { AnimationController, Helpers, RigidBody2D, Sprite, SpriteSheet, StaticSprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
+import Collider from "../math/collision/Collider";
+import NULLCOLLISION from "../math/collision/NULLCOLLISION";
+import NULLPHYSIC from "../math/physics/NULLPHYSIC";
+import Physic from "../math/physics/Physic";
 import Vector2 from "../math/vector/Vector2"
+import NULLSPRITE from "../rendering/NULLSPRITE";
 
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0);
-    public sprite: Sprite | AnimationController | null = null
-    public collider: BoxCollider2D | null = null
-    public physics: RigidBody2D | null = null
+    public sprite: Sprite = new NULLSPRITE()
+    public collider: Collider = new NULLCOLLISION()
+    public physics: Physic = new NULLPHYSIC()
     public layer:number = 1
     public tag:string = "not defined"
 
@@ -123,13 +128,13 @@ export default class GameObject {
 
     private onCollision() {
 
-        const objs = GamaSource.GameObjects.filter(obj => obj.collider && obj != this && obj != this.root)
+        const objs = GamaSource.GameObjects.filter(obj => Helpers.isNotNULL(obj.collider) && obj != this && obj != this.root)
 
         objs.forEach(obj => {
 
-            if (this.collider?.isCollided(obj.collider as BoxCollider2D)) {
+            if (this.collider.isCollided(obj.collider)) {
 
-                if (this.physics && obj.collider) {
+                if (Helpers.isNotNULL(this.physics) && Helpers.isNotNULL(obj.collider)) {
 
                     const over = this.collider.resolveCollision(obj.collider)
 
@@ -184,9 +189,9 @@ export default class GameObject {
 
         if (this.visible) {
             
-            if (this.collider) {
+            if (Helpers.isNotNULL(this.collider)) {
 
-                if (this.sprite instanceof StaticSprite || this.sprite instanceof SpriteSheet || this.sprite instanceof AnimationController ) {
+                if (Helpers.isNotNULL(this.collider)) {
                     
                     this.collider.update(this.transform, this.sprite.getSize())
 
@@ -202,9 +207,9 @@ export default class GameObject {
 
             this.update()
 
-            if (this.physics) {
+            if (Helpers.isNotNULL(this.physics)) {
     
-                this.physics.update(this)
+                this.physics.update()
                 this.fixedUpdate()
 
             }
@@ -218,9 +223,9 @@ export default class GameObject {
 
     public render() {
 
-        if (this.sprite && this.visible) {
+        if (Helpers.isNotNULL(this.sprite) && this.visible) {
  
-            if (this.collider && Helpers.config.collision) 
+            if (this.collider instanceof BoxCollider2D && Helpers.config.collision) 
                 Helpers.collsion(this.collider, this.collidingObjects.length > 0)
 
             this.sprite.render(this)

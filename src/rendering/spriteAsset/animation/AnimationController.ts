@@ -1,20 +1,18 @@
-import GamaSource, { GameObject, Vector2 } from "../../../GamaSource";
+import GamaSource, { GameObject, Sprite, Vector2 } from "../../../GamaSource";
 import JsonAnimation from "../../../asset/data/JsonAnimation";
 import SizeSprite from "../SizeSprite";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";
 
-export default class AnimationController implements SizeSprite {
+export default class AnimationController extends Sprite implements SizeSprite {
 
     private mapper = new Map<string, SpriteSheet>()
     private currentAnimation:string | null = null
-    private reference?:GameObject | Vector2
     public scale = new Vector2(1,1)
     public rotation = 0
 
     constructor(reference?:GameObject | Vector2) {
-
-        this.reference = reference
+        super(0, 0, reference)
 
     }
 

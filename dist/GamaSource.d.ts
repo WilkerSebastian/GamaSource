@@ -16,23 +16,59 @@ export class Vector2 {
     magnitude(): number;
     normalize(): Vector2;
 }
-export class BoxCollider2D {
+declare abstract class Collider {
     position: Vector2;
+    constructor(position?: Vector2);
+    abstract isCollided(collider: Collider): boolean;
+    abstract resolveCollision(collider: Collider): Vector2;
+    abstract update(position: Vector2, size?: any): void;
+}
+export class BoxCollider2D extends Collider {
     width: number;
     height: number;
     constructor(width?: number, height?: number);
-    isCollided(box: BoxCollider2D): boolean;
-    resolveCollision(box: BoxCollider2D): Vector2;
+    isCollided(collider: colliderCollider2D): boolean;
+    resolveCollision(collider: colliderCollider2D): Vector2;
     update(position: Vector2, size?: {
         width: number;
         height: number;
     }): void;
 }
+declare abstract class Physic {
+    position: Vector2;
+    velocity: Vector2;
+    mass: number;
+    constructor(mass: number, position?: Vector2);
+    abstract applyForce(force: Vector2): void;
+    abstract applyFriction(): void;
+    abstract update(): void;
+}
+interface SizeSprite {
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+}
+export abstract class Sprite implements SizeSprite {
+    reference?: Vector2 | GameObject;
+    width: number;
+    height: number;
+    constructor(width: number, height: number, reference?: Vector2 | GameObject);
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+    abstract render(reference?: GameObject | Vector2): void;
+}
 export class GameObject {
     transform: Vector2;
-    sprite: Sprite | AnimationController | null;
-    collider: BoxCollider2D | null;
-    physics: RigidBody2D | null;
+    sprite: Sprite;
+    collider: Collider;
+    physics: Physic;
     layer: number;
     tag: string;
     protected visible: boolean;
@@ -84,27 +120,6 @@ export class GameWindow {
     };
     addEvent(ev: () => void): void;
     getScale(): number;
-}
-interface SizeSprite {
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    getSize(): {
-        width: number;
-        height: number;
-    };
-}
-export abstract class Sprite implements SizeSprite {
-    reference?: Vector2 | GameObject;
-    width: number;
-    height: number;
-    constructor(width: number, height: number, reference?: Vector2 | GameObject);
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    getSize(): {
-        width: number;
-        height: number;
-    };
-    abstract render(reference?: GameObject | Vector2): void;
 }
 export abstract class ShapeSprite extends Sprite {
     color: string;
@@ -277,7 +292,7 @@ export class SpriteSheet extends StaticSprite {
     constructor(source: string, pixelRatio: number, slices: Slice[], staggerFrames?: number, reference?: Vector2 | GameObject);
     render(reference?: Vector2 | GameObject): void;
 }
-export class AnimationController implements SizeSprite {
+export class AnimationController extends Sprite implements SizeSprite {
     scale: Vector2;
     rotation: number;
     constructor(reference?: GameObject | Vector2);
@@ -298,16 +313,13 @@ export class AnimationController implements SizeSprite {
         height: number;
     };
 }
-export class RigidBody2D {
-    position: Vector2;
-    velocity: Vector2;
-    mass: number;
+export class RigidBody2D extends Physic {
     gravity: Vector2;
     frictionCoefficient: number;
-    constructor(mass: number | undefined, gravity: number, friction: number);
+    constructor(mass: number | undefined, gravity: number, friction: number, postion?: Vector2);
     applyForce(force: Vector2): void;
     applyFriction(): void;
-    update(obj: GameObject): void;
+    update(): void;
 }
 export class Camera extends GameObject {
     followObject(): void;
@@ -367,6 +379,7 @@ export class Helpers {
     static collsion(box: BoxCollider2D, collied?: boolean): void;
     static position(pos: Vector2): void;
     static grid(): void;
+    static isNotNULL(component: Sprite | Collider | Physic): boolean;
 }
 export class AudioPlayer {
     constructor(source: string, volume?: number, autoPlay?: boolean);

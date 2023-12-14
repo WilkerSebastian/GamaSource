@@ -1,5 +1,10 @@
-import GamaSource, { BoxCollider2D, Vector2 } from "../GamaSource";
+import GamaSource, { BoxCollider2D, Sprite, Vector2 } from "../GamaSource";
 import HelperConfig from "../define/HelperConfig";
+import Collider from "../math/collision/Collider";
+import NULLCOLLISION from "../math/collision/NULLCOLLISION";
+import NULLPHYSIC from "../math/physics/NULLPHYSIC";
+import Physic from "../math/physics/Physic";
+import NULLSPRITE from "../rendering/NULLSPRITE";
 
 export default class Helpers {
 
@@ -84,6 +89,21 @@ export default class Helpers {
             GamaSource.ctx.lineTo(GamaSource.window.WIDTH * 10, y);
             GamaSource.ctx.stroke();
         }
+
+    }
+
+    public static isNotNULL(component: Sprite | Collider | Physic) {
+
+        switch (true) {
+            case component instanceof NULLSPRITE:
+                return false
+            case component instanceof NULLCOLLISION:
+                return false
+            case component instanceof NULLPHYSIC:
+                return false
+        }
+
+        return true
 
     }
 

@@ -21,7 +21,7 @@ $parcel$export(module.exports, "Sprite", () => $966979a7503d5337$export$2e2bcd87
 $parcel$export(module.exports, "ShapeSprite", () => $b3c2a48e0c9708a8$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "SquareSprite", () => $16a63ba451fb476c$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "StaticSprite", () => $0a3ada9b62f29c2d$export$2e2bcd8739ae039);
-$parcel$export(module.exports, "RigidBody2D", () => $f491ddee2072e755$export$2e2bcd8739ae039);
+$parcel$export(module.exports, "RigidBody2D", () => $3bb785a9443c892c$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "BoxCollider2D", () => $f47f1bf7853bb150$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "SpriteSheet", () => $93dfe24f042b46bc$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "AnimationController", () => $c77491ef4f4406ab$export$2e2bcd8739ae039);
@@ -91,6 +91,125 @@ class $fbe8591a509f65b2$export$2e2bcd8739ae039 {
 }
 
 
+
+class $ab78dcb688e8b628$export$2e2bcd8739ae039 {
+    constructor(position){
+        this.position = position ?? new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+    }
+}
+
+
+class $f47f1bf7853bb150$export$2e2bcd8739ae039 extends (0, $ab78dcb688e8b628$export$2e2bcd8739ae039) {
+    constructor(width, height){
+        super();
+        this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.width = width ?? 0;
+        this.height = height ?? 0;
+    }
+    isCollided(collider) {
+        return this.position.x < collider.position.x + collider.width && this.position.x + this.width > collider.position.x && this.position.y < collider.position.y + collider.height && this.position.y + this.height > collider.position.y;
+    }
+    resolveCollision(collider) {
+        const dx = this.position.x + this.width / 2 - (collider.position.x + collider.width / 2);
+        const dy = this.position.y + this.height / 2 - (collider.position.y + collider.height / 2);
+        const overlapX = (this.width + collider.width) / 2 - Math.abs(dx);
+        const overlapY = (this.height + collider.height) / 2 - Math.abs(dy);
+        if (overlapX > 0 && overlapY > 0) {
+            if (overlapX < overlapY) {
+                if (dx > 0) return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x + overlapX, this.position.y);
+                return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x - overlapX, this.position.y);
+            }
+            if (dy > 0) return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x, this.position.y + overlapY);
+            return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x, this.position.y - overlapY);
+        }
+        return this.position;
+    }
+    update(position, size) {
+        this.position = position;
+        if (size) {
+            this.width = size.width;
+            this.height = size.height;
+        }
+    }
+}
+
+
+
+class $49da126e0f250d40$export$2e2bcd8739ae039 extends (0, $ab78dcb688e8b628$export$2e2bcd8739ae039) {
+    isCollided(collider) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+    resolveCollision(collider) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+    update(position, size) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+}
+
+
+
+
+class $d464fd222780c6a0$export$2e2bcd8739ae039 {
+    constructor(mass, position){
+        this.position = position ?? new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.velocity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.mass = mass;
+    }
+}
+
+
+class $8b0fec574a67c2e1$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$export$2e2bcd8739ae039) {
+    constructor(){
+        super(0, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0));
+    }
+    applyForce(force) {
+        throw new Error("Method not implemented in NULL object.");
+    }
+    applyFriction() {
+        throw new Error("Method not implemented in NULL object.");
+    }
+    update() {
+        throw new Error("Method not implemented in NULL object.");
+    }
+}
+
+
+
+
+class $966979a7503d5337$export$2e2bcd8739ae039 {
+    constructor(width, height, reference){
+        this.width = 0;
+        this.height = 0;
+        this.reference = reference;
+        this.width = width;
+        this.height = height;
+    }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    }
+}
+
+
+class $df2eea8668ef2889$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
+    constructor(){
+        super(0, 0, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0));
+    }
+    render() {
+        throw new Error("Method not implemented in NULL sprite.");
+    }
+}
+
+
 class $093225c56a233e0f$export$2e2bcd8739ae039 {
     static create(obj) {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.push(new obj());
@@ -145,10 +264,10 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     start() {}
     update() {}
     onCollision() {
-        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider && obj != this && obj != this.root);
+        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>(0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(obj.collider) && obj != this && obj != this.root);
         objs.forEach((obj)=>{
-            if (this.collider?.isCollided(obj.collider)) {
-                if (this.physics && obj.collider) {
+            if (this.collider.isCollided(obj.collider)) {
+                if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.physics) && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(obj.collider)) {
                     const over = this.collider.resolveCollision(obj.collider);
                     this.physics.applyFriction();
                     if (over.x != this.collider.position.x) {
@@ -172,22 +291,22 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     fixedUpdate() {}
     gameUpdate() {
         if (this.visible) {
-            if (this.collider) {
-                if (this.sprite instanceof (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039) || this.sprite instanceof (0, $93dfe24f042b46bc$export$2e2bcd8739ae039) || this.sprite instanceof (0, $c77491ef4f4406ab$export$2e2bcd8739ae039)) this.collider.update(this.transform, this.sprite.getSize());
+            if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.collider)) {
+                if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.collider)) this.collider.update(this.transform, this.sprite.getSize());
                 else this.collider.update(this.transform);
                 this.onCollision();
             }
             this.update();
-            if (this.physics) {
-                this.physics.update(this);
+            if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.physics)) {
+                this.physics.update();
                 this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
         }
     }
     render() {
-        if (this.sprite && this.visible) {
-            if (this.collider && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
+        if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.sprite) && this.visible) {
+            if (this.collider instanceof (0, $f47f1bf7853bb150$export$2e2bcd8739ae039) && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
             this.sprite.render(this);
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].render();
             if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.position) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).position(this.transform);
@@ -195,9 +314,9 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     }
     constructor(){
         this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.sprite = null;
-        this.collider = null;
-        this.physics = null;
+        this.sprite = new (0, $df2eea8668ef2889$export$2e2bcd8739ae039)();
+        this.collider = new (0, $49da126e0f250d40$export$2e2bcd8739ae039)();
+        this.physics = new (0, $8b0fec574a67c2e1$export$2e2bcd8739ae039)();
         this.layer = 1;
         this.tag = "not defined";
         this.visible = true;
@@ -323,28 +442,6 @@ class $d56f756e1dc733a9$export$2e2bcd8739ae039 {
 
 
 
-
-class $966979a7503d5337$export$2e2bcd8739ae039 {
-    constructor(width, height, reference){
-        this.width = 0;
-        this.height = 0;
-        this.reference = reference;
-        this.width = width;
-        this.height = height;
-    }
-    setWidth(width) {
-        this.width = width;
-    }
-    setHeight(height) {
-        this.height = height;
-    }
-    getSize() {
-        return {
-            width: this.width,
-            height: this.height
-        };
-    }
-}
 
 
 
@@ -976,13 +1073,13 @@ class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$exp
 }
 
 
-class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
+class $c77491ef4f4406ab$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
     constructor(reference){
+        super(0, 0, reference);
         this.mapper = new Map();
         this.currentAnimation = null;
         this.scale = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(1, 1);
         this.rotation = 0;
-        this.reference = reference;
     }
     set(anim) {
         this.currentAnimation = anim;
@@ -1044,11 +1141,10 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 {
 
 
 
-class $f491ddee2072e755$export$2e2bcd8739ae039 {
-    constructor(mass = 1, gravity, friction){
-        this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.velocity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.mass = mass;
+
+class $3bb785a9443c892c$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$export$2e2bcd8739ae039) {
+    constructor(mass = 1, gravity, friction, postion){
+        super(mass, postion);
         this.gravity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, gravity);
         this.frictionCoefficient = friction;
     }
@@ -1060,47 +1156,12 @@ class $f491ddee2072e755$export$2e2bcd8739ae039 {
         const friction = this.velocity.multiply(-this.frictionCoefficient);
         this.applyForce(friction);
     }
-    update(obj) {
+    update() {
         this.applyForce(this.gravity);
         this.position = this.position.add(this.velocity);
-        obj.transform.set(this.position.x, this.position.y);
     }
 }
 
-
-
-class $f47f1bf7853bb150$export$2e2bcd8739ae039 {
-    constructor(width, height){
-        this.position = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.width = width ?? 0;
-        this.height = height ?? 0;
-    }
-    isCollided(box) {
-        return this.position.x < box.position.x + box.width && this.position.x + this.width > box.position.x && this.position.y < box.position.y + box.height && this.position.y + this.height > box.position.y;
-    }
-    resolveCollision(box) {
-        const dx = this.position.x + this.width / 2 - (box.position.x + box.width / 2);
-        const dy = this.position.y + this.height / 2 - (box.position.y + box.height / 2);
-        const overlapX = (this.width + box.width) / 2 - Math.abs(dx);
-        const overlapY = (this.height + box.height) / 2 - Math.abs(dy);
-        if (overlapX > 0 && overlapY > 0) {
-            if (overlapX < overlapY) {
-                if (dx > 0) return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x + overlapX, this.position.y);
-                return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x - overlapX, this.position.y);
-            }
-            if (dy > 0) return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x, this.position.y + overlapY);
-            return new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(this.position.x, this.position.y - overlapY);
-        }
-        return this.position;
-    }
-    update(position, size) {
-        this.position = position;
-        if (size) {
-            this.width = size.width;
-            this.height = size.height;
-        }
-    }
-}
 
 
 
@@ -1279,6 +1340,9 @@ class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
 
 
 
+
+
+
 class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
     static #_ = (()=>{
         this.config = {
@@ -1338,6 +1402,17 @@ class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
         }
+    }
+    static isNotNULL(component) {
+        switch(true){
+            case component instanceof (0, $df2eea8668ef2889$export$2e2bcd8739ae039):
+                return false;
+            case component instanceof (0, $49da126e0f250d40$export$2e2bcd8739ae039):
+                return false;
+            case component instanceof (0, $8b0fec574a67c2e1$export$2e2bcd8739ae039):
+                return false;
+        }
+        return true;
     }
 }
 

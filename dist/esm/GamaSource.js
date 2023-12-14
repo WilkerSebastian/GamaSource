@@ -52,6 +52,125 @@ class $08115c74b7a4e0bd$export$2e2bcd8739ae039 {
 }
 
 
+
+class $95ca0c2bc88dfa6d$export$2e2bcd8739ae039 {
+    constructor(position){
+        this.position = position ?? new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    }
+}
+
+
+class $b5035cf9b274c60a$export$2e2bcd8739ae039 extends (0, $95ca0c2bc88dfa6d$export$2e2bcd8739ae039) {
+    constructor(width, height){
+        super();
+        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+        this.width = width ?? 0;
+        this.height = height ?? 0;
+    }
+    isCollided(collider) {
+        return this.position.x < collider.position.x + collider.width && this.position.x + this.width > collider.position.x && this.position.y < collider.position.y + collider.height && this.position.y + this.height > collider.position.y;
+    }
+    resolveCollision(collider) {
+        const dx = this.position.x + this.width / 2 - (collider.position.x + collider.width / 2);
+        const dy = this.position.y + this.height / 2 - (collider.position.y + collider.height / 2);
+        const overlapX = (this.width + collider.width) / 2 - Math.abs(dx);
+        const overlapY = (this.height + collider.height) / 2 - Math.abs(dy);
+        if (overlapX > 0 && overlapY > 0) {
+            if (overlapX < overlapY) {
+                if (dx > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x + overlapX, this.position.y);
+                return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x - overlapX, this.position.y);
+            }
+            if (dy > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y + overlapY);
+            return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y - overlapY);
+        }
+        return this.position;
+    }
+    update(position, size) {
+        this.position = position;
+        if (size) {
+            this.width = size.width;
+            this.height = size.height;
+        }
+    }
+}
+
+
+
+class $10af3dcfff72e69c$export$2e2bcd8739ae039 extends (0, $95ca0c2bc88dfa6d$export$2e2bcd8739ae039) {
+    isCollided(collider) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+    resolveCollision(collider) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+    update(position, size) {
+        throw new Error("Method not implemented in NULL Collider.");
+    }
+}
+
+
+
+
+class $8971300920d969cb$export$2e2bcd8739ae039 {
+    constructor(mass, position){
+        this.position = position ?? new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+        this.velocity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+        this.mass = mass;
+    }
+}
+
+
+class $b2297827f2457259$export$2e2bcd8739ae039 extends (0, $8971300920d969cb$export$2e2bcd8739ae039) {
+    constructor(){
+        super(0, new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0));
+    }
+    applyForce(force) {
+        throw new Error("Method not implemented in NULL object.");
+    }
+    applyFriction() {
+        throw new Error("Method not implemented in NULL object.");
+    }
+    update() {
+        throw new Error("Method not implemented in NULL object.");
+    }
+}
+
+
+
+
+class $b9476ce5e7489a8e$export$2e2bcd8739ae039 {
+    constructor(width, height, reference){
+        this.width = 0;
+        this.height = 0;
+        this.reference = reference;
+        this.width = width;
+        this.height = height;
+    }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    }
+}
+
+
+class $e43897dabd734b25$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$export$2e2bcd8739ae039) {
+    constructor(){
+        super(0, 0, new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0));
+    }
+    render() {
+        throw new Error("Method not implemented in NULL sprite.");
+    }
+}
+
+
 class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     static create(obj) {
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.push(new obj());
@@ -106,10 +225,10 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     start() {}
     update() {}
     onCollision() {
-        const objs = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.collider && obj != this && obj != this.root);
+        const objs = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>(0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(obj.collider) && obj != this && obj != this.root);
         objs.forEach((obj)=>{
-            if (this.collider?.isCollided(obj.collider)) {
-                if (this.physics && obj.collider) {
+            if (this.collider.isCollided(obj.collider)) {
+                if ((0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(this.physics) && (0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(obj.collider)) {
                     const over = this.collider.resolveCollision(obj.collider);
                     this.physics.applyFriction();
                     if (over.x != this.collider.position.x) {
@@ -133,22 +252,22 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     fixedUpdate() {}
     gameUpdate() {
         if (this.visible) {
-            if (this.collider) {
-                if (this.sprite instanceof (0, $406f161b36ba144b$export$2e2bcd8739ae039) || this.sprite instanceof (0, $c34584e0283e73c1$export$2e2bcd8739ae039) || this.sprite instanceof (0, $3fba0ef90143f197$export$2e2bcd8739ae039)) this.collider.update(this.transform, this.sprite.getSize());
+            if ((0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(this.collider)) {
+                if ((0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(this.collider)) this.collider.update(this.transform, this.sprite.getSize());
                 else this.collider.update(this.transform);
                 this.onCollision();
             }
             this.update();
-            if (this.physics) {
-                this.physics.update(this);
+            if ((0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(this.physics)) {
+                this.physics.update();
                 this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
         }
     }
     render() {
-        if (this.sprite && this.visible) {
-            if (this.collider && (0, $88f08228c341c278$export$2e2bcd8739ae039).config.collision) (0, $88f08228c341c278$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
+        if ((0, $88f08228c341c278$export$2e2bcd8739ae039).isNotNULL(this.sprite) && this.visible) {
+            if (this.collider instanceof (0, $b5035cf9b274c60a$export$2e2bcd8739ae039) && (0, $88f08228c341c278$export$2e2bcd8739ae039).config.collision) (0, $88f08228c341c278$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
             this.sprite.render(this);
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].render();
             if ((0, $88f08228c341c278$export$2e2bcd8739ae039).config.position) (0, $88f08228c341c278$export$2e2bcd8739ae039).position(this.transform);
@@ -156,9 +275,9 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     }
     constructor(){
         this.transform = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
-        this.sprite = null;
-        this.collider = null;
-        this.physics = null;
+        this.sprite = new (0, $e43897dabd734b25$export$2e2bcd8739ae039)();
+        this.collider = new (0, $10af3dcfff72e69c$export$2e2bcd8739ae039)();
+        this.physics = new (0, $b2297827f2457259$export$2e2bcd8739ae039)();
         this.layer = 1;
         this.tag = "not defined";
         this.visible = true;
@@ -284,28 +403,6 @@ class $58cc35928f5b21f0$export$2e2bcd8739ae039 {
 
 
 
-
-class $b9476ce5e7489a8e$export$2e2bcd8739ae039 {
-    constructor(width, height, reference){
-        this.width = 0;
-        this.height = 0;
-        this.reference = reference;
-        this.width = width;
-        this.height = height;
-    }
-    setWidth(width) {
-        this.width = width;
-    }
-    setHeight(height) {
-        this.height = height;
-    }
-    getSize() {
-        return {
-            width: this.width,
-            height: this.height
-        };
-    }
-}
 
 
 
@@ -937,13 +1034,13 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
 }
 
 
-class $3fba0ef90143f197$export$2e2bcd8739ae039 {
+class $3fba0ef90143f197$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$export$2e2bcd8739ae039) {
     constructor(reference){
+        super(0, 0, reference);
         this.mapper = new Map();
         this.currentAnimation = null;
         this.scale = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(1, 1);
         this.rotation = 0;
-        this.reference = reference;
     }
     set(anim) {
         this.currentAnimation = anim;
@@ -1005,11 +1102,10 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 {
 
 
 
-class $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 {
-    constructor(mass = 1, gravity, friction){
-        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
-        this.velocity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
-        this.mass = mass;
+
+class $965b124fc3af26a7$export$2e2bcd8739ae039 extends (0, $8971300920d969cb$export$2e2bcd8739ae039) {
+    constructor(mass = 1, gravity, friction, postion){
+        super(mass, postion);
         this.gravity = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, gravity);
         this.frictionCoefficient = friction;
     }
@@ -1021,47 +1117,12 @@ class $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 {
         const friction = this.velocity.multiply(-this.frictionCoefficient);
         this.applyForce(friction);
     }
-    update(obj) {
+    update() {
         this.applyForce(this.gravity);
         this.position = this.position.add(this.velocity);
-        obj.transform.set(this.position.x, this.position.y);
     }
 }
 
-
-
-class $b5035cf9b274c60a$export$2e2bcd8739ae039 {
-    constructor(width, height){
-        this.position = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
-        this.width = width ?? 0;
-        this.height = height ?? 0;
-    }
-    isCollided(box) {
-        return this.position.x < box.position.x + box.width && this.position.x + this.width > box.position.x && this.position.y < box.position.y + box.height && this.position.y + this.height > box.position.y;
-    }
-    resolveCollision(box) {
-        const dx = this.position.x + this.width / 2 - (box.position.x + box.width / 2);
-        const dy = this.position.y + this.height / 2 - (box.position.y + box.height / 2);
-        const overlapX = (this.width + box.width) / 2 - Math.abs(dx);
-        const overlapY = (this.height + box.height) / 2 - Math.abs(dy);
-        if (overlapX > 0 && overlapY > 0) {
-            if (overlapX < overlapY) {
-                if (dx > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x + overlapX, this.position.y);
-                return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x - overlapX, this.position.y);
-            }
-            if (dy > 0) return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y + overlapY);
-            return new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(this.position.x, this.position.y - overlapY);
-        }
-        return this.position;
-    }
-    update(position, size) {
-        this.position = position;
-        if (size) {
-            this.width = size.width;
-            this.height = size.height;
-        }
-    }
-}
 
 
 
@@ -1240,6 +1301,9 @@ class $ee458e2b852a09a8$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$exp
 
 
 
+
+
+
 class $88f08228c341c278$export$2e2bcd8739ae039 {
     static #_ = (()=>{
         this.config = {
@@ -1299,6 +1363,17 @@ class $88f08228c341c278$export$2e2bcd8739ae039 {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.lineTo((0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.stroke();
         }
+    }
+    static isNotNULL(component) {
+        switch(true){
+            case component instanceof (0, $e43897dabd734b25$export$2e2bcd8739ae039):
+                return false;
+            case component instanceof (0, $10af3dcfff72e69c$export$2e2bcd8739ae039):
+                return false;
+            case component instanceof (0, $b2297827f2457259$export$2e2bcd8739ae039):
+                return false;
+        }
+        return true;
     }
 }
 
@@ -1511,5 +1586,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $bde4fe0a2f1aefe6$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 as AudioPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $965b124fc3af26a7$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 as AudioPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
 //# sourceMappingURL=GamaSource.js.map
