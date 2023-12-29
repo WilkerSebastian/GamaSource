@@ -91,9 +91,14 @@ class $fbe8591a509f65b2$export$2e2bcd8739ae039 {
 }
 
 
+class $949b1c4d2d9f4625$export$2e2bcd8739ae039 {
+}
 
-class $ab78dcb688e8b628$export$2e2bcd8739ae039 {
+
+
+class $ab78dcb688e8b628$export$2e2bcd8739ae039 extends (0, $949b1c4d2d9f4625$export$2e2bcd8739ae039) {
     constructor(position){
+        super();
         this.position = position ?? new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
     }
 }
@@ -135,81 +140,6 @@ class $f47f1bf7853bb150$export$2e2bcd8739ae039 extends (0, $ab78dcb688e8b628$exp
 
 
 
-class $49da126e0f250d40$export$2e2bcd8739ae039 extends (0, $ab78dcb688e8b628$export$2e2bcd8739ae039) {
-    isCollided(collider) {
-        throw new Error("Method not implemented in NULL Collider.");
-    }
-    resolveCollision(collider) {
-        throw new Error("Method not implemented in NULL Collider.");
-    }
-    update(position, size) {
-        throw new Error("Method not implemented in NULL Collider.");
-    }
-}
-
-
-
-
-class $d464fd222780c6a0$export$2e2bcd8739ae039 {
-    constructor(mass, position){
-        this.position = position ?? new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.velocity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.mass = mass;
-    }
-}
-
-
-class $8b0fec574a67c2e1$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$export$2e2bcd8739ae039) {
-    constructor(){
-        super(0, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0));
-    }
-    applyForce(force) {
-        throw new Error("Method not implemented in NULL object.");
-    }
-    applyFriction() {
-        throw new Error("Method not implemented in NULL object.");
-    }
-    update() {
-        throw new Error("Method not implemented in NULL object.");
-    }
-}
-
-
-
-
-class $966979a7503d5337$export$2e2bcd8739ae039 {
-    constructor(width, height, reference){
-        this.width = 0;
-        this.height = 0;
-        this.reference = reference;
-        this.width = width;
-        this.height = height;
-    }
-    setWidth(width) {
-        this.width = width;
-    }
-    setHeight(height) {
-        this.height = height;
-    }
-    getSize() {
-        return {
-            width: this.width,
-            height: this.height
-        };
-    }
-}
-
-
-class $df2eea8668ef2889$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$export$2e2bcd8739ae039) {
-    constructor(){
-        super(0, 0, new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0));
-    }
-    render() {
-        throw new Error("Method not implemented in NULL sprite.");
-    }
-}
-
-
 class $093225c56a233e0f$export$2e2bcd8739ae039 {
     static create(obj) {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.push(new obj());
@@ -217,6 +147,12 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     }
     destroy() {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj != this);
+    }
+    getComponent(type) {
+        return this.components.get(type) ?? null;
+    }
+    setComponent(type, component) {
+        this.components.set(type, component);
     }
     static getElementByTag(tag) {
         const obj = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag)[0];
@@ -264,19 +200,23 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     start() {}
     update() {}
     onCollision() {
-        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>(0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(obj.collider) && obj != this && obj != this.root);
+        const objs = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.getComponent("Collision") && obj != this && obj != this.root);
         objs.forEach((obj)=>{
-            if (this.collider.isCollided(obj.collider)) {
-                if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.physics) && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(obj.collider)) {
-                    const over = this.collider.resolveCollision(obj.collider);
-                    this.physics.applyFriction();
-                    if (over.x != this.collider.position.x) {
-                        this.physics.velocity.x = 0;
-                        this.physics.position = over;
+            const collision = this.getComponent("Collision");
+            const objCollision = this.getComponent("Collision");
+            if (!collision || !objCollision) return;
+            if (collision.isCollided(objCollision)) {
+                const physics = this.getComponent("Physics");
+                if (physics) {
+                    const over = collision.resolveCollision(objCollision);
+                    physics.applyFriction();
+                    if (over.x != collision.position.x) {
+                        physics.velocity.x = 0;
+                        physics.position = over;
                         return;
                     }
-                    this.physics.velocity.y = 0;
-                    this.physics.position = over;
+                    physics.velocity.y = 0;
+                    physics.position = over;
                 }
                 if (!this.collidingObjects.includes(obj)) this.collidingObjects.push(obj);
                 this.onCollisionBetween(obj);
@@ -291,35 +231,38 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     fixedUpdate() {}
     gameUpdate() {
         if (this.visible) {
-            if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.collider)) {
-                if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.collider)) this.collider.update(this.transform, this.sprite.getSize());
-                else this.collider.update(this.transform);
+            const collision = this.getComponent("Collision");
+            if (collision) {
+                const sprite = this.getComponent("Rendering");
+                if (sprite) collision.update(this.transform, sprite.getSize());
+                else collision.update(this.transform);
                 this.onCollision();
             }
             this.update();
-            if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.physics)) {
-                this.physics.update();
+            const physics = this.getComponent("Physics");
+            if (physics) {
+                physics.update();
                 this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
         }
     }
     render() {
-        if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).isNotNULL(this.sprite) && this.visible) {
-            if (this.collider instanceof (0, $f47f1bf7853bb150$export$2e2bcd8739ae039) && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(this.collider, this.collidingObjects.length > 0);
-            this.sprite.render(this);
+        const sprite = this.getComponent("Rendering");
+        if (sprite && this.visible) {
+            const collision = this.getComponent("Collision");
+            if (collision instanceof (0, $f47f1bf7853bb150$export$2e2bcd8739ae039) && (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.collision) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).collsion(collision, this.collidingObjects.length > 0);
+            sprite.render(this);
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].render();
             if ((0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).config.position) (0, $a8dfe81a40550e4a$export$2e2bcd8739ae039).position(this.transform);
         }
     }
     constructor(){
         this.transform = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
-        this.sprite = new (0, $df2eea8668ef2889$export$2e2bcd8739ae039)();
-        this.collider = new (0, $49da126e0f250d40$export$2e2bcd8739ae039)();
-        this.physics = new (0, $8b0fec574a67c2e1$export$2e2bcd8739ae039)();
         this.layer = 1;
         this.tag = "not defined";
         this.visible = true;
+        this.components = new Map;
         this.arguments = new Array();
         this.root = null;
         this.nodes = new Array();
@@ -442,6 +385,30 @@ class $d56f756e1dc733a9$export$2e2bcd8739ae039 {
 
 
 
+
+
+class $966979a7503d5337$export$2e2bcd8739ae039 extends (0, $949b1c4d2d9f4625$export$2e2bcd8739ae039) {
+    constructor(width, height, reference){
+        super();
+        this.width = 0;
+        this.height = 0;
+        this.reference = reference;
+        this.width = width;
+        this.height = height;
+    }
+    setWidth(width) {
+        this.width = width;
+    }
+    setHeight(height) {
+        this.height = height;
+    }
+    getSize() {
+        return {
+            width: this.width,
+            height: this.height
+        };
+    }
+}
 
 
 
@@ -1142,6 +1109,17 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
 
 
 
+
+class $d464fd222780c6a0$export$2e2bcd8739ae039 extends (0, $949b1c4d2d9f4625$export$2e2bcd8739ae039) {
+    constructor(mass, position){
+        super();
+        this.position = position ?? new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.velocity = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
+        this.mass = mass;
+    }
+}
+
+
 class $3bb785a9443c892c$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$export$2e2bcd8739ae039) {
     constructor(mass = 1, gravity, friction, postion){
         super(mass, postion);
@@ -1168,9 +1146,11 @@ class $3bb785a9443c892c$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$exp
 
 class $c34811bf1dee0ba3$export$2e2bcd8739ae039 extends (0, $093225c56a233e0f$export$2e2bcd8739ae039) {
     followObject() {
-        if (this.target && this.target.sprite) {
-            this.transform.x = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH / 2 - this.target.transform.x - this.target.sprite.getSize().width / 2;
-            this.transform.y = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT / 2 - this.target.transform.y - this.target.sprite.getSize().height / 2;
+        if (this.target) {
+            const sprite = this.getComponent("Rendering");
+            if (!sprite) return;
+            this.transform.x = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH / 2 - this.target.transform.x - sprite.getSize().width / 2;
+            this.transform.y = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT / 2 - this.target.transform.y - sprite.getSize().height / 2;
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.transform.x, this.transform.y);
         }
     }
@@ -1340,9 +1320,6 @@ class $ef82af96d1cfc111$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
 
 
 
-
-
-
 class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
     static #_ = (()=>{
         this.config = {
@@ -1402,17 +1379,6 @@ class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
         }
-    }
-    static isNotNULL(component) {
-        switch(true){
-            case component instanceof (0, $df2eea8668ef2889$export$2e2bcd8739ae039):
-                return false;
-            case component instanceof (0, $49da126e0f250d40$export$2e2bcd8739ae039):
-                return false;
-            case component instanceof (0, $8b0fec574a67c2e1$export$2e2bcd8739ae039):
-                return false;
-        }
-        return true;
     }
 }
 

@@ -1,23 +1,20 @@
-import GamaSource, { AnimationController, Helpers, RigidBody2D, Sprite, SpriteSheet, StaticSprite } from "../GamaSource"
+import GamaSource, { Helpers, Sprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Collider from "../math/collision/Collider";
-import NULLCOLLISION from "../math/collision/NULLCOLLISION";
-import NULLPHYSIC from "../math/physics/NULLPHYSIC";
 import Physic from "../math/physics/Physic";
 import Vector2 from "../math/vector/Vector2"
-import NULLSPRITE from "../rendering/NULLSPRITE";
+import Component from "./components/Component";
+import ComponentType from "./components/ComponentType";
 
 export default class GameObject {
 
     public transform:Vector2 = new Vector2(0, 0);
-    public sprite: Sprite = new NULLSPRITE()
-    public collider: Collider = new NULLCOLLISION()
-    public physics: Physic = new NULLPHYSIC()
     public layer:number = 1
     public tag:string = "not defined"
 
     protected visible:boolean = true
 
+    private components = new Map<ComponentType, Component>
     private arguments = new Array<any>()
     private root:GameObject | null = null
     private nodes = new Array<GameObject>()
@@ -34,6 +31,18 @@ export default class GameObject {
     public destroy() {
 
         GamaSource.GameObjects = GamaSource.GameObjects.filter(obj => obj != this)
+
+    }
+
+    public getComponent(type:ComponentType) {
+
+        return this.components.get(type) ?? null
+
+    }
+
+    public setComponent(type:ComponentType, component:Component) {
+
+        this.components.set(type, component)
 
     }
 
@@ -128,28 +137,37 @@ export default class GameObject {
 
     private onCollision() {
 
-        const objs = GamaSource.GameObjects.filter(obj => Helpers.isNotNULL(obj.collider) && obj != this && obj != this.root)
+        const objs = GamaSource.GameObjects.filter(obj => obj.getComponent("Collision") && obj != this && obj != this.root)
 
         objs.forEach(obj => {
 
-            if (this.collider.isCollided(obj.collider)) {
+            const collision = this.getComponent("Collision") as Collider
 
-                if (Helpers.isNotNULL(this.physics) && Helpers.isNotNULL(obj.collider)) {
+            const objCollision = this.getComponent("Collision") as Collider
 
-                    const over = this.collider.resolveCollision(obj.collider)
+            if (!collision || !objCollision)
+                return
 
-                    this.physics.applyFriction()
+            if (collision.isCollided(objCollision)) {
 
-                    if (over.x != this.collider.position.x) {
+                const physics = this.getComponent("Physics") as Physic
+
+                if (physics) {
+
+                    const over = collision.resolveCollision(objCollision)
+
+                    physics.applyFriction()
+
+                    if (over.x != collision.position.x) {
                       
-                        this.physics.velocity.x = 0;
-                        this.physics.position = over
+                        physics.velocity.x = 0;
+                        physics.position = over
                         return
 
                     } 
 
-                    this.physics.velocity.y = 0;
-                    this.physics.position = over
+                    physics.velocity.y = 0;
+                    physics.position = over
 
                 }
 
@@ -188,16 +206,20 @@ export default class GameObject {
     public gameUpdate() {
 
         if (this.visible) {
-            
-            if (Helpers.isNotNULL(this.collider)) {
 
-                if (Helpers.isNotNULL(this.collider)) {
+            const collision = this.getComponent("Collision") as Collider
+            
+            if (collision) {
+
+                const sprite = this.getComponent("Rendering") as Sprite
+
+                if (sprite) {
                     
-                    this.collider.update(this.transform, this.sprite.getSize())
+                    collision.update(this.transform, sprite.getSize())
 
                 } else {
 
-                    this.collider.update(this.transform)
+                    collision.update(this.transform)
 
                 }
                 
@@ -207,9 +229,11 @@ export default class GameObject {
 
             this.update()
 
-            if (Helpers.isNotNULL(this.physics)) {
+            const physics = this.getComponent("Physics") as Physic
+
+            if (physics) {
     
-                this.physics.update()
+                physics.update()
                 this.fixedUpdate()
 
             }
@@ -223,12 +247,16 @@ export default class GameObject {
 
     public render() {
 
-        if (Helpers.isNotNULL(this.sprite) && this.visible) {
- 
-            if (this.collider instanceof BoxCollider2D && Helpers.config.collision) 
-                Helpers.collsion(this.collider, this.collidingObjects.length > 0)
+        const sprite = this.getComponent("Rendering") as Sprite
 
-            this.sprite.render(this)
+        if (sprite && this.visible) {
+
+            const collision = this.getComponent("Collision") as Collider
+ 
+            if (collision instanceof BoxCollider2D && Helpers.config.collision) 
+                Helpers.collsion(collision, this.collidingObjects.length > 0)
+
+            sprite.render(this)
 
             for (let i = 0; i < this.nodes.length; i++)
                 this.nodes[i].render()

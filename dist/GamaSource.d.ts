@@ -16,7 +16,9 @@ export class Vector2 {
     magnitude(): number;
     normalize(): Vector2;
 }
-declare abstract class Collider {
+declare abstract class Component {
+}
+declare abstract class Collider extends Component {
     position: Vector2;
     constructor(position?: Vector2);
     abstract isCollided(collider: Collider): boolean;
@@ -34,7 +36,7 @@ export class BoxCollider2D extends Collider {
         height: number;
     }): void;
 }
-declare abstract class Physic {
+declare abstract class Physic extends Component {
     position: Vector2;
     velocity: Vector2;
     mass: number;
@@ -43,37 +45,16 @@ declare abstract class Physic {
     abstract applyFriction(): void;
     abstract update(): void;
 }
-interface SizeSprite {
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    getSize(): {
-        width: number;
-        height: number;
-    };
-}
-export abstract class Sprite implements SizeSprite {
-    reference?: Vector2 | GameObject;
-    width: number;
-    height: number;
-    constructor(width: number, height: number, reference?: Vector2 | GameObject);
-    setWidth(width: number): void;
-    setHeight(height: number): void;
-    getSize(): {
-        width: number;
-        height: number;
-    };
-    abstract render(reference?: GameObject | Vector2): void;
-}
+type ComponentType = "Rendering" | "Physics" | "Collision";
 export class GameObject {
     transform: Vector2;
-    sprite: Sprite;
-    collider: Collider;
-    physics: Physic;
     layer: number;
     tag: string;
     protected visible: boolean;
     static create(obj: typeof GameObject): void;
     destroy(): void;
+    getComponent(type: ComponentType): Component | null;
+    setComponent(type: ComponentType, component: Component): void;
     static getElementByTag<T>(tag: string): T | null;
     static getAllElementsByTag<T>(tag: string): T[];
     protected addNode(obj: typeof GameObject, ...args: any[]): void;
@@ -120,6 +101,27 @@ export class GameWindow {
     };
     addEvent(ev: () => void): void;
     getScale(): number;
+}
+interface SizeSprite {
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+}
+export abstract class Sprite extends Component implements SizeSprite {
+    reference?: Vector2 | GameObject;
+    width: number;
+    height: number;
+    constructor(width: number, height: number, reference?: Vector2 | GameObject);
+    setWidth(width: number): void;
+    setHeight(height: number): void;
+    getSize(): {
+        width: number;
+        height: number;
+    };
+    abstract render(reference?: GameObject | Vector2): void;
 }
 export abstract class ShapeSprite extends Sprite {
     color: string;
@@ -379,7 +381,6 @@ export class Helpers {
     static collsion(box: BoxCollider2D, collied?: boolean): void;
     static position(pos: Vector2): void;
     static grid(): void;
-    static isNotNULL(component: Sprite | Collider | Physic): boolean;
 }
 export class AudioPlayer {
     constructor(source: string, volume?: number, autoPlay?: boolean);

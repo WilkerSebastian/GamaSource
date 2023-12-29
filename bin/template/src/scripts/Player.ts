@@ -3,11 +3,13 @@ import { GameObject, KeyBoard, StaticSprite } from "gamasource";
 export default class Player extends GameObject {
 
     private speed = 5;
+    private sprite = new StaticSprite("atomic.png", 38)
 
     start() {
         
         this.transform.set(350, 350)
-        this.sprite = new StaticSprite("atomic.png", this, 38)
+        
+        this.setComponent("Rendering", this.sprite)
 
     }
 
