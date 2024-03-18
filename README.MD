@@ -1,4 +1,4 @@
-<img src="./gama__source.png" align="center">
+<img src="./gama_source.png" align="center">
 
 # GamaSource - Biblioteca para Desenvolvimento de Jogos Web 2D
 
