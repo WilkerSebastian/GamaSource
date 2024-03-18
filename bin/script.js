@@ -63,7 +63,7 @@ function main() {
 
             }
 
-            config.name = config_extern.name ?? "app"
+            config.name = config_extern.name ?? "game"
             config.arch = config_extern.arch ? config_extern.arch.join(',') : "x64"
             config.icon = config_extern.icon ?? path.resolve("./dist/favicon.ico")
             config.platform = config_extern.platform ? config_extern.platform.join(',') : "darwin,linux,win32"

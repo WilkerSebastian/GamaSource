@@ -1,0 +1,7 @@
+{
+    "name": "game",
+    "icon": "public/favicon.ico",
+    "arch": ["x64"],
+    "platform": ["win32"],
+    "out": "bin"
+}
