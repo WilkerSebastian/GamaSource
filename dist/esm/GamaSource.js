@@ -983,7 +983,6 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
         else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         const index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
-        console.log(this.originScalable);
         if (this.originScalable) {
             this.setWidth(slice.width);
             this.setHeight(slice.height);
@@ -994,7 +993,6 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.rotate((0, $4c348eb6c64c4710$export$2e2bcd8739ae039).degressToRadian(this.rotation));
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, -this.width / 2, -this.height / 2, this.width, this.height);
-        console.log(this.width, this.height);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
         this.gameFrame++;
     }
