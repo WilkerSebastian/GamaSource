@@ -19,14 +19,15 @@ export default class StaticSprite extends Sprite implements SizeSprite {
          
             this.pixelRatio = pixelRatio / 100
 
-        } else {
+        } else if (image) {
 
             this.pixelRatio = 1
 
-            this.width = pixelRatio.width
-            this.height = pixelRatio.height
+            this.width = GamaSource.window.WIDTH * (pixelRatio.width / 100)
+            this.height = GamaSource.window.HEIGHT * (pixelRatio.height / 100)
 
-        }
+        } else 
+            this.pixelRatio = 1;
 
         if (!image) {
 

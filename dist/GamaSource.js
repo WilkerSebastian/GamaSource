@@ -25,7 +25,6 @@ $parcel$export(module.exports, "RigidBody2D", () => $3bb785a9443c892c$export$2e2
 $parcel$export(module.exports, "BoxCollider2D", () => $f47f1bf7853bb150$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "SpriteSheet", () => $93dfe24f042b46bc$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "AnimationController", () => $c77491ef4f4406ab$export$2e2bcd8739ae039);
-$parcel$export(module.exports, "JsonAnimation", () => $fc3d5595fa537972$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "GameCanvas", () => $6e1d1d3cd91f3210$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "GameWindow", () => $d56f756e1dc733a9$export$2e2bcd8739ae039);
 $parcel$export(module.exports, "GameMath", () => $5a334b166dfa1be5$export$2e2bcd8739ae039);
@@ -468,11 +467,11 @@ class $0a3ada9b62f29c2d$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
         this.rotation = 0;
         const image = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ASSETS.get(source);
         if (typeof pixelRatio == "number") this.pixelRatio = pixelRatio / 100;
-        else {
+        else if (image) {
             this.pixelRatio = 1;
-            this.width = pixelRatio.width;
-            this.height = pixelRatio.height;
-        }
+            this.width = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * (pixelRatio.width / 100);
+            this.height = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.HEIGHT * (pixelRatio.height / 100);
+        } else this.pixelRatio = 1;
         if (!image) {
             console.error("Error on instace of StaticSprite " + source);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
@@ -1000,13 +999,6 @@ class $fcb37ed2e27d49de$export$2e2bcd8739ae039 extends (0, $7a794ae910495cf5$exp
 
 
 
-class $fc3d5595fa537972$export$2e2bcd8739ae039 {
-    constructor(json){
-        this.animations = json.animations;
-    }
-}
-
-
 
 
 
@@ -1014,10 +1006,13 @@ class $fc3d5595fa537972$export$2e2bcd8739ae039 {
 class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$export$2e2bcd8739ae039) {
     constructor(source, pixelRatio, slices, staggerFrames, reference){
         super(source, pixelRatio, reference);
+        this.originScalable = true;
         this.slices = slices;
         const slice = slices[0];
-        this.setWidth(slice.width);
-        this.setHeight(slice.height);
+        if (typeof pixelRatio == "number") {
+            this.setWidth(slice.width);
+            this.setHeight(slice.height);
+        } else this.originScalable = false;
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
@@ -1026,14 +1021,18 @@ class $93dfe24f042b46bc$export$2e2bcd8739ae039 extends (0, $0a3ada9b62f29c2d$exp
         else if (!this.reference) this.reference = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(0, 0);
         const index = (0, $5a334b166dfa1be5$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
-        this.setWidth(slice.width);
-        this.setHeight(slice.height);
+        console.log(this.originScalable);
+        if (this.originScalable) {
+            this.setWidth(slice.width);
+            this.setHeight(slice.height);
+        }
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $093225c56a233e0f$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
         else if (this.reference instanceof (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)) (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.rotate((0, $5a334b166dfa1be5$export$2e2bcd8739ae039).degressToRadian(this.rotation));
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, -this.width / 2, -this.height / 2, this.width, this.height);
+        console.log(this.width, this.height);
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.restore();
         this.gameFrame++;
     }
@@ -1051,10 +1050,10 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
     set(anim) {
         this.currentAnimation = anim;
     }
-    addAnimation(name, source, animation, staggerFrames) {
+    addAnimation(name, source, pixelRatio, slices, staggerFrames) {
         const controller = this.mapper.get(name);
         if (!controller) {
-            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, animation.pixelRatio, animation.slices, staggerFrames, this.reference));
+            this.mapper.set(name, new (0, $93dfe24f042b46bc$export$2e2bcd8739ae039)(source, pixelRatio, slices, staggerFrames, this.reference));
             return;
         }
         console.warn("Animation overwriting is not allowed!");
@@ -1075,22 +1074,28 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
         animation.rotation = this.rotation;
         animation.render(this.reference);
     }
-    static load(json, anim, staggerFrames) {
-        const j = new (0, $fc3d5595fa537972$export$2e2bcd8739ae039)(json);
-        const animation = new $c77491ef4f4406ab$export$2e2bcd8739ae039(anim.reference);
-        if (j.animations) {
-            j.animations.forEach((a)=>{
-                animation.addAnimation(a.name, a.source, {
-                    pixelRatio: anim.pixelRatio,
-                    slices: a.slices
-                }, staggerFrames);
-            });
-            animation.set(j.animations[0].name);
+    static load(json, reference, over) {
+        const animation = new $c77491ef4f4406ab$export$2e2bcd8739ae039(reference);
+        try {
+            for(let i = 0; i < json.length; i++){
+                const anim = json[i];
+                if (!anim.pixel) {
+                    if (over) {
+                        if (!over.pixelRatio) throw new Error("over pixel rate not found");
+                        else anim.pixel = over.pixelRatio;
+                        if (over.staggerFrames) anim.stagger = over.staggerFrames;
+                    } else throw new Error("over pixel rate not found");
+                }
+                animation.addAnimation(anim.name, anim.source, anim.pixel, anim.slices, anim.stagger);
+            }
+            return animation;
+        } catch (error) {
+            console.error("Failed to load json animtaion, " + error);
+            (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
+        } finally{
+            animation.set(json[0].name);
             return animation;
         }
-        console.error("Failed to load json animtaion");
-        (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).falied();
-        return animation;
     }
     setWidth(width) {
         console.warn("AnimationController does not implement setWidth");
@@ -1103,7 +1108,6 @@ class $c77491ef4f4406ab$export$2e2bcd8739ae039 extends (0, $966979a7503d5337$exp
         return animation.getSize();
     }
 }
-
 
 
 

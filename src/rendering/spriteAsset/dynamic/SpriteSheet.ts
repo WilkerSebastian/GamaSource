@@ -6,18 +6,22 @@ import GamaSource, { GameMath } from "../../../GamaSource";
 
 export default class SpriteSheet extends StaticSprite{
 
-    private gameFrame;
+    private gameFrame:number;
     private staggerFrames:number
     private slices:Slice[]
+    private originScalable = true
 
-    constructor(source: string, pixelRatio: number, slices:Slice[], staggerFrames?:number, reference?:Vector2 | GameObject) {
+    constructor(source: string, pixelRatio: number | {width:number, height:number}, slices:Slice[], staggerFrames?:number, reference?:Vector2 | GameObject) {
         super(source, pixelRatio, reference)
         this.slices = slices
 
         const slice = slices[0]
 
-        this.setWidth(slice.width)
-        this.setHeight(slice.height)
+        if (typeof pixelRatio == "number") { 
+            this.setWidth(slice.width)
+            this.setHeight(slice.height) 
+        } else 
+            this.originScalable = false;
         
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2
@@ -35,9 +39,11 @@ export default class SpriteSheet extends StaticSprite{
         const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 
 
         const slice = this.slices[index];
-
-        this.setWidth(slice.width)
-        this.setHeight(slice.height)
+        
+        if (this.originScalable) {
+            this.setWidth(slice.width)
+            this.setHeight(slice.height)
+        }
 
         GamaSource.ctx.save()
 

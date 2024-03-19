@@ -1,5 +1,4 @@
 import GamaSource, { GameObject, Sprite, Vector2 } from "../../../GamaSource";
-import JsonAnimation from "../../../asset/data/JsonAnimation";
 import SizeSprite from "../SizeSprite";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";
@@ -22,7 +21,7 @@ export default class AnimationController extends Sprite implements SizeSprite {
 
     };
 
-    public addAnimation(name:string, source:string, animation:{pixelRatio: number, slices:Slice[]}, staggerFrames?:number) {
+    public addAnimation(name:string, source:string, pixelRatio: number | {width:number, height:number}, slices:Slice[], staggerFrames?:number) {
 
         const controller = this.mapper.get(name)
 
@@ -31,8 +30,8 @@ export default class AnimationController extends Sprite implements SizeSprite {
              
             this.mapper.set(name, new SpriteSheet(
                 source,
-                animation.pixelRatio,
-                animation.slices,
+                pixelRatio,
+                slices,
                 staggerFrames,
                 this.reference
             ))
@@ -81,35 +80,56 @@ export default class AnimationController extends Sprite implements SizeSprite {
 
     }
 
-    public static load(json:object, anim:{reference:GameObject | Vector2, pixelRatio: number}, staggerFrames?:number) {
+    public static load(json:any[], reference:GameObject | Vector2, over?: { pixelRatio?: number, staggerFrames?:number}) {
 
-        const j = new JsonAnimation(json)
+        const animation = new AnimationController(reference);
 
-        const animation = new AnimationController(anim.reference);
+        try {
 
-        if (j.animations) {      
-            
-            j.animations.forEach(a => {
+            for (let i = 0; i < json.length; i++) {
 
-                animation.addAnimation(a.name, a.source, {
+                const anim = json[i]
 
-                    pixelRatio: anim.pixelRatio,
-                    slices: a.slices
+                if (!anim.pixel) {
+                    if (over) {
 
-                }, staggerFrames);
+                        if (!over.pixelRatio)
+                            throw new Error("over pixel rate not found");
+                        else 
+                            anim.pixel = over.pixelRatio;
 
-            })
+                        if (over.staggerFrames)
+                            anim.stagger = over.staggerFrames;
 
-            animation.set(j.animations[0].name);
+                    } else 
+                        throw new Error("over pixel rate not found");
+                }
+                        
+                
+                animation.addAnimation(
+                    anim.name,
+                    anim.source,
+                    anim.pixel,
+                    anim.slices,
+                    anim.stagger
+                )
+                
+            }
 
             return animation
+            
+        } catch (error) {
+         
+            console.error("Failed to load json animtaion, " + error)
+            GamaSource.falied()
+
+        } finally {
+
+            animation.set(json[0].name)
+
+            return animation;
 
         }
-
-        console.error("Failed to load json animtaion")
-        GamaSource.falied()
-
-        return animation
 
     }
 
@@ -127,7 +147,7 @@ export default class AnimationController extends Sprite implements SizeSprite {
 
     public getSize() {
         
-        const animation =  this.getCurrentAnimation() as SpriteSheet
+        const animation = this.getCurrentAnimation() as SpriteSheet
 
         return animation.getSize()
 

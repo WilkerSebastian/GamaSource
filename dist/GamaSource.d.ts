@@ -269,21 +269,6 @@ export class FrameText extends FrameComponent {
     setFont(font: string): void;
     getFont(): string;
 }
-export class JsonAnimation {
-    animations: [
-        {
-            name: string;
-            slices: [{
-                x: number;
-                y: number;
-                width: number;
-                height: number;
-            }];
-            source: string;
-        }
-    ];
-    constructor(json: any);
-}
 interface Slice {
     x: number;
     y: number;
@@ -291,7 +276,10 @@ interface Slice {
     height: number;
 }
 export class SpriteSheet extends StaticSprite {
-    constructor(source: string, pixelRatio: number, slices: Slice[], staggerFrames?: number, reference?: Vector2 | GameObject);
+    constructor(source: string, pixelRatio: number | {
+        width: number;
+        height: number;
+    }, slices: Slice[], staggerFrames?: number, reference?: Vector2 | GameObject);
     render(reference?: Vector2 | GameObject): void;
 }
 export class AnimationController extends Sprite implements SizeSprite {
@@ -299,15 +287,15 @@ export class AnimationController extends Sprite implements SizeSprite {
     rotation: number;
     constructor(reference?: GameObject | Vector2);
     set(anim: string): void;
-    addAnimation(name: string, source: string, animation: {
-        pixelRatio: number;
-        slices: Slice[];
-    }, staggerFrames?: number): void;
+    addAnimation(name: string, source: string, pixelRatio: number | {
+        width: number;
+        height: number;
+    }, slices: Slice[], staggerFrames?: number): void;
     render(reference?: GameObject | Vector2): void;
-    static load(json: object, anim: {
-        reference: GameObject | Vector2;
-        pixelRatio: number;
-    }, staggerFrames?: number): AnimationController;
+    static load(json: any[], reference: GameObject | Vector2, over?: {
+        pixelRatio?: number;
+        staggerFrames?: number;
+    }): AnimationController;
     setWidth(width: number): void;
     setHeight(height: number): void;
     getSize(): {

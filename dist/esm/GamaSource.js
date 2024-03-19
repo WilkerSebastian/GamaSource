@@ -429,11 +429,11 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         this.rotation = 0;
         const image = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ASSETS.get(source);
         if (typeof pixelRatio == "number") this.pixelRatio = pixelRatio / 100;
-        else {
+        else if (image) {
             this.pixelRatio = 1;
-            this.width = pixelRatio.width;
-            this.height = pixelRatio.height;
-        }
+            this.width = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.WIDTH * (pixelRatio.width / 100);
+            this.height = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).window.HEIGHT * (pixelRatio.height / 100);
+        } else this.pixelRatio = 1;
         if (!image) {
             console.error("Error on instace of StaticSprite " + source);
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
@@ -961,13 +961,6 @@ class $82182a7e02a00cea$export$2e2bcd8739ae039 extends (0, $0d012e83fb7d1e90$exp
 
 
 
-class $77becdb398fdbf11$export$2e2bcd8739ae039 {
-    constructor(json){
-        this.animations = json.animations;
-    }
-}
-
-
 
 
 
@@ -975,10 +968,13 @@ class $77becdb398fdbf11$export$2e2bcd8739ae039 {
 class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$export$2e2bcd8739ae039) {
     constructor(source, pixelRatio, slices, staggerFrames, reference){
         super(source, pixelRatio, reference);
+        this.originScalable = true;
         this.slices = slices;
         const slice = slices[0];
-        this.setWidth(slice.width);
-        this.setHeight(slice.height);
+        if (typeof pixelRatio == "number") {
+            this.setWidth(slice.width);
+            this.setHeight(slice.height);
+        } else this.originScalable = false;
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
@@ -987,14 +983,18 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
         else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         const index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
-        this.setWidth(slice.width);
-        this.setHeight(slice.height);
+        console.log(this.originScalable);
+        if (this.originScalable) {
+            this.setWidth(slice.width);
+            this.setHeight(slice.height);
+        }
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
         else if (this.reference instanceof (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.rotate((0, $4c348eb6c64c4710$export$2e2bcd8739ae039).degressToRadian(this.rotation));
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.scale(this.scale.x, this.scale.y);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.drawImage(this.getImage().getSource(), slice.x, slice.y, slice.width, slice.height, -this.width / 2, -this.height / 2, this.width, this.height);
+        console.log(this.width, this.height);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.restore();
         this.gameFrame++;
     }
@@ -1012,10 +1012,10 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
     set(anim) {
         this.currentAnimation = anim;
     }
-    addAnimation(name, source, animation, staggerFrames) {
+    addAnimation(name, source, pixelRatio, slices, staggerFrames) {
         const controller = this.mapper.get(name);
         if (!controller) {
-            this.mapper.set(name, new (0, $c34584e0283e73c1$export$2e2bcd8739ae039)(source, animation.pixelRatio, animation.slices, staggerFrames, this.reference));
+            this.mapper.set(name, new (0, $c34584e0283e73c1$export$2e2bcd8739ae039)(source, pixelRatio, slices, staggerFrames, this.reference));
             return;
         }
         console.warn("Animation overwriting is not allowed!");
@@ -1036,22 +1036,28 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         animation.rotation = this.rotation;
         animation.render(this.reference);
     }
-    static load(json, anim, staggerFrames) {
-        const j = new (0, $77becdb398fdbf11$export$2e2bcd8739ae039)(json);
-        const animation = new $3fba0ef90143f197$export$2e2bcd8739ae039(anim.reference);
-        if (j.animations) {
-            j.animations.forEach((a)=>{
-                animation.addAnimation(a.name, a.source, {
-                    pixelRatio: anim.pixelRatio,
-                    slices: a.slices
-                }, staggerFrames);
-            });
-            animation.set(j.animations[0].name);
+    static load(json, reference, over) {
+        const animation = new $3fba0ef90143f197$export$2e2bcd8739ae039(reference);
+        try {
+            for(let i = 0; i < json.length; i++){
+                const anim = json[i];
+                if (!anim.pixel) {
+                    if (over) {
+                        if (!over.pixelRatio) throw new Error("over pixel rate not found");
+                        else anim.pixel = over.pixelRatio;
+                        if (over.staggerFrames) anim.stagger = over.staggerFrames;
+                    } else throw new Error("over pixel rate not found");
+                }
+                animation.addAnimation(anim.name, anim.source, anim.pixel, anim.slices, anim.stagger);
+            }
+            return animation;
+        } catch (error) {
+            console.error("Failed to load json animtaion, " + error);
+            (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
+        } finally{
+            animation.set(json[0].name);
             return animation;
         }
-        console.error("Failed to load json animtaion");
-        (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
-        return animation;
     }
     setWidth(width) {
         console.warn("AnimationController does not implement setWidth");
@@ -1064,7 +1070,6 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         return animation.getSize();
     }
 }
-
 
 
 
@@ -1555,5 +1560,5 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
 var $f8bbed27444dc2b3$export$2e2bcd8739ae039 = $f8bbed27444dc2b3$export$d36076abcf594543;
 
 
-export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $965b124fc3af26a7$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $77becdb398fdbf11$export$2e2bcd8739ae039 as JsonAnimation, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 as AudioPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
+export {$f8bbed27444dc2b3$export$d36076abcf594543 as GamaSource, $f8bbed27444dc2b3$export$2e2bcd8739ae039 as default, $d138717687ddda30$export$2e2bcd8739ae039 as GamaSourceState, $64d48ff8d4d06d3a$export$2e2bcd8739ae039 as TimeGame, $8ada8c2f2e8cd214$export$2e2bcd8739ae039 as GamaSourceConfig, $e9381f474ff620cc$export$2e2bcd8739ae039 as GameObject, $94db9bb1e19ed727$export$2e2bcd8739ae039 as KeyBoard, $a5c17bf62a97e3fd$export$2e2bcd8739ae039 as Mouse, $08115c74b7a4e0bd$export$2e2bcd8739ae039 as Vector2, $08a27fb1cb0f162c$export$2e2bcd8739ae039 as TimeController, $b9476ce5e7489a8e$export$2e2bcd8739ae039 as Sprite, $59f2c5857d98d905$export$2e2bcd8739ae039 as ShapeSprite, $c4d1796e1253327f$export$2e2bcd8739ae039 as SquareSprite, $406f161b36ba144b$export$2e2bcd8739ae039 as StaticSprite, $965b124fc3af26a7$export$2e2bcd8739ae039 as RigidBody2D, $b5035cf9b274c60a$export$2e2bcd8739ae039 as BoxCollider2D, $c34584e0283e73c1$export$2e2bcd8739ae039 as SpriteSheet, $3fba0ef90143f197$export$2e2bcd8739ae039 as AnimationController, $0e52282bd7cacc2f$export$2e2bcd8739ae039 as GameCanvas, $58cc35928f5b21f0$export$2e2bcd8739ae039 as GameWindow, $4c348eb6c64c4710$export$2e2bcd8739ae039 as GameMath, $0d012e83fb7d1e90$export$2e2bcd8739ae039 as FrameComponent, $8482aeb5ffc96aff$export$2e2bcd8739ae039 as FramePanel, $82182a7e02a00cea$export$2e2bcd8739ae039 as FrameText, $c03a4fecca5efceb$export$2e2bcd8739ae039 as FrameButton, $ee458e2b852a09a8$export$2e2bcd8739ae039 as VideoPlayer, $a4f0bbb1d18e25c5$export$2e2bcd8739ae039 as AudioPlayer, $acd5a054dcfb562a$export$2e2bcd8739ae039 as Camera, $88f08228c341c278$export$2e2bcd8739ae039 as Helpers};
 //# sourceMappingURL=GamaSource.js.map

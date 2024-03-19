@@ -20,7 +20,6 @@ import FrameComponent from "./UI/FrameComponent"
 import FramePanel from "./UI/components/FramePanel"
 import FrameText from "./UI/components/FrameText"
 import AnimationController from "./rendering/spriteAsset/animation/AnimationController"
-import JsonAnimation from "./asset/data/JsonAnimation"
 import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
 import RigidBody2D from "./math/physics/RigidBody2D"
 import BoxCollider2D from "./math/collision/BoxCollider2D"
@@ -373,7 +372,6 @@ export {
     BoxCollider2D,
     SpriteSheet,
     AnimationController,
-    JsonAnimation,
     GameCanvas, 
     GameWindow,
     GameMath,
