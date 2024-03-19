@@ -51,4 +51,10 @@ export default class Vector2 {
 
     }
 
+    public isNullVector() {
+
+        return this.x == 0 && this.y == 0
+
+    }
+
 }

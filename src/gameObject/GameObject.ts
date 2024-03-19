@@ -126,6 +126,15 @@ export default class GameObject {
 
         this.start()
 
+        const physics = this.getComponent("Physics") as Physic
+
+        if (physics) {
+
+            physics.position = physics.position.isNullVector() ? this.transform : physics.position
+            this.setComponent("Physics", physics)
+
+        }
+
         for (let i = 0; i < this.nodes.length; i++)
             this.nodes[i].gameStart()
 
@@ -234,7 +243,7 @@ export default class GameObject {
             if (physics) {
     
                 physics.update()
-                this.fixedUpdate()
+                this.fixedUpdate();
 
             }
 

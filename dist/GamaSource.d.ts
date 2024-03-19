@@ -15,6 +15,7 @@ export class Vector2 {
     multiply(scalar: number): Vector2;
     magnitude(): number;
     normalize(): Vector2;
+    isNullVector(): boolean;
 }
 declare abstract class Component {
 }

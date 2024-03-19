@@ -87,6 +87,9 @@ class $fbe8591a509f65b2$export$2e2bcd8739ae039 {
         if (mag === 0) return new $fbe8591a509f65b2$export$2e2bcd8739ae039(0, 0);
         return new $fbe8591a509f65b2$export$2e2bcd8739ae039(this.x / mag, this.y / mag);
     }
+    isNullVector() {
+        return this.x == 0 && this.y == 0;
+    }
 }
 
 
@@ -194,6 +197,11 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     }
     gameStart() {
         this.start();
+        const physics = this.getComponent("Physics");
+        if (physics) {
+            physics.position = physics.position.isNullVector() ? this.transform : physics.position;
+            this.setComponent("Physics", physics);
+        }
         for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameStart();
     }
     start() {}
