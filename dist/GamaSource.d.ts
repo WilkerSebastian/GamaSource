@@ -44,7 +44,7 @@ declare abstract class Physic extends Component {
     constructor(mass: number, position?: Vector2);
     abstract applyForce(force: Vector2): void;
     abstract applyFriction(): void;
-    abstract update(position: Vector2): void;
+    abstract update(): void;
 }
 type ComponentType = "Rendering" | "Physics" | "Collision";
 export class GameObject {
@@ -122,7 +122,7 @@ export abstract class Sprite extends Component implements SizeSprite {
         width: number;
         height: number;
     };
-    abstract render(reference?: GameObject | Vector2): void;
+    abstract render(): void;
 }
 export abstract class ShapeSprite extends Sprite {
     color: string;
@@ -130,7 +130,7 @@ export abstract class ShapeSprite extends Sprite {
 }
 export class SquareSprite extends ShapeSprite {
     constructor(width: number, height: number, color: string, reference?: Vector2 | GameObject);
-    render(reference?: GameObject | Vector2): void;
+    render(): void;
 }
 declare class GameImage {
     constructor(path: string);
@@ -150,7 +150,7 @@ export class StaticSprite extends Sprite implements SizeSprite {
         height: number;
     };
     getImage(): GameImage;
-    render(reference?: GameObject | Vector2): void;
+    render(): void;
 }
 export abstract class GameMath {
     static standard: Math;
@@ -281,7 +281,7 @@ export class SpriteSheet extends StaticSprite {
         width: number;
         height: number;
     }, slices: Slice[], staggerFrames?: number, reference?: Vector2 | GameObject);
-    render(reference?: Vector2 | GameObject): void;
+    render(): void;
 }
 export class AnimationController extends Sprite implements SizeSprite {
     scale: Vector2;
@@ -292,7 +292,7 @@ export class AnimationController extends Sprite implements SizeSprite {
         width: number;
         height: number;
     }, slices: Slice[], staggerFrames?: number): void;
-    render(reference?: GameObject | Vector2): void;
+    render(): void;
     static load(json: any[], reference: GameObject | Vector2, over?: {
         pixelRatio?: number;
         staggerFrames?: number;
@@ -310,7 +310,7 @@ export class RigidBody2D extends Physic {
     constructor(mass: number | undefined, gravity: number, friction: number, postion?: Vector2);
     applyForce(force: Vector2): void;
     applyFriction(): void;
-    update(position: Vector2): void;
+    update(): void;
 }
 export class Camera extends GameObject {
     followObject(): void;

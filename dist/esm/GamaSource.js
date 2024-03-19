@@ -162,8 +162,8 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
         const collision = this.getComponent("Collision");
         const rendering = this.getComponent("Rendering");
         if (physics) physics.position = this.transform;
-        if (physics) collision.position = this.transform;
-        if (physics) rendering.reference = this.transform;
+        if (collision) collision.position = this.transform;
+        if (rendering) rendering.reference = this.transform;
         for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameStart();
     }
     start() {}
@@ -211,7 +211,7 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
             this.update();
             const physics = this.getComponent("Physics");
             if (physics) {
-                physics.update(this.transform);
+                physics.update();
                 this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
@@ -222,7 +222,7 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
         if (sprite && this.visible) {
             const collision = this.getComponent("Collision");
             if (collision instanceof (0, $b5035cf9b274c60a$export$2e2bcd8739ae039) && (0, $88f08228c341c278$export$2e2bcd8739ae039).config.collision) (0, $88f08228c341c278$export$2e2bcd8739ae039).collsion(collision, this.collidingObjects.length > 0);
-            sprite.render(this);
+            sprite.render();
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].render();
             if ((0, $88f08228c341c278$export$2e2bcd8739ae039).config.position) (0, $88f08228c341c278$export$2e2bcd8739ae039).position(this.transform);
         }
@@ -398,9 +398,8 @@ class $c4d1796e1253327f$export$2e2bcd8739ae039 extends (0, $59f2c5857d98d905$exp
     constructor(width, height, color, reference){
         super(width, height, color, reference);
     }
-    render(reference) {
-        if (!this.reference && reference) this.reference = reference;
-        else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    render() {
+        if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) {
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillStyle = this.color;
             (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.fillRect(this.reference.transform.x, this.reference.transform.y, this.width, this.height);
@@ -470,9 +469,8 @@ class $406f161b36ba144b$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
     getImage() {
         return this.image;
     }
-    render(reference) {
-        if (!this.reference && reference) this.reference = reference;
-        else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    render() {
+        if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.save();
         if (this.reference instanceof (0, $e9381f474ff620cc$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2);
         else if (this.reference instanceof (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)) (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2);
@@ -987,9 +985,8 @@ class $c34584e0283e73c1$export$2e2bcd8739ae039 extends (0, $406f161b36ba144b$exp
         this.gameFrame = 0;
         this.staggerFrames = staggerFrames ?? this.slices.length / 2;
     }
-    render(reference) {
-        if (!this.reference && reference) this.reference = reference;
-        else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    render() {
+        if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         const index = (0, $4c348eb6c64c4710$export$2e2bcd8739ae039).parseInt(this.gameFrame / this.staggerFrames) % this.slices.length;
         const slice = this.slices[index];
         if (this.originScalable) {
@@ -1035,13 +1032,12 @@ class $3fba0ef90143f197$export$2e2bcd8739ae039 extends (0, $b9476ce5e7489a8e$exp
         console.error("Failed to render animation: " + this.currentAnimation);
         (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).falied();
     }
-    render(reference) {
-        if (!this.reference && reference) this.reference = reference;
-        else if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
+    render() {
+        if (!this.reference) this.reference = new (0, $08115c74b7a4e0bd$export$2e2bcd8739ae039)(0, 0);
         const animation = this.getCurrentAnimation();
         animation.scale = this.scale;
         animation.rotation = this.rotation;
-        animation.render(this.reference);
+        animation.render();
     }
     static load(json, reference, over) {
         const animation = new $3fba0ef90143f197$export$2e2bcd8739ae039(reference);
@@ -1107,8 +1103,7 @@ class $965b124fc3af26a7$export$2e2bcd8739ae039 extends (0, $8971300920d969cb$exp
         const friction = this.velocity.multiply(-this.frictionCoefficient);
         this.applyForce(friction);
     }
-    update(position) {
-        this.position = position;
+    update() {
         this.applyForce(this.gravity);
     }
 }

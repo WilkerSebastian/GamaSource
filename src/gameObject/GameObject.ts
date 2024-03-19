@@ -133,10 +133,10 @@ export default class GameObject {
         if (physics)
             physics.position = this.transform
 
-        if (physics)
+        if (collision)
             collision.position = this.transform
 
-        if (physics)
+        if (rendering)
             rendering.reference = this.transform
 
         for (let i = 0; i < this.nodes.length; i++)
