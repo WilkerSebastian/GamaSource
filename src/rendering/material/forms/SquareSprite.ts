@@ -11,12 +11,9 @@ export default class SquareSprite extends ShapeSprite {
 
     }
 
-    public render(reference?: GameObject | Vector2) {
+    public render() {
 
-        if (!this.reference && reference)
-            this.reference = reference
-
-        else if(!this.reference)
+        if(!this.reference)
             this.reference = new Vector2(0,0)
 
         if (this.reference instanceof GameObject) {

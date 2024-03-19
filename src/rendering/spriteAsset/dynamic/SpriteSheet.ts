@@ -28,12 +28,9 @@ export default class SpriteSheet extends StaticSprite{
 
     }
 
-    public render(reference?:Vector2 | GameObject): void {
+    public render(): void {
 
-        if (!this.reference && reference)
-            this.reference = reference
-
-        else if(!this.reference)
+        if(!this.reference)
             this.reference = new Vector2(0,0)
 
         const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 

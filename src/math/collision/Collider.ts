@@ -14,6 +14,6 @@ export default abstract class Collider extends Component {
 
     public abstract resolveCollision(collider:Collider):Vector2
 
-    public abstract update(position:Vector2, size?:any):void
+    public abstract update(size?:any):void
 
 }

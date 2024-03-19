@@ -127,13 +127,17 @@ export default class GameObject {
         this.start()
 
         const physics = this.getComponent("Physics") as Physic
+        const collision = this.getComponent("Collision") as BoxCollider2D
+        const rendering = this.getComponent("Rendering") as Sprite
 
-        if (physics) {
+        if (physics)
+            physics.position = this.transform
 
-            physics.position = physics.position.isNullVector() ? this.transform : physics.position
-            this.setComponent("Physics", physics)
+        if (physics)
+            collision.position = this.transform
 
-        }
+        if (physics)
+            rendering.reference = this.transform
 
         for (let i = 0; i < this.nodes.length; i++)
             this.nodes[i].gameStart()
@@ -148,13 +152,15 @@ export default class GameObject {
 
         const objs = GamaSource.GameObjects.filter(obj => obj.getComponent("Collision") && obj != this && obj != this.root)
 
-        objs.forEach(obj => {
+         for (let i = 0;i < objs.length;i++) {
+         
+            const obj = objs[i]
 
             const collision = this.getComponent("Collision") as Collider
 
             const objCollision = this.getComponent("Collision") as Collider
 
-            if (!collision || !objCollision)
+            if (collision && objCollision)
                 return
 
             if (collision.isCollided(objCollision)) {
@@ -192,7 +198,7 @@ export default class GameObject {
 
             }
 
-        })
+        }
 
     }
 
@@ -224,7 +230,7 @@ export default class GameObject {
 
                 if (sprite) {
                     
-                    collision.update(this.transform, sprite.getSize())
+                    collision.update(sprite.getSize())
 
                 } else {
 
@@ -265,7 +271,7 @@ export default class GameObject {
             if (collision instanceof BoxCollider2D && Helpers.config.collision) 
                 Helpers.collsion(collision, this.collidingObjects.length > 0)
 
-            sprite.render(this)
+            sprite.render()
 
             for (let i = 0; i < this.nodes.length; i++)
                 this.nodes[i].render()

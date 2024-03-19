@@ -24,7 +24,7 @@ declare abstract class Collider extends Component {
     constructor(position?: Vector2);
     abstract isCollided(collider: Collider): boolean;
     abstract resolveCollision(collider: Collider): Vector2;
-    abstract update(position: Vector2, size?: any): void;
+    abstract update(size?: any): void;
 }
 export class BoxCollider2D extends Collider {
     width: number;
@@ -32,7 +32,7 @@ export class BoxCollider2D extends Collider {
     constructor(width?: number, height?: number);
     isCollided(collider: colliderCollider2D): boolean;
     resolveCollision(collider: colliderCollider2D): Vector2;
-    update(position: Vector2, size?: {
+    update(size?: {
         width: number;
         height: number;
     }): void;
@@ -44,7 +44,7 @@ declare abstract class Physic extends Component {
     constructor(mass: number, position?: Vector2);
     abstract applyForce(force: Vector2): void;
     abstract applyFriction(): void;
-    abstract update(): void;
+    abstract update(position: Vector2): void;
 }
 type ComponentType = "Rendering" | "Physics" | "Collision";
 export class GameObject {
@@ -310,7 +310,7 @@ export class RigidBody2D extends Physic {
     constructor(mass: number | undefined, gravity: number, friction: number, postion?: Vector2);
     applyForce(force: Vector2): void;
     applyFriction(): void;
-    update(): void;
+    update(position: Vector2): void;
 }
 export class Camera extends GameObject {
     followObject(): void;

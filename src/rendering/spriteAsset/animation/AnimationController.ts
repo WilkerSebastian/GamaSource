@@ -26,7 +26,6 @@ export default class AnimationController extends Sprite implements SizeSprite {
         const controller = this.mapper.get(name)
 
         if (!controller) {
-
              
             this.mapper.set(name, new SpriteSheet(
                 source,
@@ -63,20 +62,17 @@ export default class AnimationController extends Sprite implements SizeSprite {
 
     }
 
-    public render(reference?: GameObject | Vector2) {
+    public render() {
 
-        if (!this.reference && reference)
-            this.reference = reference
-
-        else if(!this.reference)
+        if(!this.reference)
             this.reference = new Vector2(0,0)
 
-        const animation =  this.getCurrentAnimation() as SpriteSheet
+        const animation = this.getCurrentAnimation() as SpriteSheet
 
         animation.scale = this.scale
         animation.rotation = this.rotation
 
-        animation.render(this.reference)
+        animation.render()
 
     }
 

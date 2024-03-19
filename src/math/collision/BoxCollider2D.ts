@@ -52,9 +52,7 @@ export default class colliderCollider2D extends Collider {
 
     }
 
-    public override update(position:Vector2, size?:{width:number, height:number}) {
-
-        this.position = position
+    public override update(size?:{width:number, height:number}) {
 
         if (size) {
          

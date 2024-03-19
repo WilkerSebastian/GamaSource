@@ -26,6 +26,6 @@ export default abstract class Sprite extends Component implements SizeSprite {
         return { width:this.width, height:this.height}
     }
 
-    public abstract render(reference?:GameObject | Vector2):void
+    public abstract render():void
 
 }

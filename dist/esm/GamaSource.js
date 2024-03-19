@@ -93,8 +93,7 @@ class $b5035cf9b274c60a$export$2e2bcd8739ae039 extends (0, $95ca0c2bc88dfa6d$exp
         }
         return this.position;
     }
-    update(position, size) {
-        this.position = position;
+    update(size) {
         if (size) {
             this.width = size.width;
             this.height = size.height;
@@ -160,20 +159,22 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
     gameStart() {
         this.start();
         const physics = this.getComponent("Physics");
-        if (physics) {
-            physics.position = physics.position.isNullVector() ? this.transform : physics.position;
-            this.setComponent("Physics", physics);
-        }
+        const collision = this.getComponent("Collision");
+        const rendering = this.getComponent("Rendering");
+        if (physics) physics.position = this.transform;
+        if (physics) collision.position = this.transform;
+        if (physics) rendering.reference = this.transform;
         for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameStart();
     }
     start() {}
     update() {}
     onCollision() {
         const objs = (0, $f8bbed27444dc2b3$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.getComponent("Collision") && obj != this && obj != this.root);
-        objs.forEach((obj)=>{
+        for(let i = 0; i < objs.length; i++){
+            const obj = objs[i];
             const collision = this.getComponent("Collision");
             const objCollision = this.getComponent("Collision");
-            if (!collision || !objCollision) return;
+            if (collision && objCollision) return;
             if (collision.isCollided(objCollision)) {
                 const physics = this.getComponent("Physics");
                 if (physics) {
@@ -193,7 +194,7 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
                 this.collidingObjects = this.collidingObjects.filter((o)=>o != obj);
                 this.onCollisionExit(obj);
             }
-        });
+        }
     }
     onCollisionBetween(gameObject) {}
     onCollisionExit(gameObject) {}
@@ -203,14 +204,14 @@ class $e9381f474ff620cc$export$2e2bcd8739ae039 {
             const collision = this.getComponent("Collision");
             if (collision) {
                 const sprite = this.getComponent("Rendering");
-                if (sprite) collision.update(this.transform, sprite.getSize());
+                if (sprite) collision.update(sprite.getSize());
                 else collision.update(this.transform);
                 this.onCollision();
             }
             this.update();
             const physics = this.getComponent("Physics");
             if (physics) {
-                physics.update();
+                physics.update(this.transform);
                 this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
@@ -1106,9 +1107,9 @@ class $965b124fc3af26a7$export$2e2bcd8739ae039 extends (0, $8971300920d969cb$exp
         const friction = this.velocity.multiply(-this.frictionCoefficient);
         this.applyForce(friction);
     }
-    update() {
+    update(position) {
+        this.position = position;
         this.applyForce(this.gravity);
-        this.position = this.position.add(this.velocity);
     }
 }
 
