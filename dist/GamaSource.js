@@ -150,10 +150,10 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj != this);
     }
     getComponent(type) {
-        return this.components.get(type) ?? null;
+        return this.components[type] ?? null;
     }
     setComponent(type, component) {
-        this.components.set(type, component);
+        this.components[type] = component;
     }
     static getElementByTag(tag) {
         const obj = (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).GameObjects.filter((obj)=>obj.tag == tag)[0];
@@ -211,26 +211,21 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         for(let i = 0; i < objs.length; i++){
             const obj = objs[i];
             const collision = this.getComponent("Collision");
-            const objCollision = this.getComponent("Collision");
-            if (collision && objCollision) return;
-            if (collision.isCollided(objCollision)) {
-                const physics = this.getComponent("Physics");
-                if (physics) {
-                    const over = collision.resolveCollision(objCollision);
-                    physics.applyFriction();
-                    if (over.x != collision.position.x) {
-                        physics.velocity.x = 0;
-                        physics.position = over;
-                        return;
+            const objCollision = obj.getComponent("Collision");
+            if (collision && objCollision) {
+                if (collision.isCollided(objCollision)) {
+                    const physics = this.getComponent("Physics");
+                    if (physics) {
+                        physics.applyFriction();
+                        physics.velocity.y = 0;
+                        physics.position.y = objCollision.position.y - this.getComponent("Rendering").getSize().height;
                     }
-                    physics.velocity.y = 0;
-                    physics.position = over;
+                    if (!this.collidingObjects.includes(obj)) this.collidingObjects.push(obj);
+                    this.onCollisionBetween(obj);
+                } else if (this.collidingObjects.includes(obj)) {
+                    this.collidingObjects = this.collidingObjects.filter((o)=>o != obj);
+                    this.onCollisionExit(obj);
                 }
-                if (!this.collidingObjects.includes(obj)) this.collidingObjects.push(obj);
-                this.onCollisionBetween(obj);
-            } else if (this.collidingObjects.includes(obj)) {
-                this.collidingObjects = this.collidingObjects.filter((o)=>o != obj);
-                this.onCollisionExit(obj);
             }
         }
     }
@@ -238,22 +233,24 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
     onCollisionExit(gameObject) {}
     fixedUpdate() {}
     gameUpdate() {
+        this.update();
+        const physics = this.getComponent("Physics");
+        if (physics) {
+            physics.update();
+            this.fixedUpdate();
+            this.transform = physics.position;
+        }
+        const collision = this.getComponent("Collision");
         if (this.visible) {
-            const collision = this.getComponent("Collision");
             if (collision) {
                 const sprite = this.getComponent("Rendering");
                 if (sprite) collision.update(sprite.getSize());
-                else collision.update(this.transform);
+                else collision.update();
                 this.onCollision();
-            }
-            this.update();
-            const physics = this.getComponent("Physics");
-            if (physics) {
-                physics.update();
-                this.fixedUpdate();
             }
             for(let i = 0; i < this.nodes.length; i++)this.nodes[i].gameUpdate();
         }
+        if (collision) collision.position = this.transform;
     }
     render() {
         const sprite = this.getComponent("Rendering");
@@ -270,7 +267,7 @@ class $093225c56a233e0f$export$2e2bcd8739ae039 {
         this.layer = 1;
         this.tag = "not defined";
         this.visible = true;
-        this.components = new Map;
+        this.components = {};
         this.arguments = new Array();
         this.root = null;
         this.nodes = new Array();
@@ -1143,6 +1140,7 @@ class $3bb785a9443c892c$export$2e2bcd8739ae039 extends (0, $d464fd222780c6a0$exp
     }
     update() {
         this.applyForce(this.gravity);
+        this.position = this.position.add(this.velocity);
     }
 }
 

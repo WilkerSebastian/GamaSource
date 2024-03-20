@@ -29,6 +29,8 @@ export default class RigidBody2D extends Physic {
         
         this.applyForce(this.gravity);
 
+        this.position = this.position.add(this.velocity)
+
     }
 
 }

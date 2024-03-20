@@ -54,7 +54,7 @@ export class GameObject {
     protected visible: boolean;
     static create(obj: typeof GameObject): void;
     destroy(): void;
-    getComponent(type: ComponentType): Component | null;
+    getComponent(type: ComponentType): Component;
     setComponent(type: ComponentType, component: Component): void;
     static getElementByTag<T>(tag: string): T | null;
     static getAllElementsByTag<T>(tag: string): T[];

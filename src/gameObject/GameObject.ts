@@ -14,7 +14,7 @@ export default class GameObject {
 
     protected visible:boolean = true
 
-    private components = new Map<ComponentType, Component>
+    private components: {[key:string]: Component} = {}
     private arguments = new Array<any>()
     private root:GameObject | null = null
     private nodes = new Array<GameObject>()
@@ -36,13 +36,13 @@ export default class GameObject {
 
     public getComponent(type:ComponentType) {
 
-        return this.components.get(type) ?? null
+        return this.components[type] ?? null
 
     }
 
     public setComponent(type:ComponentType, component:Component) {
 
-        this.components.set(type, component)
+        this.components[type] = component
 
     }
 
@@ -152,49 +152,40 @@ export default class GameObject {
 
         const objs = GamaSource.GameObjects.filter(obj => obj.getComponent("Collision") && obj != this && obj != this.root)
 
-         for (let i = 0;i < objs.length;i++) {
+        for (let i = 0;i < objs.length;i++) {
          
             const obj = objs[i]
 
             const collision = this.getComponent("Collision") as Collider
 
-            const objCollision = this.getComponent("Collision") as Collider
+            const objCollision = obj.getComponent("Collision") as Collider
 
-            if (collision && objCollision)
-                return
+            if (collision && objCollision) {
 
-            if (collision.isCollided(objCollision)) {
+                if (collision.isCollided(objCollision)) {
 
-                const physics = this.getComponent("Physics") as Physic
+                    const physics = this.getComponent("Physics") as Physic
 
-                if (physics) {
+                    if (physics) {
 
-                    const over = collision.resolveCollision(objCollision)
+                        physics.applyFriction()
 
-                    physics.applyFriction()
+                        physics.velocity.y = 0;
+                        physics.position.y = objCollision.position.y - (this.getComponent("Rendering") as Sprite).getSize().height
 
-                    if (over.x != collision.position.x) {
-                      
-                        physics.velocity.x = 0;
-                        physics.position = over
-                        return
+                    }
 
-                    } 
+                    if (!this.collidingObjects.includes(obj))
+                        this.collidingObjects.push(obj)
 
-                    physics.velocity.y = 0;
-                    physics.position = over
+                    this.onCollisionBetween(obj);
+
+                } else if(this.collidingObjects.includes(obj)) {
+
+                    this.collidingObjects = this.collidingObjects.filter(o => o != obj)
+                    this.onCollisionExit(obj)
 
                 }
-
-                if (!this.collidingObjects.includes(obj))
-                    this.collidingObjects.push(obj)
-
-                this.onCollisionBetween(obj);
-
-            } else if(this.collidingObjects.includes(obj)) {
-
-                this.collidingObjects = this.collidingObjects.filter(o => o != obj)
-                this.onCollisionExit(obj)
 
             }
 
@@ -220,10 +211,23 @@ export default class GameObject {
 
     public gameUpdate() {
 
-        if (this.visible) {
+        this.update()
 
-            const collision = this.getComponent("Collision") as Collider
-            
+        const physics = this.getComponent("Physics") as Physic
+
+        if (physics) {
+
+            physics.update()
+            this.fixedUpdate();
+
+            this.transform = physics.position
+
+        }
+
+        const collision = this.getComponent("Collision") as Collider
+
+        if (this.visible) {
+           
             if (collision) {
 
                 const sprite = this.getComponent("Rendering") as Sprite
@@ -234,7 +238,7 @@ export default class GameObject {
 
                 } else {
 
-                    collision.update(this.transform)
+                    collision.update()
 
                 }
                 
@@ -242,21 +246,13 @@ export default class GameObject {
 
             }
 
-            this.update()
-
-            const physics = this.getComponent("Physics") as Physic
-
-            if (physics) {
-    
-                physics.update()
-                this.fixedUpdate();
-
-            }
-
             for (let i = 0; i < this.nodes.length; i++)
                 this.nodes[i].gameUpdate()
 
         }
+
+        if (collision)
+            collision.position = this.transform
 
     }
 
