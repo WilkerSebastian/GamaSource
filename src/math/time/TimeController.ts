@@ -8,31 +8,51 @@ export default class TimeController {
     private frameInterval:number
     private lastFrameTime:number
     private frameCount:number
+    private currentTime:number
 
     constructor(maxFPS:number) {
 
         this.FPS = 0
         this.DeltaTime = 0
-        this.lastFrameTime = performance.now()
+        this.lastFrameTime = 0
+        this.currentTime = 0
         this.frameCount = 0
         this.frameInterval = Time.SECOND / maxFPS
 
     }
 
-    public updateFrame(currentTime:number) {
+    public initFrame() {
 
-        this.frameCount++;
-        if (currentTime > this.lastFrameTime + Time.SECOND) {
-            this.FPS = this.frameCount;
-            this.frameCount = 0;
-            this.lastFrameTime = currentTime;
+        this.lastFrameTime = performance.now()
+
+    }
+
+    public frameUpdate() {
+
+        this.frameCount++
+
+        if (this.currentTime > this.lastFrameTime + Time.SECOND) {
+
+            this.FPS = this.frameCount
+
+            this.frameCount = 0
+            this.lastFrameTime = this.currentTime - (this.DeltaTime % this.frameInterval)
+
         }
 
     }
 
-    public updateLastFrame() {
+    public deltaTimeIsGreaterThenFrameInterval() {
 
-        this.lastFrameTime = performance.now()
+        return this.DeltaTime > this.frameInterval
+
+    }
+
+    public updateDeltaTime() {
+
+        this.currentTime = performance.now()
+
+        this.DeltaTime += (this.currentTime - this.lastFrameTime) / this.frameInterval  
 
     }
 
@@ -42,13 +62,7 @@ export default class TimeController {
 
     }
 
-    public getDeltaTime(currentTime?:number) {
-
-        if (currentTime) {;
-         
-            return (currentTime - this.lastFrameTime) / Time.SECOND
-
-        }
+    public getDeltaTime() {
 
         return this.DeltaTime
 

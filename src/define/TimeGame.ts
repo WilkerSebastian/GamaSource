@@ -1,6 +1,6 @@
 abstract class GameTime {
 
-    public static SECOND = 1000
+    public static readonly SECOND = 1000
 
 }
 

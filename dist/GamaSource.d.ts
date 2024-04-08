@@ -85,10 +85,12 @@ export class TimeController {
     DeltaTime: number;
     FPS: number;
     constructor(maxFPS: number);
-    updateFrame(currentTime: number): void;
-    updateLastFrame(): void;
+    initFrame(): void;
+    frameUpdate(): void;
+    deltaTimeIsGreaterThenFrameInterval(): boolean;
+    updateDeltaTime(): void;
     setMaxFPS(maxFPS: number): void;
-    getDeltaTime(currentTime?: number): number;
+    getDeltaTime(): number;
     getFrameInterval(): number;
 }
 export default _default;

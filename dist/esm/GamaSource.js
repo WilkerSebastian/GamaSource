@@ -272,26 +272,33 @@ class $08a27fb1cb0f162c$export$2e2bcd8739ae039 {
     constructor(maxFPS){
         this.FPS = 0;
         this.DeltaTime = 0;
-        this.lastFrameTime = performance.now();
+        this.lastFrameTime = 0;
+        this.currentTime = 0;
         this.frameCount = 0;
         this.frameInterval = (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND / maxFPS;
     }
-    updateFrame(currentTime) {
+    initFrame() {
+        this.lastFrameTime = performance.now();
+    }
+    frameUpdate() {
         this.frameCount++;
-        if (currentTime > this.lastFrameTime + (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND) {
+        if (this.currentTime > this.lastFrameTime + (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND) {
             this.FPS = this.frameCount;
             this.frameCount = 0;
-            this.lastFrameTime = currentTime;
+            this.lastFrameTime = this.currentTime - this.DeltaTime % this.frameInterval;
         }
     }
-    updateLastFrame() {
-        this.lastFrameTime = performance.now();
+    deltaTimeIsGreaterThenFrameInterval() {
+        return this.DeltaTime > this.frameInterval;
+    }
+    updateDeltaTime() {
+        this.currentTime = performance.now();
+        this.DeltaTime += (this.currentTime - this.lastFrameTime) / this.frameInterval;
     }
     setMaxFPS(maxFPS) {
         this.frameInterval = (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND / maxFPS;
     }
-    getDeltaTime(currentTime) {
-        if (currentTime) return (currentTime - this.lastFrameTime) / (0, $64d48ff8d4d06d3a$export$2e2bcd8739ae039).SECOND;
+    getDeltaTime() {
         return this.DeltaTime;
     }
     getFrameInterval() {
@@ -1439,6 +1446,10 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         $f8bbed27444dc2b3$export$d36076abcf594543.ctx.imageSmoothingEnabled = config?.imageSmoothingEnabled ?? false;
         if (config?.camera) $f8bbed27444dc2b3$export$d36076abcf594543.Camera = new config.camera();
         else $f8bbed27444dc2b3$export$d36076abcf594543.Camera = new (0, $acd5a054dcfb562a$export$2e2bcd8739ae039)();
+        window.addEventListener("focus", ()=>{
+            if ($f8bbed27444dc2b3$export$d36076abcf594543.state == (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED) $f8bbed27444dc2b3$export$d36076abcf594543.resume();
+        });
+        window.addEventListener("blur", ()=>$f8bbed27444dc2b3$export$d36076abcf594543.stop());
     }
     // métodos de incialização
     start() {
@@ -1474,15 +1485,16 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
         (0, $88f08228c341c278$export$2e2bcd8739ae039).render();
         $f8bbed27444dc2b3$export$d36076abcf594543.UI.FrameRender();
     }
-    loop(currentTime) {
+    loop() {
         try {
+            requestAnimationFrame(()=>this.loop());
             if ($f8bbed27444dc2b3$export$d36076abcf594543.state != (0, $d138717687ddda30$export$2e2bcd8739ae039).CLOSED && $f8bbed27444dc2b3$export$d36076abcf594543.state != (0, $d138717687ddda30$export$2e2bcd8739ae039).CRASHED) {
-                requestAnimationFrame((currentTime)=>this.loop(currentTime));
-                this.time.DeltaTime = this.time.getDeltaTime(currentTime);
-                if (this.time.DeltaTime >= this.time.getFrameInterval()) return;
-                if ($f8bbed27444dc2b3$export$d36076abcf594543.state != (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED) this.update();
-                this.render();
-                this.time.updateFrame(currentTime);
+                this.time.updateDeltaTime();
+                if (this.time.deltaTimeIsGreaterThenFrameInterval()) {
+                    if ($f8bbed27444dc2b3$export$d36076abcf594543.state != (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED) this.update();
+                    this.render();
+                    this.time.frameUpdate();
+                }
             }
         } catch (err) {
             console.error(err);
@@ -1492,8 +1504,8 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     run() {
         this.start();
         $f8bbed27444dc2b3$export$d36076abcf594543.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).RUNNING;
-        this.time.updateLastFrame();
-        requestAnimationFrame((currentTime)=>this.loop(currentTime));
+        this.time.initFrame();
+        this.loop();
     }
     static stop() {
         this.state = (0, $d138717687ddda30$export$2e2bcd8739ae039).STOPPED;

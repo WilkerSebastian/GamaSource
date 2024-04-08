@@ -107,6 +107,14 @@ class GamaSource {
 
         }
 
+        window.addEventListener('focus', () => {
+
+            if (GamaSource.state == GamaSourceState.STOPPED) 
+                GamaSource.resume()
+        
+        });
+        window.addEventListener('blur', () => GamaSource.stop());
+
     }
 
     // métodos de incialização
@@ -179,28 +187,29 @@ class GamaSource {
 
     }
 
-    private loop(currentTime:number) {
+    private loop() {
 
         try {
+
+            requestAnimationFrame(() => this.loop())
          
             if (GamaSource.state != GamaSourceState.CLOSED && GamaSource.state != GamaSourceState.CRASHED) {
 
-                requestAnimationFrame((currentTime) => this.loop(currentTime));
+                this.time.updateDeltaTime()
 
-                this.time.DeltaTime = this.time.getDeltaTime(currentTime)
-
-                if (this.time.DeltaTime >= this.time.getFrameInterval()) return;
+                if (this.time.deltaTimeIsGreaterThenFrameInterval()) {
          
-                if (GamaSource.state != GamaSourceState.STOPPED) {
+                    if (GamaSource.state != GamaSourceState.STOPPED) {
 
-                    this.update()
+                        this.update()
+
+                    }
+
+                    this.render()
+                    this.time.frameUpdate()       
 
                 }
 
-                this.render()
-
-                this.time.updateFrame(currentTime)
-    
             }
 
         } catch (err) {
@@ -219,9 +228,9 @@ class GamaSource {
 
         GamaSource.state = GamaSourceState.RUNNING;
 
-        this.time.updateLastFrame()
+        this.time.initFrame()
 
-        requestAnimationFrame((currentTime) => this.loop(currentTime))
+        this.loop()
 
     }
 
