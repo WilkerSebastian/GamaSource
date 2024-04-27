@@ -35,6 +35,12 @@ export default class Vector2 {
 
     }
 
+    public dotProduct(other:Vector2) {
+
+        return (this.x * other.x) + (this.y * other.y)
+
+    }
+
     public magnitude(): number {
 
         return Math.sqrt(this.x * this.x + this.y * this.y);
@@ -48,6 +54,12 @@ export default class Vector2 {
         if (mag === 0) return new Vector2(0, 0);
 
         return new Vector2(this.x / mag, this.y / mag);
+
+    }
+
+    public vectorToAngle(other:Vector2) {
+        
+        return Math.acos(this.dotProduct(other) / (this.magnitude() * other.magnitude()))
 
     }
 

@@ -79,6 +79,9 @@ class $fbe8591a509f65b2$export$2e2bcd8739ae039 {
     multiply(scalar) {
         return new $fbe8591a509f65b2$export$2e2bcd8739ae039(this.x * scalar, this.y * scalar);
     }
+    dotProduct(other) {
+        return this.x * other.x + this.y * other.y;
+    }
     magnitude() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
@@ -86,6 +89,9 @@ class $fbe8591a509f65b2$export$2e2bcd8739ae039 {
         const mag = this.magnitude();
         if (mag === 0) return new $fbe8591a509f65b2$export$2e2bcd8739ae039(0, 0);
         return new $fbe8591a509f65b2$export$2e2bcd8739ae039(this.x / mag, this.y / mag);
+    }
+    vectorToAngle(other) {
+        return Math.acos(this.dotProduct(other) / (this.magnitude() * other.magnitude()));
     }
     isNullVector() {
         return this.x == 0 && this.y == 0;
@@ -1390,6 +1396,17 @@ class $a8dfe81a40550e4a$export$2e2bcd8739ae039 {
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.lineTo((0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).window.WIDTH * 10, y);
             (0, $be9b019dcf88b1d2$export$2e2bcd8739ae039).ctx.stroke();
         }
+    }
+    static angleRelativeToTarget(reference, target) {
+        if (!reference.getComponent("Rendering")) {
+            console.warn("reference need Rendenring Component!");
+            return 0;
+        }
+        const size = reference.getComponent("Rendering").getSize();
+        const vectorA = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(size.width / 2, 0);
+        const midVector = new (0, $fbe8591a509f65b2$export$2e2bcd8739ae039)(reference.transform.x + size.width / 2, reference.transform.y + size.height / 2);
+        const vectorB = target.subtract(midVector);
+        return (0, $5a334b166dfa1be5$export$2e2bcd8739ae039).radianToDegress(vectorA.vectorToAngle(vectorB)) * (target.y > midVector.y ? 1 : -1);
     }
 }
 

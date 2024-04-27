@@ -1,4 +1,4 @@
-import GamaSource, { BoxCollider2D, Vector2 } from "../GamaSource";
+import GamaSource, { BoxCollider2D, GameMath, GameObject, Mouse, Sprite, Vector2 } from "../GamaSource";
 import HelperConfig from "../define/HelperConfig";
 
 export default class Helpers {
@@ -84,6 +84,28 @@ export default class Helpers {
             GamaSource.ctx.lineTo(GamaSource.window.WIDTH * 10, y);
             GamaSource.ctx.stroke();
         }
+
+    }
+
+    public static angleRelativeToTarget(reference:GameObject, target:Vector2) {
+
+        if (!reference.getComponent("Rendering")) {
+
+            console.warn("reference need Rendenring Component!")
+
+            return 0;
+
+        }
+
+        const size = (reference.getComponent("Rendering") as Sprite).getSize()
+
+        const vectorA = new Vector2(size.width / 2, 0)
+
+        const midVector = new Vector2(reference.transform.x + (size.width / 2), reference.transform.y + (size.height / 2))
+
+        const vectorB = target.subtract(midVector)
+
+        return GameMath.radianToDegress(vectorA.vectorToAngle(vectorB)) * (target.y > midVector.y ? 1 : -1)
 
     }
 

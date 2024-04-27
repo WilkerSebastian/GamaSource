@@ -13,8 +13,10 @@ export class Vector2 {
     add(other: Vector2): Vector2;
     subtract(other: Vector2): Vector2;
     multiply(scalar: number): Vector2;
+    dotProduct(other: Vector2): number;
     magnitude(): number;
     normalize(): Vector2;
+    vectorToAngle(other: Vector2): number;
     isNullVector(): boolean;
 }
 declare abstract class Component {
@@ -372,6 +374,7 @@ export class Helpers {
     static collsion(box: BoxCollider2D, collied?: boolean): void;
     static position(pos: Vector2): void;
     static grid(): void;
+    static angleRelativeToTarget(reference: GameObject, target: Vector2): number;
 }
 export class AudioPlayer {
     constructor(source: string, volume?: number, autoPlay?: boolean);
