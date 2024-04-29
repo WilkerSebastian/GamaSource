@@ -21,6 +21,33 @@
   "dependencies": {
     "shelljs": "^0.8.5"
   },
+  "files": [
+    "README.MD",
+    "LICENSE",
+    "gama_source.png",
+    "bin",
+    "dist"
+  ],
+  "keywords": [
+    "gama source",
+    "engine",
+    "typescript",
+    "game",
+    "2d",
+    "game development",
+    "game engine",
+    "canvas",
+    "render",
+    "physics",
+    "animation",
+    "sprite",
+    "collision",
+    "input",
+    "audio",
+    "multiplayer",
+    "gaming",
+    "development"
+  ],
   "repository": "git@github.com:WilkerSebastian/GamaSource.git",
   "author": "WilkerSebastian <wilkerafonso2005@gmail.com>"
 }
