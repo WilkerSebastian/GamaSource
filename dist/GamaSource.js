@@ -1733,7 +1733,6 @@ class $be9b019dcf88b1d2$export$d36076abcf594543 {
     }
     // métodos de incialização
     start() {
-        $be9b019dcf88b1d2$export$d36076abcf594543.ReferenceGame = this;
         const main = $be9b019dcf88b1d2$export$d36076abcf594543.scenes.get("main");
         if (main) main();
         else {

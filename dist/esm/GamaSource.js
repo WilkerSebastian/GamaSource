@@ -1695,7 +1695,6 @@ class $f8bbed27444dc2b3$export$d36076abcf594543 {
     }
     // métodos de incialização
     start() {
-        $f8bbed27444dc2b3$export$d36076abcf594543.ReferenceGame = this;
         const main = $f8bbed27444dc2b3$export$d36076abcf594543.scenes.get("main");
         if (main) main();
         else {

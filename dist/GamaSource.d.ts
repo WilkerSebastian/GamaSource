@@ -609,7 +609,6 @@ export class GamaSource {
     static window: GameWindow;
     static UI: FrameComponent;
     static globalEnv: Map<string, any>;
-    static ReferenceGame: GamaSource;
     static Camera: Camera;
     static canvas: HTMLCanvasElement;
     constructor(config?: GamaSourceConfig);

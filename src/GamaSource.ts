@@ -39,7 +39,6 @@ class GamaSource {
     public static window:GameWindow
     public static UI:FrameComponent
     public static globalEnv = new Map<string, any>()
-    public static ReferenceGame: GamaSource
     public static Camera:Camera
     public static canvas:HTMLCanvasElement
 
@@ -120,8 +119,6 @@ class GamaSource {
     // métodos de incialização
 
     private start() {
-
-        GamaSource.ReferenceGame = this
 
         const main = GamaSource.scenes.get("main")
 
