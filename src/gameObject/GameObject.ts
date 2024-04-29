@@ -20,9 +20,13 @@ export default class GameObject {
     private nodes = new Array<GameObject>()
     private collidingObjects = new Array<GameObject>()
 
-    public static create(obj: typeof GameObject) {
+    public static create(obj: typeof GameObject, ...args:any[]) {
 
-        GamaSource.GameObjects.push(new obj())
+        const o = new obj()
+
+        o.arguments = args
+
+        GamaSource.GameObjects.push(o)
 
         GamaSource.GameObjects = GamaSource.GameObjects.sort((a,b) => a.layer - b.layer)
 
