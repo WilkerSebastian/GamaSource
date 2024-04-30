@@ -1,47 +1,26 @@
 export default abstract class GameMath {
 
-    public static standard:Math
-
-    public static random(min?:number, max?:number) {
-
-        min = min ?? 0
-        max = max ?? 1
-
-        return (Math.random() + min) * max
-
+    public static random(min: number = 0, max: number = 1): number {
+        return Math.random() * (max - min) + min;
     }
 
-    public static randomInteger(min?:number, max?:number) {
-
-        min = min ?? 0
-        max = max ?? 1
-
-        return this.parseInt((Math.random() + min) * max)
-
+    public static randomInteger(min: number = 0, max: number = 1): number {
+        return this.parseInt(this.random(max - min + 1));
     }
 
-    public static parseInt(x:number) {
-
-        return parseInt(x.toString())
-
+    public static parseInt(x: number): number {
+        return Math.floor(x);
     }
 
-    public static root(x:number, exp:number) {
-
-        return x ** 1/exp
-
+    public static root(x: number, exp: number): number {
+        return x ** (1 / exp);
     }
 
-    public static degressToRadian(degress:number) {
-
-        return degress * Math.PI / 180
-
+    public static degreesToRadians(degrees: number): number {
+        return degrees * Math.PI / 180;
     }
 
-    public static radianToDegress(radian:number) {
-
-        return radian * 180 / Math.PI
-
+    public static radiansToDegrees(radians: number): number {
+        return radians * 180 / Math.PI;
     }
-
 }
