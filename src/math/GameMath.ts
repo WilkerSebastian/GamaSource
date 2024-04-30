@@ -18,8 +18,8 @@ export default abstract class GameMath {
      * Generates a random integer between the specified minimum and maximum values.
      * 
      * @param min The minimum value (inclusive). Default is 0.
-     * @param max The maximum value (exclusive). Default is 1.
-     * @returns A random integer between min (inclusive) and max (exclusive).
+     * @param max The maximum value (inclusive). Default is 1.
+     * @returns A random integer between min (inclusive) and max (inclusive).
      */
     public static randomInteger(min: number = 0, max: number = 1): number {
         min = Math.ceil(min);
