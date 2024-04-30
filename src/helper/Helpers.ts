@@ -87,25 +87,30 @@ export default class Helpers {
 
     }
 
-    public static angleRelativeToTarget(reference:GameObject, target:Vector2) {
-
+    /**
+     * Calculates the angle between the reference object and the target position.
+     * 
+     * @param reference The reference GameObject object.
+     * @param target The target position (Vector2).
+     * @returns The angle (in degrees) between the reference object and the target position.
+     *          Returns 0 if the reference object doesn't have a "Rendering" component.
+     */
+    public static angleRelativeToTarget(reference: GameObject, target: Vector2): number {
+        
         if (!reference.getComponent("Rendering")) {
-
-            console.warn("reference need Rendenring Component!")
-
+            console.warn("reference needs Rendering Component!");
             return 0;
-
         }
 
-        const size = (reference.getComponent("Rendering") as Sprite).getSize()
+        const size = (reference.getComponent("Rendering") as Sprite).getSize();
 
-        const vectorA = new Vector2(size.width / 2, 0)
+        const vectorA = new Vector2(size.width / 2, 0);
 
-        const midVector = new Vector2(reference.transform.x + (size.width / 2), reference.transform.y + (size.height / 2))
+        const midVector = new Vector2(reference.transform.x + (size.width / 2), reference.transform.y + (size.height / 2));
 
-        const vectorB = target.subtract(midVector)
+        const vectorB = target.subtract(midVector);
 
-        return GameMath.radianToDegress(vectorA.vectorToAngle(vectorB)) * (target.y > midVector.y ? 1 : -1)
+        return GameMath.radiansToDegrees(vectorA.vectorToAngle(vectorB)) * (target.y > midVector.y ? 1 : -1);
 
     }
 
