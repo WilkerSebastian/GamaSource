@@ -50,7 +50,7 @@ export default class SpriteSheet extends StaticSprite{
         else if (this.reference instanceof Vector2)
             GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
 
-        GamaSource.ctx.rotate(GameMath.degressToRadian(this.rotation))
+        GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
         GamaSource.ctx.scale(this.scale.x, this.scale.y)
 
