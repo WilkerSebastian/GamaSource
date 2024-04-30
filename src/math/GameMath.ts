@@ -1,5 +1,3 @@
-import { Vector2 } from "../GamaSource"
-
 export default abstract class GameMath {
 
     public static standard:Math
@@ -31,12 +29,6 @@ export default abstract class GameMath {
     public static root(x:number, exp:number) {
 
         return x ** 1/exp
-
-    }
-
-    public static distance(v1:Vector2, v2:Vector2) {
-
-        return Math.sqrt(Math.pow(v1.x - v2.x, 2) + Math.pow(v1.y - v2.y, 2))
 
     }
 
