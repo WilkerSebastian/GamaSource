@@ -17,8 +17,6 @@ export default class Camera extends GameObject {
             this.transform.x = GamaSource.window.WIDTH / 2 - this.target.transform.x - sprite.getSize().width / 2;
             this.transform.y = GamaSource.window.HEIGHT / 2 - this.target.transform.y - sprite.getSize().height / 2;
 
-            GamaSource.ctx.translate(this.transform.x, this.transform.y);
-
         }
 
     }
@@ -26,8 +24,7 @@ export default class Camera extends GameObject {
     public reset() {
 
         this.setTarget(null)
-        this.transform = new Vector2(0,0)
-        GamaSource.ctx.translate(this.transform.x, this.transform.y);
+        this.transform.set(GamaSource.window.WIDTH / 2, GamaSource.window.HEIGHT / 2)
 
     }
 
@@ -35,6 +32,10 @@ export default class Camera extends GameObject {
 
         this.target = target;
 
+    }
+
+    public render(): void {
+        GamaSource.ctx.translate(this.transform.x, this.transform.y);
     }
 
 }

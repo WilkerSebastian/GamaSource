@@ -104,6 +104,8 @@ class GamaSource {
 
             GamaSource.Camera = new Camera()
 
+            GamaSource.Camera.reset()
+
         }
 
         window.addEventListener('focus', () => {
@@ -165,6 +167,8 @@ class GamaSource {
         if (GamaSource.Camera) {
          
             GamaSource.Camera.followObject()
+
+            GamaSource.Camera.render()
 
         }
 

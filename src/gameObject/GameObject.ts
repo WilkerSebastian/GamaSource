@@ -70,7 +70,8 @@ export default class GameObject {
 
         node.arguments = args
         node.setRoot(this)
-        node.transform = this.transform
+        node.transform.x = this.transform.x
+        node.transform.y = this.transform.y
 
         this.nodes.push(node)
 
