@@ -43,7 +43,7 @@ export default class SpriteSheet extends StaticSprite{
 
         GamaSource.ctx.save()
         
-        GamaSource.ctx.translate(x + width / 2, y + height / 2)
+        GamaSource.ctx.translate(x, y)
 
         GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
@@ -55,8 +55,8 @@ export default class SpriteSheet extends StaticSprite{
             slice.y,
             slice.width,
             slice.height,
-            -width, 
-            -height, 
+            -width / 2, 
+            -height / 2, 
             width, 
             height
         )

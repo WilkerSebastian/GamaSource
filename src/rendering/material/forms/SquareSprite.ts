@@ -19,15 +19,15 @@ export default class SquareSprite extends ShapeSprite {
 
         GamaSource.ctx.fillStyle = this.color
 
-        GamaSource.ctx.translate(x + width / 2, y + height / 2)
+        GamaSource.ctx.translate(x, y)
 
         GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
         GamaSource.ctx.scale(this.scale.x, this.scale.y)
 
         GamaSource.ctx.fillRect(
-            -width, 
-            -height, 
+            -width / 2, 
+            -height / 2, 
             width, 
             height
         )

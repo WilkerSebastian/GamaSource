@@ -57,7 +57,7 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
         GamaSource.ctx.save()
 
-        GamaSource.ctx.translate(x + width / 2, y + height / 2)
+        GamaSource.ctx.translate(x, y)
 
         GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
@@ -65,12 +65,12 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
         GamaSource.ctx.drawImage(
             this.image.getSource() as HTMLImageElement,
-            -width, 
-            -height, 
+            -width / 2, 
+            -height / 2, 
             width, 
             height
         )
-
+        
         GamaSource.ctx.restore()
 
     }
