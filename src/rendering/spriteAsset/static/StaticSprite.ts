@@ -7,27 +7,13 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
     private image: GameImage 
     private pixelRatio:number
-    public scale = new Vector2(1,1)
-    public rotation = 0
 
     constructor(source: string, pixelRatio: number | {width:number, height:number}, reference?:Vector2 | GameObject) {
         super(0, 0, reference);
 
         const image = GamaSource.ASSETS.get(source) as GameImage | undefined
 
-        if (typeof pixelRatio == "number") {
-         
-            this.pixelRatio = pixelRatio / 100
-
-        } else if (image) {
-
-            this.pixelRatio = 1
-
-            this.width = GamaSource.window.WIDTH * (pixelRatio.width / 100)
-            this.height = GamaSource.window.HEIGHT * (pixelRatio.height / 100)
-
-        } else 
-            this.pixelRatio = 1;
+        this.pixelRatio = 1
 
         if (!image) {
 
@@ -40,34 +26,24 @@ export default class StaticSprite extends Sprite implements SizeSprite {
             
         }
         
-        this.image = image
+        if (typeof pixelRatio == "number") { 
+            
+            this.pixelRatio = pixelRatio / 100  
 
-        if (typeof pixelRatio == "number") {
+            this.width = image.getSource().width * this.pixelRatio
+            this.height = image.getSource().height * this.pixelRatio
 
-            this.setWidth(this.image.getSource().width)
-            this.setHeight(this.image.getSource().height)
+        } else {
+
+            this.width = pixelRatio.width
+            this.height = pixelRatio.height
 
         }
-
-    }
-
-    public setWidth(width:number) {
         
-        this.width = width * this.pixelRatio * GamaSource.window.getScale()
+        this.image = image
 
     }
 
-    public setHeight(height:number) {
-        
-        this.height = height * this.pixelRatio * GamaSource.window.getScale()
-
-    }
-
-    public getSize() {
-        
-        return {width:this.width, height:this.height}
-
-    }
 
     public getImage() {
 
@@ -77,18 +53,11 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
     public render(): void {
 
-        if(!this.reference)
-            this.reference = new Vector2(0,0)
-
+        const { x, y, width, height } = this.getRenderObject()
 
         GamaSource.ctx.save()
 
-        if (this.reference instanceof GameObject)
-            GamaSource.ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2)
-            
-        else if(this.reference instanceof Vector2)
-            GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
-
+        GamaSource.ctx.translate(x + width / 2, y + height / 2)
 
         GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
@@ -96,10 +65,10 @@ export default class StaticSprite extends Sprite implements SizeSprite {
 
         GamaSource.ctx.drawImage(
             this.image.getSource() as HTMLImageElement,
-            -this.width / 2, 
-            -this.height / 2, 
-            this.width, 
-            this.height
+            -width, 
+            -height, 
+            width, 
+            height
         )
 
         GamaSource.ctx.restore()

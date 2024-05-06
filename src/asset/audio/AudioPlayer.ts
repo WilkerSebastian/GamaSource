@@ -1,72 +1,118 @@
-import GamaSource from "../../GamaSource"
-import GameAudio from "./GameAudio"
+import GamaSource from "../../GamaSource";
+import GameAudio from "./GameAudio";
 
 export default class AudioPlayer {
 
-    private source:GameAudio
+    private sources: GameAudio[] = [];
+    private currentSourceIndex: number = -1;
 
-    constructor(source:string, volume?:number, autoPlay?:boolean) {
+    constructor(sources: string[] | string, volume: number = 50, auto: boolean = false) {
 
-        const audio = GamaSource.ASSETS.get(source) as GameAudio | undefined
-
-        if (audio) {
-            
-            this.source = audio
-            this.setVolume(volume ?? 50)
-            this.setAutoPlay(autoPlay ?? false)
-            return
-
+        if (typeof sources === 'string') {
+            sources = [sources];
         }
 
-        this.source = new GameAudio("not found")
-        console.error(`The video ${source} was not found`);
+        sources.forEach((source) => {
 
+            const audio = GamaSource.ASSETS.get(source) as GameAudio | undefined;
+
+            if (audio) 
+                this.sources.push(audio);
+
+            else
+                console.error(`The audio ${source} was not found`);
+            
+        });
+
+        this.currentSourceIndex = this.sources.length > 0 ? this.sources.length - 1 : -1;
+
+        this.setVolume(volume)
+        this.setAutoPlay(auto)
     }
 
-    public setEventEnd(event:() => void) {
-
-        this.source.getSource().addEventListener("ended", () => event())
-
-    }
-
-    public async playTo(start:number, end?:number) {
+    public setEventEnd(event: () => void) {
+        const source = this.getCurrentSource()
         
-        await this.source.playTo(start, end)
+        if (source)
+            source.onEnded(event);
+    }
+
+    public async playTo(start: number, end?: number) {
+        const source = this.getCurrentSource()
+        
+        if (source)
+            await source.playTo(start, end);
     }
 
     public async play() {
-
-        await this.source.play()
-
+        const source = this.getCurrentSource()
+        
+        if (source)
+            await source.play();
     }
 
-    public setAutoPlay(auto:boolean) {
-        this.source.setAutoPlay(auto)
+    public setAutoPlay(auto: boolean) {
+        const source = this.getCurrentSource()
+        
+        if (source)
+            source.setAutoPlay(auto);
     }
 
     public pause() {
+        const source = this.getCurrentSource()
+        
+        if (source)
+            source.pause();
+    }
 
-        this.source.pause()
+    public pauseAll() {
+
+        for (let index = 0; index < this.sources.length; index++) {
+            
+            this.sources[index].pause();
+            
+        }
 
     }
 
-    public setVolume(volume:number) {
-
-        this.source.setVolume(volume)
-
+    public setVolume(volume: number) {
+        const source = this.getCurrentSource()
+        
+        if (source)
+            source.setVolume(volume);
     }
 
     public getVolume() {
-
-        return this.source.getVolume()
-
+        const source = this.getCurrentSource()
+        
+        if (source)
+            source.getVolume();
     }
 
     public getDuration() {
-
-        return this.source.getDuration()
-
+        const source = this.getCurrentSource()
+        
+        if (source)
+            source.getDuration();
     }
 
+    public setCurrentSource(index: number) {
 
+        if (index >= 0 && index < this.sources.length) {
+            this.currentSourceIndex = index;
+        }
+    }
+
+    public getCurrentSourceIndex(): number {
+        return this.currentSourceIndex;
+    }
+
+    public getCurrentSource(): GameAudio | null {
+        
+        if (this.currentSourceIndex)
+            return this.sources[this.currentSourceIndex]
+
+        return null
+
+    }
 }

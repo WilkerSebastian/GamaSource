@@ -53,13 +53,15 @@ export default class Helpers {
 
     }
 
-    public static position(pos:Vector2) {
+    public static position(obj:GameObject) {
+
+        const { x, y, width, height } = (obj.getComponent("Rendering") as Sprite).getRenderObject()
 
         GamaSource.ctx.save()
         GamaSource.ctx.fillStyle = "#000"
         GamaSource.ctx.font = "18px ARIAL"
-        GamaSource.ctx.fillText(`x: ${pos.x}`,pos.x + 18, pos.y - 36)
-        GamaSource.ctx.fillText(`y: ${pos.y}`, pos.x + 18, pos.y - 18)
+        GamaSource.ctx.fillText(`x: ${obj.transform.x.toPrecision(3)}`,x + width / 2, (y - height / 2) - 36)
+        GamaSource.ctx.fillText(`y: ${obj.transform.y.toPrecision(3)}`, x + width / 2, (y - height / 2) - 18)
         GamaSource.ctx.restore()
 
     }

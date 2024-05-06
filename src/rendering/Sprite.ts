@@ -1,30 +1,47 @@
+import GamaSource, { Vector2 } from "../GamaSource";
 import GameObject from "../gameObject/GameObject";
 import Component from "../gameObject/components/Component";
-import Vector2 from "../math/vector/Vector2";
 import SizeSprite from "./spriteAsset/SizeSprite";
 
 export default abstract class Sprite extends Component implements SizeSprite {
 
-    public reference?: Vector2 | GameObject
-    public width = 0;
-    public height = 0;
+    public reference: GameObject | Vector2
+    public width:number;
+    public height:number;
+    public scale = new Vector2(1,1)
+    public rotation = 0
 
     constructor(width:number, height:number, reference?:Vector2 | GameObject) {
         super()
-        this.reference = reference
+        this.reference = reference || Vector2.zero()
         this.width = width
         this.height = height
+    }
 
-    }
-    setWidth(width: number): void {
+    public setWidth(width: number): void {
         this.width = width
     }
-    setHeight(height: number): void {
+
+    public setHeight(height: number): void {
         this.height = height
     }
-    getSize(): { width: number; height: number; } {
+
+    public getSize(): { width: number; height: number; } {
         return { width:this.width, height:this.height}
     }
+
+    public getRenderObject() {
+
+        const vector = this.reference instanceof GameObject ? this.reference.transform : this.reference
+
+        return {
+            x: GamaSource.window.getScalableMeasure(vector.x),
+            y: -GamaSource.window.getScalableMeasure(vector.y),
+            width: GamaSource.window.getScalableMeasure(this.width),
+            height: GamaSource.window.getScalableMeasure(this.height)
+        }
+
+    }   
 
     public abstract render():void
 

@@ -30,9 +30,6 @@ export default class SpriteSheet extends StaticSprite{
 
     public render(): void {
 
-        if(!this.reference)
-            this.reference = new Vector2(0,0)
-
         const index = GameMath.parseInt(this.gameFrame / this.staggerFrames) % this.slices.length 
 
         const slice = this.slices[index];
@@ -42,13 +39,11 @@ export default class SpriteSheet extends StaticSprite{
             this.setHeight(slice.height)
         }
 
-        GamaSource.ctx.save()
+        const { x, y, width, height } = this.getRenderObject()
 
-        if (this.reference instanceof GameObject)
-            GamaSource.ctx.translate(this.reference.transform.x + this.width / 2, this.reference.transform.y + this.height / 2)
-            
-        else if (this.reference instanceof Vector2)
-            GamaSource.ctx.translate(this.reference.x + this.width / 2, this.reference.y + this.height / 2)
+        GamaSource.ctx.save()
+        
+        GamaSource.ctx.translate(x + width / 2, y + height / 2)
 
         GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
 
@@ -60,10 +55,10 @@ export default class SpriteSheet extends StaticSprite{
             slice.y,
             slice.width,
             slice.height,
-            -this.width / 2, 
-            -this.height / 2, 
-            this.width, 
-            this.height
+            -width, 
+            -height, 
+            width, 
+            height
         )
 
         GamaSource.ctx.restore()

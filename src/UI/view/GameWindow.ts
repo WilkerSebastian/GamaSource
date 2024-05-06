@@ -42,6 +42,20 @@ export default class GameWindow {
 
     }
 
+    public getScalableMeasure(scalar:number) {
+
+        const scale = this.getMinSide() * 0.001
+
+        return scale * scalar
+
+    }
+
+    public getMinSide() {
+
+        return Math.min(GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
+
+    }
+
     public getScale() {
 
         return this.WIDTH / this.HEIGHT

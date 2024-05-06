@@ -278,7 +278,7 @@ export default class GameObject {
                 this.nodes[i].render()
 
             if (Helpers.config.position)
-                Helpers.position(this.transform)
+                Helpers.position(this)
 
         }
 

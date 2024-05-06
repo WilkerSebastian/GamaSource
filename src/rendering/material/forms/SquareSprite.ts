@@ -1,4 +1,4 @@
-import GamaSource from "../../../GamaSource";
+import GamaSource, { GameMath } from "../../../GamaSource";
 import GameObject from "../../../gameObject/GameObject";
 import Vector2 from "../../../math/vector/Vector2";
 import ShapeSprite from "../ShapeSprite";
@@ -13,20 +13,26 @@ export default class SquareSprite extends ShapeSprite {
 
     public render() {
 
-        if(!this.reference)
-            this.reference = new Vector2(0,0)
+        const { x, y, width, height } = this.getRenderObject()
 
-        if (this.reference instanceof GameObject) {
-        
-            GamaSource.ctx.fillStyle = this.color
-            GamaSource.ctx.fillRect(this.reference.transform.x, this.reference.transform.y, this.width, this.height)
+        GamaSource.ctx.save()
 
-        } else if (this.reference instanceof Vector2) {
+        GamaSource.ctx.fillStyle = this.color
 
-            GamaSource.ctx.fillStyle = this.color
-            GamaSource.ctx.fillRect(this.reference.x, this.reference.y, this.width, this.height)
+        GamaSource.ctx.translate(x + width / 2, y + height / 2)
 
-        }
+        GamaSource.ctx.rotate(GameMath.degreesToRadians(this.rotation))
+
+        GamaSource.ctx.scale(this.scale.x, this.scale.y)
+
+        GamaSource.ctx.fillRect(
+            -width, 
+            -height, 
+            width, 
+            height
+        )
+
+        GamaSource.ctx.restore()
 
     }
 
