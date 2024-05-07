@@ -1,4 +1,4 @@
-import GamaSource, { BoxCollider2D, GameMath, GameObject, Mouse, Sprite, Vector2 } from "../GamaSource";
+import GamaSource, { BoxCollider2D, GameMath, GameObject, GameWindow, Mouse, Sprite, Vector2 } from "../GamaSource";
 import HelperConfig from "../define/HelperConfig";
 
 export default class Helpers {
@@ -36,7 +36,22 @@ export default class Helpers {
 
         GamaSource.ctx.save()
         GamaSource.ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC"
-        GamaSource.ctx.fillRect(box.position.x, box.position.y, box.width, box.height)
+
+        const renderBox = {
+            x: GamaSource.window.getScalableMeasure(box.position.x),
+            y: -GamaSource.window.getScalableMeasure(box.position.y),
+            width: GamaSource.window.getScalableMeasure(box.width),
+            height: GamaSource.window.getScalableMeasure(box.height)
+        }
+
+        GamaSource.ctx.translate(renderBox.x, renderBox.y)
+
+        GamaSource.ctx.fillRect(
+            -renderBox.width / 2, 
+            -renderBox.height / 2, 
+            renderBox.width, 
+            renderBox.height
+        )
         GamaSource.ctx.restore()
 
     }

@@ -1,3 +1,4 @@
+import { Sprite } from "../../GamaSource";
 import Vector2 from "../vector/Vector2";
 import Collider from "./Collider";
 
@@ -5,13 +6,14 @@ export default class colliderCollider2D extends Collider {
 
     public width:number;
     public height:number;
+    public scale = new Vector2(1,1)
 
-    constructor(width?:number, height?:number) {
+    constructor(width:number = 0, height:number = 0) {
 
         super();
         this.position = new Vector2(0, 0)
-        this.width = width ?? 0
-        this.height = height ?? 0
+        this.width = width
+        this.height = height
 
     }
 
@@ -52,15 +54,31 @@ export default class colliderCollider2D extends Collider {
 
     }
 
-    public override update(size?:{width:number, height:number}) {
+    public override update() {
 
-        if (size) {
-         
-            this.width = size.width
-            this.height = size.height
+        let sprite:Sprite
+
+        if (this.reference instanceof Vector2) {
+
+            this.position = this.reference
+            return
+
+        } 
+        
+        sprite = this.reference.getComponent("Rendering") as Sprite
+
+        if (!sprite) {
+            
+            this.position = this.reference.transform
+
+            return
 
         }
 
-    }
+        this.position = this.reference.transform
+        this.width = sprite.width * this.scale.x
+        this.height = sprite.height * this.scale.y
+
+    }   
 
 }

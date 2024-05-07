@@ -5,7 +5,6 @@ import SizeSprite from "./spriteAsset/SizeSprite";
 
 export default abstract class Sprite extends Component implements SizeSprite {
 
-    public reference: GameObject | Vector2
     public width:number;
     public height:number;
     public scale = new Vector2(1,1)

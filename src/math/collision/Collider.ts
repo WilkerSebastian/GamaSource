@@ -7,7 +7,7 @@ export default abstract class Collider extends Component {
 
     constructor(position?:Vector2) {
         super()
-        this.position = position ?? new Vector2(0,0)
+        this.position = position || Vector2.zero()
     }
 
     public abstract isCollided(collider:Collider):boolean;

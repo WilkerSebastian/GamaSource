@@ -136,13 +136,13 @@ export default class GameObject {
         const rendering = this.getComponent("Rendering") as Sprite
 
         if (physics)
-            physics.position = this.transform
+            physics.reference = this
 
         if (collision)
-            collision.position = this.transform
+            collision.reference = this
 
         if (rendering)
-            rendering.reference = this.transform
+            rendering.reference = this
 
         for (let i = 0; i < this.nodes.length; i++)
             this.nodes[i].gameStart()
@@ -225,8 +225,6 @@ export default class GameObject {
             physics.update()
             this.fixedUpdate();
 
-            this.transform = physics.position
-
         }
 
         const collision = this.getComponent("Collision") as Collider
@@ -235,17 +233,7 @@ export default class GameObject {
            
             if (collision) {
 
-                const sprite = this.getComponent("Rendering") as Sprite
-
-                if (sprite) {
-                    
-                    collision.update(sprite.getSize())
-
-                } else {
-
-                    collision.update()
-
-                }
+                collision.update()
                 
                 this.onCollision()
 
@@ -255,9 +243,6 @@ export default class GameObject {
                 this.nodes[i].gameUpdate()
 
         }
-
-        if (collision)
-            collision.position = this.transform
 
     }
 

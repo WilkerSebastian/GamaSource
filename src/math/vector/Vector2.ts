@@ -1,3 +1,5 @@
+import GameMath from "../GameMath";
+
 /**
  * Represents a 2D vector with x and y components.
  * 
@@ -206,6 +208,17 @@ export default class Vector2 {
         return new Vector2(x, y);
     }
 
+    public rotate(angle:number) : Vector2 {
+
+        const radian = GameMath.degreesToRadians(angle)
+
+        return new Vector2(
+            this.x * Math.cos(radian) + this.y * Math.sin(radian),
+            -this.x * Math.sin(radian) + this.y * Math.cos(radian)
+        )
+
+    }
+
     /**
      * Returns a Vector2 instance with both components set to zero.
      * @returns The zero vector.
@@ -330,6 +343,17 @@ export default class Vector2 {
      */
     public static interpolate(vec1: Vector2, vec2: Vector2, t: number): Vector2 {
         return vec1.interpolate(vec2, t);
+    }
+
+    public static rotate(vec:Vector2, angle:number) : Vector2 {
+
+        const radian = GameMath.degreesToRadians(angle)
+
+        return new Vector2(
+            vec.x * Math.cos(radian) + vec.y * Math.sin(radian),
+            -vec.x * Math.sin(radian) + vec.y * Math.cos(radian)
+        )
+
     }
 
 }
