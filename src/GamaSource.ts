@@ -45,7 +45,7 @@ class GamaSource {
     private static state:GamaSourceState
     private time:TimeController
 
-    private background:Sprite
+    private background:FramePanel
     private static scenes = new Map<string, () => void>()
 
     constructor(config?:GamaSourceConfig) {
@@ -54,17 +54,14 @@ class GamaSource {
 
         const source = config?.background ?? "#F2F2F2"
 
-        if (!Number.isNaN(parseInt(source.split("#").join(""), 16))) {
-
-            this.background = new SquareSprite(GamaSource.window.WIDTH, GamaSource.window.HEIGHT, source)
-            
-        } else {
-
-            const name = GamaSource.loader(source)[0]
-
-            this.background = new StaticSprite(name, {width:GamaSource.window.WIDTH, height:GamaSource.window.HEIGHT})
-    
-        }
+        this.background = new FramePanel({
+            x: 0,
+            y: 0,
+            width : GamaSource.window.WIDTH,
+            height: GamaSource.window.HEIGHT,
+            source: source,
+            visible: true
+        })
 
         GamaSource.UI = new FrameComponent({
             x:0,
@@ -78,8 +75,8 @@ class GamaSource {
 
             GamaSource.UI.setSize(GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
 
-            this.background.width = GamaSource.window.WIDTH
-            this.background.height = GamaSource.window.HEIGHT
+            this.background.setWidth(GamaSource.window.WIDTH)
+            this.background.setHeight(GamaSource.window.HEIGHT)
 
         })
 
@@ -160,7 +157,7 @@ class GamaSource {
 
         GamaSource.ctx.clearRect(0, 0, GamaSource.window.WIDTH, GamaSource.window.HEIGHT)
 
-        this.background.render()
+        this.background.FrameRender()
 
         GamaSource.ctx.save()
         
