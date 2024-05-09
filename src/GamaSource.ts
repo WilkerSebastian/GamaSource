@@ -48,6 +48,8 @@ class GamaSource {
     private background:FramePanel
     private static scenes = new Map<string, () => void>()
 
+    private firstScene = "main"
+
     constructor(config?:GamaSourceConfig) {
 
         GamaSource.window = new GameWindow()
@@ -119,7 +121,7 @@ class GamaSource {
 
     private start() {
 
-        const main = GamaSource.scenes.get("main")
+        const main = GamaSource.scenes.get(this.firstScene)
 
         if (main) {
 
@@ -127,7 +129,7 @@ class GamaSource {
             
         } else {
 
-            console.error("Error the main scene not found!");
+            console.error(`Error the ${this.firstScene} scene not found!`);
             GamaSource.falied()
             return
 
@@ -220,7 +222,10 @@ class GamaSource {
 
     }
 
-    public run() {
+    public run(firstScene?:string) {
+
+        if (firstScene)
+            this.firstScene = firstScene;
 
         this.start()
 
