@@ -22,6 +22,12 @@ export default abstract class KeyBoard {
 
     public static getKeyDown(key:string) {
 
+        return KeyBoard.mapper.get(key.toLowerCase()) || KeyBoard.mapper.get(key.toUpperCase())
+
+    }
+
+    public static getKeyDownExclusive(key:string) {
+
         return KeyBoard.mapper.get(key)
 
     }
