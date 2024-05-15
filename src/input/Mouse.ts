@@ -3,7 +3,7 @@ import GamaSource, { Vector2 } from "../GamaSource";
 export default abstract class Mouse {
 
     private static events = new Array<(mouse:MouseEvent) => void>
-    public static transform:Vector2 = new Vector2(0, 0)
+    public static position = Vector2.zero()
     private static mapper = new Map<string, boolean>
     private static pressed = false
 
@@ -11,7 +11,7 @@ export default abstract class Mouse {
 
         document.addEventListener("mousemove", e => {
 
-            this.transform.set(e.clientX, e.clientY)
+            this.position.set(e.clientX, e.clientY)
 
         })
         document.addEventListener("mousedown", e => {
@@ -69,6 +69,15 @@ export default abstract class Mouse {
     public static setPointer(pointer:boolean) {
 
         GamaSource.canvas.style.cursor = pointer ? "pointer" : "default"
+
+    }
+
+    public static getPositionRelativeRender() {
+
+        return new Vector2(
+            this.position.x - (GamaSource.window.WIDTH / 2),
+            this.position.y - (GamaSource.window.HEIGHT / 2)
+        ) 
 
     }
 
