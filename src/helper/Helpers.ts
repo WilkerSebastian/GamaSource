@@ -114,20 +114,22 @@ export default class Helpers {
      */
     public static angleRelativeToTarget(reference: GameObject, target: Vector2): number {
         
-        if (!reference.getComponent("Rendering")) {
+        const sprite = reference.getComponent("Rendering") as Sprite
+
+        if (!sprite) {
             console.warn("reference needs Rendering Component!");
             return 0;
         }
 
-        const size = (reference.getComponent("Rendering") as Sprite).getSize();
+        let { x, y, width, height } = sprite.getRenderObject()
 
-        const vectorA = new Vector2(size.width / 2, 0);
+        const midVector = new Vector2(x - (width / 2), y - (height / 2))
 
-        const midVector = new Vector2(reference.transform.x + (size.width / 2), reference.transform.y + (size.height / 2));
+        const vectorA = new Vector2((GamaSource.window.WIDTH / 2) + target.x, 0);
 
         const vectorB = target.subtract(midVector);
 
-        return GameMath.radiansToDegrees(vectorA.vectorToAngle(vectorB)) * (target.y > midVector.y ? 1 : -1);
+        return GameMath.radiansToDegrees(vectorA.vectorToAngle(vectorB)) * (target.y > vectorA.y ? 1 : -1);
 
     }
 

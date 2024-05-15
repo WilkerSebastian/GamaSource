@@ -248,10 +248,10 @@ export default class FrameComponent {
 
     private hasHovered() {
 
-        if (this.position.x < Mouse.transform.x + 1 &&
-            this.position.x + this.width > Mouse.transform.x &&
-            this.position.y < Mouse.transform.y + 1 &&
-            this.position.y + this.height > Mouse.transform.y) {
+        if (this.position.x < Mouse.position.x + 1 &&
+            this.position.x + this.width > Mouse.position.x &&
+            this.position.y < Mouse.position.y + 1 &&
+            this.position.y + this.height > Mouse.position.y) {
                 
             if (!this.hoverState) {
              
