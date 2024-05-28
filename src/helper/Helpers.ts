@@ -1,5 +1,6 @@
 import GamaSource, { BoxCollider2D, GameMath, GameObject, GameWindow, Mouse, Sprite, Vector2 } from "../GamaSource";
 import HelperConfig from "../define/HelperConfig";
+import Collider from "../math/collision/Collider";
 
 export default class Helpers {
 
@@ -32,27 +33,31 @@ export default class Helpers {
 
     }
 
-    public static collsion(box:BoxCollider2D, collied?:boolean) {
+    public static collsion(collider:Collider, collied?:boolean) {
 
-        GamaSource.ctx.save()
-        GamaSource.ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC"
+        if (collider instanceof BoxCollider2D) {
 
-        const renderBox = {
-            x: GamaSource.window.getScalableMeasure(box.position.x),
-            y: -GamaSource.window.getScalableMeasure(box.position.y),
-            width: GamaSource.window.getScalableMeasure(box.width),
-            height: GamaSource.window.getScalableMeasure(box.height)
+            GamaSource.ctx.save()
+            GamaSource.ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC"
+
+            const renderBox = {
+                x: GamaSource.window.getScalableMeasure(collider.position.x),
+                y: -GamaSource.window.getScalableMeasure(collider.position.y),
+                width: GamaSource.window.getScalableMeasure(collider.width),
+                height: GamaSource.window.getScalableMeasure(collider.height)
+            }
+
+            GamaSource.ctx.translate(renderBox.x, renderBox.y)
+
+            GamaSource.ctx.fillRect(
+                -renderBox.width / 2, 
+                -renderBox.height / 2, 
+                renderBox.width, 
+                renderBox.height
+            )
+            GamaSource.ctx.restore()
+
         }
-
-        GamaSource.ctx.translate(renderBox.x, renderBox.y)
-
-        GamaSource.ctx.fillRect(
-            -renderBox.width / 2, 
-            -renderBox.height / 2, 
-            renderBox.width, 
-            renderBox.height
-        )
-        GamaSource.ctx.restore()
 
     }
 

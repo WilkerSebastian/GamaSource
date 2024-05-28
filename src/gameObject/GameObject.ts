@@ -1,5 +1,6 @@
-import GamaSource, { Helpers, Sprite } from "../GamaSource"
+import GamaSource, { Helpers, RigidBody2D, Sprite } from "../GamaSource"
 import BoxCollider2D from "../math/collision/BoxCollider2D";
+import CircularCollider from "../math/collision/CircularCollider";
 import Collider from "../math/collision/Collider";
 import Physic from "../math/physics/Physic";
 import Vector2 from "../math/vector/Vector2"
@@ -169,14 +170,25 @@ export default class GameObject {
 
                 if (collision.isCollided(objCollision)) {
 
-                    const physics = this.getComponent("Physics") as Physic
+                    const physic = this.getComponent("Physics") as Physic
 
-                    if (physics) {
+                    const objPhysic = obj.getComponent("Physics") as Physic
 
-                        physics.applyFriction()
+                    if (physic instanceof RigidBody2D && objPhysic) {
 
-                        physics.velocity.y = 0;
-                        physics.position.y = objCollision.position.y - (this.getComponent("Rendering") as Sprite).getSize().height
+                        const resolve = collision.resolveCollision(objCollision)
+
+                        if (collision instanceof BoxCollider2D)
+                            objCollision instanceof CircularCollider ? physic.position.subtractInPlace(resolve) : physic.position.addInPlace(resolve);
+
+                        else if (collision instanceof CircularCollider)
+                            physic.position.addInPlace(resolve)
+                        
+
+                        if (resolve.y != 0) {
+                            physic.velocity.y = 0;
+                            physic.position.y = objCollision.position.y - (this.getComponent("Rendering") as Sprite).getSize().height
+                        }
 
                     }
 
@@ -254,7 +266,7 @@ export default class GameObject {
 
             const collision = this.getComponent("Collision") as Collider
  
-            if (collision instanceof BoxCollider2D && Helpers.config.collision) 
+            if (collision && Helpers.config.collision) 
                 Helpers.collsion(collision, this.collidingObjects.length > 0)
 
             sprite.render()

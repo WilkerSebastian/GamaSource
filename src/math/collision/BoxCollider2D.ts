@@ -17,7 +17,7 @@ export default class BoxCollider2D extends Collider {
 
     }
 
-    public override isCollided(collider:Collider) {
+    public override isCollided(collider:Collider): boolean {
 
         if (collider instanceof CircularCollider)
             return collider.isCollided(this);
@@ -32,7 +32,7 @@ export default class BoxCollider2D extends Collider {
 
     }
 
-    public override resolveCollision(collider: Collider) {
+    public override resolveCollision(collider: Collider): Vector2 {
 
         if (collider instanceof CircularCollider) 
             return collider.resolveCollision(this)
