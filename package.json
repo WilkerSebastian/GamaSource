@@ -10,7 +10,8 @@
     "gamasource": "bin/script.js"
   },
   "scripts": {
-    "build": "parcel build"
+    "build": "parcel build",
+    "test": "bun test"
   },
   "devDependencies": {
     "@parcel/packager-ts": "2.9.3",
