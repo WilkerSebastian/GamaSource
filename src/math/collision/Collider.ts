@@ -4,6 +4,7 @@ import Vector2 from "../vector/Vector2";
 export default abstract class Collider extends Component {
 
     public position:Vector2;
+    public scale = new Vector2(1,1)
 
     constructor(position?:Vector2) {
         super()
@@ -14,6 +15,6 @@ export default abstract class Collider extends Component {
 
     public abstract resolveCollision(collider:Collider):Vector2
 
-    public abstract update(size?:any):void
+    public abstract update():void
 
 }

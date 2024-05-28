@@ -219,6 +219,13 @@ export default class Vector2 {
 
     }
 
+    public absolute() {
+        return new Vector2(
+            Math.abs(this.x),
+            Math.abs(this.y)
+        )
+    }
+
     /**
      * Returns a Vector2 instance with both components set to zero.
      * @returns The zero vector.
@@ -354,6 +361,10 @@ export default class Vector2 {
             -vec.x * Math.sin(radian) + vec.y * Math.cos(radian)
         )
 
+    }
+
+    public static absolute(vec:Vector2) {
+        return vec.absolute()
     }
 
 }
