@@ -14,10 +14,6 @@ export default abstract class Physic extends Component {
         this.mass = mass
     }
 
-    public abstract applyForce(force: Vector2):void;
-
-    public abstract applyFriction():void;
-
     public abstract update():void;
 
 }

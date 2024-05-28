@@ -226,6 +226,15 @@ export default class Vector2 {
         )
     }
 
+    public copy(other:Vector2) {
+
+        this.set(
+            other.x,
+            other.y
+        )
+
+    }
+
     /**
      * Returns a Vector2 instance with both components set to zero.
      * @returns The zero vector.
