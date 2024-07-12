@@ -235,6 +235,15 @@ export default class Vector2 {
 
     }
 
+    public clone() {
+
+        return new Vector2(
+            this.x,
+            this.y
+        )
+
+    }
+
     /**
      * Returns a Vector2 instance with both components set to zero.
      * @returns The zero vector.
