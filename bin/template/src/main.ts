@@ -4,9 +4,9 @@ import atomic from "./assets/atomic.png"
 
 const game = new GamaSource()
 
-game.addScene("main", () => {
+game.loader(atomic)
 
-    GamaSource.loader(atomic)
+game.addScene("main", () => {
 
     GameObject.create(Player)
     

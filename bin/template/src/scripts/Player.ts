@@ -14,27 +14,10 @@ export default class Player extends GameObject {
     }
 
     update() {
+        
+        const axios = KeyBoard.getAxios("transverse")
 
-        if (KeyBoard.getKeyDown("w")) {
-            
-            this.transform.y -= this.speed
-
-        }
-        if (KeyBoard.getKeyDown("a")) {
-
-            this.transform.x -= this.speed
-            
-        }
-        if (KeyBoard.getKeyDown("d")) {
-
-            this.transform.x += this.speed
-            
-        }
-        if (KeyBoard.getKeyDown("s")) {
-
-            this.transform.y += this.speed
-            
-        }
+        this.transform.addInPlace(axios.multiply(this.speed))
         
     }
 
