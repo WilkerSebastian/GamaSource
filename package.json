@@ -2,22 +2,22 @@
   "name": "gamasource",
   "version": "0.4.2-fix",
   "source": "src/GamaSource.ts",
-  "main": "dist/GamaSource.js",
-  "module": "dist/esm/GamaSource.js",
-  "types": "dist/GamaSource.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
   "license": "MIT",
   "bin": {
     "gamasource": "bin/script.js"
   },
   "scripts": {
-    "build": "parcel build",
+    "build": "bun build.config.ts",
     "test": "bun test"
   },
   "devDependencies": {
-    "@parcel/packager-ts": "2.9.3",
-    "@parcel/transformer-typescript-types": "2.9.3",
-    "parcel": "^2.9.3",
-    "typescript": ">=3.0.0"
+    "@types/bun": "^1.1.6",
+    "tsup": "^8.2.3",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "shelljs": "^0.8.5"

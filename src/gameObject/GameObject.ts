@@ -1,9 +1,12 @@
-import GamaSource, { Helpers, RigidBody2D, Sprite } from "../GamaSource"
+import GamaSource from "../core/GamaSource";
+import Helpers from "../helper/Helpers";
 import BoxCollider2D from "../math/collision/BoxCollider2D";
 import CircularCollider from "../math/collision/CircularCollider";
 import Collider from "../math/collision/Collider";
 import Physic from "../math/physics/Physic";
+import RigidBody2D from "../math/physics/RigidBody2D";
 import Vector2 from "../math/vector/Vector2"
+import Sprite from "../rendering/Sprite";
 import Component from "./components/Component";
 import ComponentType from "./components/ComponentType";
 

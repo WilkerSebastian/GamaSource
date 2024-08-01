@@ -1,4 +1,4 @@
-import GamaSource from "../../GamaSource"
+import GamaSource from "../../core/GamaSource"
 import GameImage from "../../asset/image/GameImage"
 import FrameComponent from "../FrameComponent"
 import FramePanelConfig from "../config/FramePanelConfig"

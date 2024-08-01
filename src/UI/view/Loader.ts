@@ -1,4 +1,4 @@
-import GamaSource from "../../GamaSource"
+import GamaSource from "../../core/GamaSource"
 import atomic from "./img64/atomic"
 import source from "./img64/source"
 

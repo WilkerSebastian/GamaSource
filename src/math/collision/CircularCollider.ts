@@ -1,6 +1,6 @@
-import { BoxCollider2D, GameMath } from "../../GamaSource";
 import Sprite from "../../rendering/Sprite";
 import Vector2 from "../vector/Vector2";
+import BoxCollider2D from "./BoxCollider2D";
 import Collider from "./Collider";
 
 

@@ -1,5 +1,7 @@
-import GamaSource, { Mouse, Vector2 } from "../GamaSource"
+import GamaSource from "../core/GamaSource"
 import ratio from "../define/ratio"
+import Mouse from "../input/Mouse"
+import Vector2 from "../math/vector/Vector2"
 import FrameConfig from "./config/FrameConfig"
 
 export default class FrameComponent {

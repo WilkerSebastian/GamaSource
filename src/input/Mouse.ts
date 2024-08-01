@@ -1,4 +1,5 @@
-import GamaSource, { Vector2 } from "../GamaSource";
+import GamaSource from "../core/GamaSource";
+import Vector2 from "../math/vector/Vector2";
 
 export default abstract class Mouse {
 

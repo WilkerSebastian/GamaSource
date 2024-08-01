@@ -1,4 +1,5 @@
-import { Vector2 } from "../GamaSource";
+import { describe, expect, it } from "bun:test"
+import { Vector2 } from "../dist/index"
 
 describe("instance vector", () => {
 

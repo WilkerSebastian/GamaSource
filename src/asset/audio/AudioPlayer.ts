@@ -1,4 +1,4 @@
-import GamaSource from "../../GamaSource";
+import GamaSource from "../../core/GamaSource";
 import GameAudio from "./GameAudio";
 
 export default class AudioPlayer {

@@ -1,4 +1,4 @@
-import GamaSource from "../../GamaSource"
+import GamaSource from "../../core/GamaSource"
 
 export default class GameVideo {
 

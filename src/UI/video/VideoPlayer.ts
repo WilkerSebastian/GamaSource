@@ -1,6 +1,7 @@
-import GamaSource, { FrameComponent } from "../../GamaSource";
+import GamaSource from "../../core/GamaSource";
 import GameVideo from "../../asset/video/GameVideo";
 import VideoPlayerConfig from "../config/VideoPlayerConfig";
+import FrameComponent from "../FrameComponent";
 
 export default class VideoPlayer extends FrameComponent {
 

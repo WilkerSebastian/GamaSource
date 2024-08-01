@@ -1,5 +1,4 @@
-import { Camera } from "../GamaSource"
-
+import Camera from "../gameObject/Camera"
 export default class GamaSourceConfig {
 
     maxFPS?:number

@@ -1,4 +1,4 @@
-import { GameObject } from "../../GamaSource"
+import GameObject from "../../gameObject/GameObject"
 import Vector2 from "../vector/Vector2"
 import Physic from "./Physic"
 

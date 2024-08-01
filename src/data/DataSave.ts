@@ -1,4 +1,4 @@
-import { GameObject } from "../GamaSource";
+import GameObject from "../gameObject/GameObject";
 
 export default class DataSave<T extends GameObject> {
 

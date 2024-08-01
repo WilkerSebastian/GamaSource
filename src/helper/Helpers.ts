@@ -1,6 +1,11 @@
-import GamaSource, { BoxCollider2D, GameMath, GameObject, GameWindow, Mouse, Sprite, Vector2 } from "../GamaSource";
+import GamaSource from "../core/GamaSource";
 import HelperConfig from "../define/HelperConfig";
+import GameObject from "../gameObject/GameObject";
+import BoxCollider2D from "../math/collision/BoxCollider2D";
 import Collider from "../math/collision/Collider";
+import GameMath from "../math/GameMath";
+import Vector2 from "../math/vector/Vector2";
+import Sprite from "../rendering/Sprite";
 
 export default class Helpers {
 

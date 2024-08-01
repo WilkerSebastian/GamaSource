@@ -1,4 +1,5 @@
-import { Mouse, Vector2 } from "../../GamaSource";
+import Mouse from "../../input/Mouse";
+import Vector2 from "../../math/vector/Vector2";
 import FrameButtonConfig from "../config/FrameButtonConfig";
 import FrameTextConfig from "../config/FrameTextConfig";
 import FramePanel from "./FramePanel";

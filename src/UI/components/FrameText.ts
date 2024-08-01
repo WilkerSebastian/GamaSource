@@ -1,4 +1,4 @@
-import GamaSource from "../../GamaSource";
+import GamaSource from "../../core/GamaSource";
 import ratio from "../../define/ratio";
 import FrameComponent from "../FrameComponent";
 import FrameTextConfig from "../config/FrameTextConfig";

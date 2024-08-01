@@ -1,4 +1,4 @@
-import { Vector2 } from "../../GamaSource";
+import Vector2 from "../../math/vector/Vector2";
 import GameObject from "../GameObject";
 
 export default abstract class Component {

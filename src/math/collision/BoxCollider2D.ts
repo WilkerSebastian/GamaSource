@@ -1,4 +1,4 @@
-import { Sprite } from "../../GamaSource";
+import Sprite from "../../rendering/Sprite";
 import Vector2 from "../vector/Vector2";
 import CircularCollider from "./CircularCollider";
 import Collider from "./Collider";

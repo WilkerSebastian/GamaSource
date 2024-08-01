@@ -1,6 +1,7 @@
-import GamaSource, { Vector2 } from "../GamaSource";
+import GamaSource from "../core/GamaSource";
 import GameObject from "../gameObject/GameObject";
 import Component from "../gameObject/components/Component";
+import Vector2 from "../math/vector/Vector2";
 import SizeSprite from "./spriteAsset/SizeSprite";
 
 export default abstract class Sprite extends Component implements SizeSprite {

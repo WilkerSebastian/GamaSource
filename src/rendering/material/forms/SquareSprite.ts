@@ -1,5 +1,6 @@
-import GamaSource, { GameMath } from "../../../GamaSource";
+import GamaSource from "../../../core/GamaSource";
 import GameObject from "../../../gameObject/GameObject";
+import GameMath from "../../../math/GameMath";
 import Vector2 from "../../../math/vector/Vector2";
 import ShapeSprite from "../ShapeSprite";
 

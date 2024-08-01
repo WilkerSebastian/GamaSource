@@ -1,34 +1,19 @@
-import GamaSourceState from "./define/GamaSourceState"
-import GamaSourceConfig from "./define/GamaSourceConfig"
-import GameObject from "./gameObject/GameObject"
-import KeyBoard from "./input/KeyBoard"
-import TimeController from "./math/time/TimeController"
-import GameCanvas from "./UI/view/GameCanvas"
-import GameWindow from "./UI/view/GameWindow"
-import TimeGame from "./define/TimeGame"
-import Vector2 from "./math/vector/Vector2"
-import Sprite from "./rendering/Sprite"
-import ShapeSprite from "./rendering/material/ShapeSprite"
-import SquareSprite from "./rendering/material/forms/SquareSprite"
-import StaticSprite from "./rendering/spriteAsset/static/StaticSprite"
-import GameMath from "./math/GameMath"
-import GameAudio from "./asset/audio/GameAudio"
-import GameImage from "./asset/image/GameImage"
-import Loader from "./UI/view/Loader"
-import Mouse from "./input/Mouse"
-import FrameComponent from "./UI/FrameComponent"
-import FramePanel from "./UI/components/FramePanel"
-import FrameText from "./UI/components/FrameText"
-import AnimationController from "./rendering/spriteAsset/animation/AnimationController"
-import SpriteSheet from "./rendering/spriteAsset/dynamic/SpriteSheet"
-import RigidBody2D from "./math/physics/RigidBody2D"
-import BoxCollider2D from "./math/collision/BoxCollider2D"
-import Camera from "./gameObject/Camera"
-import FrameButton from "./UI/components/FrameButton"
-import GameVideo from "./asset/video/GameVideo"
-import VideoPlayer from "./UI/video/VideoPlayer"
-import Helpers from "./helper/Helpers"
-import AudioPlayer from "./asset/audio/AudioPlayer"
+import GamaSourceState from "../define/GamaSourceState"
+import GamaSourceConfig from "../define/GamaSourceConfig"
+import GameObject from "../gameObject/GameObject"
+import KeyBoard from "../input/KeyBoard"
+import TimeController from "../math/time/TimeController"
+import GameCanvas from "../UI/view/GameCanvas"
+import GameWindow from "../UI/view/GameWindow"
+import GameAudio from "../asset/audio/GameAudio"
+import GameImage from "../asset/image/GameImage"
+import Loader from "../UI/view/Loader"
+import Mouse from "../input/Mouse"
+import FrameComponent from "../UI/FrameComponent"
+import FramePanel from "../UI/components/FramePanel"
+import Camera from "../gameObject/Camera"
+import GameVideo from "../asset/video/GameVideo"
+import Helpers from "../helper/Helpers"
 
 class GamaSource {
 
@@ -364,35 +349,3 @@ class GamaSource {
 }
 
 export default GamaSource
-
-// exportações para biblioteca
-export {    
-    GamaSource, 
-    GamaSourceState, 
-    TimeGame, 
-    GamaSourceConfig,
-    GameObject, 
-    KeyBoard,
-    Mouse,
-    Vector2,
-    TimeController,
-    Sprite,
-    ShapeSprite, 
-    SquareSprite, 
-    StaticSprite,
-    RigidBody2D,
-    BoxCollider2D,
-    SpriteSheet,
-    AnimationController,
-    GameCanvas, 
-    GameWindow,
-    GameMath,
-    FrameComponent,
-    FramePanel,
-    FrameText,
-    FrameButton,
-    VideoPlayer,
-    AudioPlayer,
-    Camera,
-    Helpers
-};

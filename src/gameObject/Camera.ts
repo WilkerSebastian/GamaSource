@@ -1,4 +1,5 @@
-import GamaSource, { Sprite, Vector2 } from "../GamaSource";
+import GamaSource from "../core/GamaSource";
+import Sprite from "../rendering/Sprite";
 import GameObject from "./GameObject";
 
 export default class Camera extends GameObject {

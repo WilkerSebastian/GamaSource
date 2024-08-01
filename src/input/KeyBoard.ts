@@ -1,4 +1,4 @@
-import { Vector2 } from "../GamaSource"
+import Vector2 from "../math/vector/Vector2"
 
 export default abstract class KeyBoard {
 

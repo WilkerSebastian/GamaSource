@@ -2,7 +2,8 @@ import Vector2 from "../../../math/vector/Vector2";
 import GameObject from "../../../gameObject/GameObject" 
 import StaticSprite from "../static/StaticSprite";
 import Slice from "./Slice";
-import GamaSource, { GameMath } from "../../../GamaSource";
+import GamaSource from "../../../core/GamaSource";
+import GameMath from "../../../math/GameMath";
 
 export default class SpriteSheet extends StaticSprite{
 

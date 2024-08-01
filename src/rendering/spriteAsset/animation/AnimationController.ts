@@ -1,4 +1,7 @@
-import GamaSource, { GameObject, Sprite, Vector2 } from "../../../GamaSource";
+import GamaSource from "../../../core/GamaSource";
+import GameObject from "../../../gameObject/GameObject";
+import Vector2 from "../../../math/vector/Vector2";
+import Sprite from "../../Sprite";
 import SizeSprite from "../SizeSprite";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";

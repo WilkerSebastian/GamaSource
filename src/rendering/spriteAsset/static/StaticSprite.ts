@@ -1,5 +1,8 @@
-import GamaSource, { Vector2, GameObject, GameMath } from "../../../GamaSource";
 import GameImage from "../../../asset/image/GameImage";
+import GamaSource from "../../../core/GamaSource";
+import GameObject from "../../../gameObject/GameObject";
+import GameMath from "../../../math/GameMath";
+import Vector2 from "../../../math/vector/Vector2";
 import Sprite from "../../Sprite"
 import SizeSprite from "../SizeSprite";
 
