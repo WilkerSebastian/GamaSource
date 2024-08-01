@@ -1,4 +1,4 @@
-import {GamaSource, GameObject} from "gamasource"
+import { GamaSource, GameObject } from "gamasource"
 import Player from "./scripts/Player"
 import atomic from "./assets/atomic.png"
 
