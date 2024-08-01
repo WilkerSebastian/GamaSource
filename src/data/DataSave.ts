@@ -1,4 +1,5 @@
 import GameObject from "../gameObject/GameObject";
+import MemoryManeger from "./MemoryManeger";
 
 export default class DataSave<T extends GameObject> {
 
@@ -14,7 +15,7 @@ export default class DataSave<T extends GameObject> {
 
         const items = this.getAll();
         items.push(item);
-        localStorage.setItem(this.storageKey, JSON.stringify(items));
+        localStorage.setItem(this.storageKey, MemoryManeger.toJSON(items));
 
     }
 
@@ -39,7 +40,7 @@ export default class DataSave<T extends GameObject> {
 
         if (index !== -1) {
             items[index] = item;
-            localStorage.setItem(this.storageKey, JSON.stringify(items));
+            localStorage.setItem(this.storageKey, MemoryManeger.toJSON(items));
         }
     
     }
@@ -48,7 +49,7 @@ export default class DataSave<T extends GameObject> {
     
         const items = this.getAll();
         const filteredItems = items.filter(item => item.tag !== tag);
-        localStorage.setItem(this.storageKey, JSON.stringify(filteredItems));
+        localStorage.setItem(this.storageKey, MemoryManeger.toJSON(filteredItems));
     
     }
 
