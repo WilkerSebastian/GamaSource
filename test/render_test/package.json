@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "gamasource": "link:gamasource",
     "typescript": "^5.2.2",
     "vite": "^5.3.4"
   }
