@@ -317,6 +317,8 @@ class GamaSource {
 
         if(sc) {
 
+            this.state = GamaSourceState.CLOSED
+
             this.UI.setChildrens([])
             this.GameObjects = []
 
@@ -325,6 +327,8 @@ class GamaSource {
             this.GameObjects.forEach((g) => g.start())     
             
             this.globalEnv.set("current_scene", scene)
+
+            GamaSource.resume()
 
             return
 

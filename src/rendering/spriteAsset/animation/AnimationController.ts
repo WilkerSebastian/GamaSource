@@ -5,6 +5,7 @@ import Sprite from "../../Sprite";
 import SizeSprite from "../SizeSprite";
 import Slice from "../dynamic/Slice";
 import SpriteSheet from "../dynamic/SpriteSheet";
+import Animation from "../../../define/Animation";
 
 export default class AnimationController extends Sprite implements SizeSprite {
 
@@ -67,19 +68,17 @@ export default class AnimationController extends Sprite implements SizeSprite {
 
     public render() {
 
-        if(!this.reference)
-            this.reference = new Vector2(0,0)
-
         const animation = this.getCurrentAnimation() as SpriteSheet
 
         animation.scale = this.scale
         animation.rotation = this.rotation
+        animation.reference = this.reference
 
         animation.render()
 
     }
 
-    public static load(json:any[], reference:GameObject | Vector2, over?: { pixelRatio?: number, staggerFrames?:number}) {
+    public static load(json:Animation[], over?: { pixelRatio?: number, staggerFrames?:number}, reference?:GameObject | Vector2) {
 
         const animation = new AnimationController(reference);
 

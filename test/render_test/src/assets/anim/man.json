@@ -1,0 +1,36 @@
+[
+    {
+        "name": "idle",
+        "slices": [
+            { "x": 49, "y": 55, "width": 35, "height": 73 },
+            { "x": 49, "y": 183, "width": 35, "height": 73 },
+            { "x": 49, "y": 311, "width": 35, "height": 73 },
+            { "x": 49, "y": 439, "width": 35, "height": 73 }
+        ],
+        "pixel": {
+            "width": 350,
+            "height": 730 
+        },
+        "stagger": 12,
+        "source": "man_idle.png"
+    },
+    {
+        "name": "run",
+        "slices": [
+            { "x": 38, "y": 184, "width": 49, "height": 72 },
+            { "x": 163, "y": 184, "width": 51, "height": 72 },
+            { "x": 290, "y": 183, "width": 52, "height": 71 },
+            { "x": 419, "y": 183, "width": 50, "height": 73 },
+            { "x": 550, "y": 184, "width": 42, "height": 72 },
+            { "x": 684, "y": 184, "width": 38, "height": 72 },
+            { "x": 818, "y": 185, "width": 37, "height": 71 },
+            { "x": 946, "y": 184, "width": 39, "height": 72 }
+        ],
+        "pixel": {
+            "width": 490,
+            "height": 720
+        },
+        "stagger": 12,
+        "source": "man_run.png"
+    }
+]

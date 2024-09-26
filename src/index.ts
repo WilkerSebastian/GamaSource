@@ -27,6 +27,7 @@ import Camera from "./gameObject/Camera";
 import Helpers from "./helper/Helpers";
 import VideoPlayer from "./UI/video/VideoPlayer";
 import DataSave from "./data/DataSave";
+import Animation from "./define/Animation";
 
 export default GamaSource
 
@@ -59,5 +60,6 @@ export {
     AudioPlayer,
     Camera,
     Helpers,
-    DataSave
+    DataSave,
+    Animation
 }
