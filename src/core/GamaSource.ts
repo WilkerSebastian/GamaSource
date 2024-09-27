@@ -32,8 +32,10 @@ class GamaSource {
 
     private background:FramePanel
     private static scenes = new Map<string, () => void>()
-
+    
     private firstScene = "main"
+
+    private static AnimationFrameID:number
 
     constructor(config?:GamaSourceConfig) {
 
@@ -176,7 +178,7 @@ class GamaSource {
 
         try {
 
-            requestAnimationFrame(() => this.loop())
+            GamaSource.AnimationFrameID = requestAnimationFrame(() => this.loop())
          
             if (GamaSource.state != GamaSourceState.CLOSED && GamaSource.state != GamaSourceState.CRASHED) {
 
@@ -317,18 +319,12 @@ class GamaSource {
 
         if(sc) {
 
-            this.state = GamaSourceState.CLOSED
-
             this.UI.setChildrens([])
             this.GameObjects = []
 
-            sc()
+            sc()    
 
-            this.GameObjects.forEach((g) => g.start())     
-            
-            this.globalEnv.set("current_scene", scene)
-
-            GamaSource.resume()
+            this.GameObjects.forEach((g) => g.gameStart())
 
             return
 
