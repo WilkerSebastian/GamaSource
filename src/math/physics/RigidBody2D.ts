@@ -1,3 +1,4 @@
+import GameObject from "../../gameObject/GameObject";
 import Vector2 from "../vector/Vector2";
 import Physic from "./Physic";
 
@@ -28,7 +29,10 @@ export default class RigidBody2D extends Physic {
         
         this.applyForce(this.gravity);
 
-        this.position = this.position.add(this.velocity)
+        this.position = this.position.add(new Vector2(this.velocity.x, -this.velocity.y));
+
+        if (this.reference instanceof GameObject)
+            this.reference.transform.copy(this.position)
 
     }
 

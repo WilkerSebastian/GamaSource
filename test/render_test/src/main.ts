@@ -3,13 +3,15 @@ import Cube from "./scripts/Cube"
 import Man from "./scripts/Man"
 import man_idle from "./assets/sprites/man_idle.png"
 import man_run from "./assets/sprites/man_run.png"
+import Cube_physics from "./scripts/Cube_physics"
+import Cube_static from "./scripts/Cube_static"
 
 const game = new GamaSource()
 
 game.loader(man_idle, man_run)
 
 let i = 1
-const statges = ["main", "man_animation"]
+const statges = ["main", "man_animation", "physics"]
 
 document.addEventListener("keydown", (e) => {
 
@@ -29,6 +31,14 @@ game.addScene("main", () => {
 game.addScene("man_animation", () => {
 
     GameObject.create(Man)
+
+})
+
+game.addScene("physics", () => {
+
+    GameObject.create(Cube_physics)
+
+    GameObject.create(Cube_static)
 
 })
 

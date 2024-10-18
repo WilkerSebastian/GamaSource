@@ -139,8 +139,10 @@ export default class GameObject {
         const collision = this.getComponent("Collision") as BoxCollider2D
         const rendering = this.getComponent("Rendering") as Sprite
 
-        if (physics)
+        if (physics) {
             physics.reference = this
+            physics.position.copy(this.transform)
+        }
 
         if (collision)
             collision.reference = this
@@ -190,7 +192,7 @@ export default class GameObject {
 
                         if (resolve.y != 0) {
                             physic.velocity.y = 0;
-                            physic.position.y = objCollision.position.y - (this.getComponent("Rendering") as Sprite).getSize().height
+                            physic.position.y = physic.position.y + resolve.y
                         }
 
                     }

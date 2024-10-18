@@ -28,6 +28,7 @@ import Helpers from "./helper/Helpers";
 import VideoPlayer from "./UI/video/VideoPlayer";
 import DataSave from "./data/DataSave";
 import Animation from "./define/Animation";
+import StaticBody2D from "./math/physics/StaticBody2D";
 
 export default GamaSource
 
@@ -45,6 +46,7 @@ export {
     ShapeSprite, 
     SquareSprite, 
     StaticSprite,
+    StaticBody2D,
     RigidBody2D,
     BoxCollider2D,
     SpriteSheet,
