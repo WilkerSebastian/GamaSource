@@ -17,7 +17,7 @@ export default abstract class KeyBoard {
 
         document.addEventListener("keydown", (keyboard) => {
 
-            KeyBoard.mapper.set(keyboard.key, true)
+            KeyBoard.mapper.set(keyboard.key == " " ? "SPACE" : keyboard.key, true)
 
             this.events.forEach(e => {
 
@@ -38,7 +38,7 @@ export default abstract class KeyBoard {
 
     public static getKeyDownExclusive(key:string) {
 
-        return KeyBoard.mapper.get(key)
+        return KeyBoard.mapper.get(key == "space" ? "SPACE" : key)
 
     }
 
