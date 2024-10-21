@@ -5,18 +5,29 @@ import os from 'os';
 import path from 'path';
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import gama from '../package.json' assert { type: 'json' };
+import { fileURLToPath } from 'url';
 
 const execAsync = promisify(exec);
 const args = process.argv;
 
+// Corrigindo o caminho de __dirname usando import.meta.url
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Carregar o arquivo JSON sem usar import
+const gamaPath = path.join(__dirname, '../package.json');
+const gama = JSON.parse(await fs.readFile(gamaPath, 'utf-8'));
+
 async function main() {
     try {
+        // Detectando o gerenciador de pacotes padrão
+        const defaultPackageManager = detectPackageManager();
+        
         if (args.length === 3) {
-            await handleArgs(args[2]);
+            await handleArgs(args[2], defaultPackageManager);
         } else if (args.length === 4 || args.length === 5) {
             if (args[2] === "create") {
-                await createProject(args[3], args[4]);
+                await createProject(args[3], args[4] || defaultPackageManager);
             }
         } else {
             console.log("command not found");
@@ -26,13 +37,26 @@ async function main() {
     }
 }
 
-async function handleArgs(arg) {
+function detectPackageManager() {
+    const execPath = process.argv[0];
+    if (execPath.includes('bun')) {
+        return '-bun';
+    } else if (execPath.includes('pnpm')) {
+        return '-pnpm';
+    } else if (execPath.includes('yarn')) {
+        return '-yarn';
+    } else {
+        return '-npm';
+    }
+}
+
+async function handleArgs(arg, defaultPackageManager) {
     if (arg === "--help" || arg === "-h") {
         displayHelp();
     } else if (arg === "--version" || arg === "-v") {
         console.log(`v${gama.version}`);
     } else if (arg === "build") {
-        await buildProject();
+        await buildProject(defaultPackageManager);
     } else {
         console.log("Invalid argument");
     }
@@ -51,12 +75,12 @@ function displayHelp() {
     `);
 }
 
-async function buildProject() {
+async function buildProject(packageManager) {
     console.log("starting project compilation");
     console.time("complete in");
 
     const tmp = os.tmpdir();
-    const electronPackagePath = path.join(path.dirname(import.meta.url), "/electron/package.json");
+    const electronPackagePath = path.join(__dirname, "/electron/package.json");
     const packElectron = JSON.parse(await fs.readFile(electronPackagePath, "utf-8"));
 
     let config = await getConfig();
@@ -66,13 +90,13 @@ async function buildProject() {
     await fs.writeFile(electronPackagePath, JSON.stringify(packElectron));
 
     const electronDir = path.join(tmp, "/electron");
-    await fs.cp(path.join(path.dirname(import.meta.url), "/electron"), electronDir, { recursive: true });
+    await fs.cp(path.join(__dirname, "/electron"), electronDir, { recursive: true });
 
-    await installDependencies(electronDir, args[4]);
+    await installDependencies(electronDir, packageManager);
 
     await fs.cp(path.resolve("dist"), electronDir, { recursive: true });
 
-    await executeBuild(electronDir, args[4]);
+    await executeBuild(electronDir, packageManager);
 
     await fs.cp(path.join(electronDir, config.out), path.resolve("./"), { recursive: true });
     await fs.rm(electronDir, { recursive: true, force: true });
@@ -129,7 +153,7 @@ async function createProject(projectPath, packageManager) {
 
     const { installCommand, execCommand } = getPackageManagerCommands(packageManager);
 
-    const templateDir = path.join(path.dirname(import.meta.url), "template");
+    const templateDir = path.join(__dirname, "template");
     await fs.cp(templateDir, projectPath, { recursive: true });
 
     const packageJsonContent = `
