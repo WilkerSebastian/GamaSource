@@ -7,13 +7,18 @@ export default abstract class Physic extends Component {
     public velocity: Vector2;
     public mass: number;
 
-    constructor(mass:number, position?:Vector2) {
+    constructor(mass:number = 1, position?:Vector2) {
         super()
         this.position = position ?? new Vector2(0, 0)
         this.velocity = new Vector2(0, 0)
         this.mass = mass
     }
 
-    public abstract update():void;
+    public abstract update(deltaTime:number):void;
+
+    public applyForce(force: Vector2): void {
+        const acceleration = force.multiply(1 / this.mass);
+        this.velocity = this.velocity.add(acceleration);
+    }
 
 }

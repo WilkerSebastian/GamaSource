@@ -4,8 +4,8 @@ import Physic from "./Physic"
 
 export default class StaticBody2D extends Physic {
 
-    constructor(mass:number = 0, position?:Vector2) {
-        super(mass, position)
+    constructor(position?:Vector2) {
+        super(0, position)
     }
 
     public override update() {

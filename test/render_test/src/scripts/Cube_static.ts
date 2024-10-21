@@ -4,7 +4,7 @@ export default class Cube_static extends GameObject {
 
     private sprite = new SquareSprite(250, 100, "blue")
     private collider = new BoxCollider2D()
-    private physics = new StaticBody2D(1)
+    private physics = new StaticBody2D()
 
 
     start() {

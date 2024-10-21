@@ -35,7 +35,7 @@ export default class BoxCollider2D extends Collider {
     public override resolveCollision(collider: Collider): Vector2 {
 
         if (collider instanceof CircularCollider) 
-            return collider.resolveCollision(this)
+            return collider.resolveCollision(this);
 
         else if (collider instanceof BoxCollider2D) {
 
@@ -54,15 +54,32 @@ export default class BoxCollider2D extends Collider {
                 Math.abs(distance.y)
             ));
 
-            if (overlay.x < overlay.y) 
+            if (overlay.x < overlay.y) {
+
+                if (distance.x < 0) 
+                    this.position.x = collider.position.x - this.width;
+
+                else
+                    this.position.x = collider.position.x + collider.width;
+              
                 return new Vector2(distance.x < 0 ? -overlay.x : overlay.x, 0);
-           
-            return new Vector2(0, distance.y < 0 ? -overlay.y : overlay.y);
+
+            } else {
+
+                if (distance.y < 0) 
+                    this.position.y = collider.position.y - this.height;
+
+                else
+                    this.position.y = collider.position.y + collider.height;
+                
+                return new Vector2(0, distance.y < 0 ? -overlay.y : overlay.y);
+
+            }
             
         }
 
-        return Vector2.zero()
-
+        return Vector2.zero();
+    
     }
 
     public override update() {
