@@ -1,20 +1,45 @@
 #!/usr/bin/env node
 
-const fs = require('fs')
-const shell = require ("shelljs")
-const os = require("os")
-const path = require ('path')
-const gama = require ("../package.json")
+import fs from 'fs/promises';
+import os from 'os';
+import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import gama from '../package.json' assert { type: 'json' };
 
-const args = process.argv
+const execAsync = promisify(exec);
+const args = process.argv;
 
-function main() {
+async function main() {
+    try {
+        if (args.length === 3) {
+            await handleArgs(args[2]);
+        } else if (args.length === 4 || args.length === 5) {
+            if (args[2] === "create") {
+                await createProject(args[3], args[4]);
+            }
+        } else {
+            console.log("command not found");
+        }
+    } catch (error) {
+        console.error("Error:", error.message);
+    }
+}
 
-    if (args.length == 3) {
-    
-        if (args[2] == "--help" || args[2] == "-h") {
+async function handleArgs(arg) {
+    if (arg === "--help" || arg === "-h") {
+        displayHelp();
+    } else if (arg === "--version" || arg === "-v") {
+        console.log(`v${gama.version}`);
+    } else if (arg === "build") {
+        await buildProject();
+    } else {
+        console.log("Invalid argument");
+    }
+}
 
-            console.log(`
+function displayHelp() {
+    console.log(`
     GamaSource v${gama.version}
 
     create <path> // create a template project, default use npm
@@ -23,148 +48,91 @@ function main() {
     build -<package> // gamma build and use package(-npm, -yarn, -pnpm, -bun)
     --version || -v // view the version of GamaSource
     --help || -h // view the commands
-            `);
-            return
-            
-        }
-        else if (args[2] == "--version" || args[2] == "-v") {
+    `);
+}
 
-            console.log(`v${gama.version}`);
-            return
-            
-        }
-        else if (args[2] == "build") {
+async function buildProject() {
+    console.log("starting project compilation");
+    console.time("complete in");
 
-            console.log("starting project compilation");
-            console.time("complete in")
+    const tmp = os.tmpdir();
+    const electronPackagePath = path.join(path.dirname(import.meta.url), "/electron/package.json");
+    const packElectron = JSON.parse(await fs.readFile(electronPackagePath, "utf-8"));
 
-            const tmp = os.tmpdir()
+    let config = await getConfig();
 
-            const pack_electron = JSON.parse(fs.readFileSync(path.join(path.dirname(__filename), "/electron/package.json")).toString("utf-8"))
-        
-            let config = {
-                name: "app",
-                arch: "x64",
-                icon: path.resolve("./dist/favicon.ico"),
-                platform: "darwin,linux,win32",
-                out: "bin"
-            }
+    packElectron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=${config.out} --overwrite`;
 
-            let config_extern
+    await fs.writeFile(electronPackagePath, JSON.stringify(packElectron));
 
-            try {
+    const electronDir = path.join(tmp, "/electron");
+    await fs.cp(path.join(path.dirname(import.meta.url), "/electron"), electronDir, { recursive: true });
 
-                config_extern = JSON.parse(fs.readFileSync(path.resolve("./game.config.json")).toString("utf-8"))
+    await installDependencies(electronDir, args[4]);
 
-            } catch(e) {
-                
-                console.log(path.resolve("./game.config.json"));
-                console.log("WARNING: configuration file not found, continuing to use compilation default values");
+    await fs.cp(path.resolve("dist"), electronDir, { recursive: true });
 
-            }
+    await executeBuild(electronDir, args[4]);
 
-            config.name = config_extern.name ?? "game"
-            config.arch = config_extern.arch ? config_extern.arch.join(',') : "x64"
-            config.icon = config_extern.icon ?? path.resolve("./dist/favicon.ico")
-            config.platform = config_extern.platform ? config_extern.platform.join(',') : "darwin,linux,win32"
-            config.out = config_extern.out ?? "bin"
-            
-            pack_electron.scripts.make = `electron-packager . --arch=${config.arch} --icon=${config.icon} --platform=${config.platform} --prune=true --out=${config.out} --overwrite`
+    await fs.cp(path.join(electronDir, config.out), path.resolve("./"), { recursive: true });
+    await fs.rm(electronDir, { recursive: true, force: true });
 
-            fs.writeFileSync(path.join(path.dirname(__filename), "/electron/package.json"), JSON.stringify(pack_electron))
+    console.log("compilation finished, output in folder " + config.out);
+    console.timeEnd("complete in");
+}
 
-            shell.cp("-r", path.join(path.dirname(__filename), "/electron"), tmp)
+async function getConfig() {
+    let config = {
+        name: "app",
+        arch: "x64",
+        icon: path.resolve("./dist/favicon.ico"),
+        platform: "darwin,linux,win32",
+        out: "bin"
+    };
 
-            const tmp_electron = path.join(tmp, "/electron")
+    try {
+        const configExtern = JSON.parse(await fs.readFile(path.resolve("./game.config.json"), "utf-8"));
+        config.name = configExtern.name ?? "game";
+        config.arch = configExtern.arch?.join(',') ?? "x64";
+        config.icon = configExtern.icon ?? path.resolve("./dist/favicon.ico");
+        config.platform = configExtern.platform?.join(',') ?? "darwin,linux,win32";
+        config.out = configExtern.out ?? "bin";
+    } catch (e) {
+        console.log(path.resolve("./game.config.json"));
+        console.log("WARNING: configuration file not found, continuing to use default values");
+    }
 
-            const module = "npm install"
+    return config;
+}
 
-            if (args[4] == "-yarn")
-                module = "yarn"
+async function installDependencies(electronDir, packageManager) {
+    let installCommand = "npm install";
+    if (packageManager === "-yarn") installCommand = "yarn";
+    else if (packageManager === "-pnpm") installCommand = "pnpm install";
+    else if (packageManager === "-bun") installCommand = "bun install";
 
-            else if (args[4] == "-pnpm")
-                module = "pnpm install"
-            
-            else if (args[4] == "-bun")
-                module = "bun install"
+    await execAsync(`cd ${electronDir} && ${installCommand}`);
+}
 
-            shell.exec(`cd ${tmp_electron} && ${module}`)
+async function executeBuild(electronDir, packageManager) {
+    let buildCommand = "npm run make";
+    if (packageManager === "-yarn") buildCommand = "yarn make";
+    else if (packageManager === "-pnpm") buildCommand = "pnpm make";
+    else if (packageManager === "-bun") buildCommand = "bun make";
 
-            shell.cp("-r", path.resolve("dist"), tmp_electron)
+    await execAsync(`cd ${electronDir} && ${buildCommand}`);
+}
 
-            const exec = "npm run make"
+async function createProject(projectPath, packageManager) {
+    let name = projectPath === "." || projectPath === "./" ? path.basename(path.resolve(".")) : path.basename(projectPath);
+    await fs.mkdir(name, { recursive: true });
 
-            if (args[4] == "-yarn")
-                exec = "yarn make"
+    const { installCommand, execCommand } = getPackageManagerCommands(packageManager);
 
-            else if (args[4] == "-pnpm")
-                exec = "pnpm make"
-            
-            else if (args[4] == "-bun")
-                exec = "bun make"
+    const templateDir = path.join(path.dirname(import.meta.url), "template");
+    await fs.cp(templateDir, projectPath, { recursive: true });
 
-            shell.exec(`cd ${tmp_electron} && ${exec}`)
-
-            shell.cp("-r",path.join(`${tmp_electron}`, config.out), path.resolve("./"))
-
-            shell.rm("-rf", tmp_electron)
-
-            console.log("compilation finished output in folder" + config.out);
-            console.timeEnd("complete in")
-            return
-
-        }
-    
-    } else if(args.length == 4 || args.length == 5) {
-
-        if (args[2] == "create") {
-
-            let name = ""
-
-            if (args[3] == "." || args[3] == "./") {
-
-                name = path.resolve(".").split("/")
-                name = name[name.length - 1]
-                
-            } else {
-
-                name = args[3].split("/")
-                name = name[name.length - 1]
-
-                shell.mkdir(name)
-
-            }
-
-            let module = "npm i -D typescript vite && npm i gamasource"
-            let exec = "npm run dev"
-
-            if(args.length == 5) {
-
-                if (args[4] == "-yarn") {
-
-                    module = "yarn add -D typescript vite && yarn add gamasource"
-                    exec = "yarn dev"
-                    
-                }
-                 else if (args[4] == "-pnpm") {
-
-                    module = "pnpm add -D typescript vite && pnpm add gamasource"
-                    exec = "pnpm run dev"
-                    
-                } else if (args[4] == "-bun") {
-
-                    module = "bun add -D typescript vite && bun add gamasource"
-                    exec = "bun run dev"
-                    
-                }
-
-            }
-
-            const template = path.join(path.dirname(__filename), "template")
-
-            shell.cp('-r', `${template}/*`, args[3])
-
-            fs.writeFileSync(path.resolve(args[3]) + "/package.json", `
+    const packageJsonContent = `
 {
     "name": "${name}",
     "private": true,
@@ -176,25 +144,30 @@ function main() {
         "preview": "vite preview",
         "make": "npm run build && gamasource build"
     }
-}            
-            `,)
+}`;
+    await fs.writeFile(path.resolve(projectPath, "package.json"), packageJsonContent);
 
-            shell.exec(`cd ${args[3]} && ${module}`)
+    await execAsync(`cd ${projectPath} && ${installCommand}`);
 
-            console.clear()
-
-            console.log("Execute to start your project: \n" +
-            "cd " + args[3] + "\n" +
-            exec);
-
-            return
-            
-        }
-
-    }
-
-    console.log("command not found");
-
+    console.log(`Execute to start your project: \ncd ${projectPath}\n${execCommand}`);
 }
 
-main()
+function getPackageManagerCommands(packageManager) {
+    let installCommand = "npm i -D typescript vite && npm i gamasource";
+    let execCommand = "npm run dev";
+
+    if (packageManager === "-yarn") {
+        installCommand = "yarn add -D typescript vite && yarn add gamasource";
+        execCommand = "yarn dev";
+    } else if (packageManager === "-pnpm") {
+        installCommand = "pnpm add -D typescript vite && pnpm add gamasource";
+        execCommand = "pnpm run dev";
+    } else if (packageManager === "-bun") {
+        installCommand = "bun add -D typescript vite && bun add gamasource";
+        execCommand = "bun run dev";
+    }
+
+    return { installCommand, execCommand };
+}
+
+main();
