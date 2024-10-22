@@ -1,4 +1,4 @@
-import { GameObject, AnimationController, Animation, KeyBoard } from "gamasource"
+import { GameObject, AnimationController, Animation, Gamepads, Vector2 } from "gamasource"
 import man from "../assets/anim/man.json"
 
 export default class Man extends GameObject {
@@ -14,8 +14,10 @@ export default class Man extends GameObject {
     }
 
     update(): void {
+
+        let axios: Vector2
         
-        const axios = KeyBoard.getAxios("horizontal")
+        axios = Gamepads.first.getLeftAxis()
 
         if (axios.isNullVector())
             this.sprite.set("idle")

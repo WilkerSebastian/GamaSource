@@ -14,6 +14,7 @@ import FramePanel from "../UI/components/FramePanel"
 import Camera from "../gameObject/Camera"
 import GameVideo from "../asset/video/GameVideo"
 import Helpers from "../helper/Helpers"
+import Gamepads from "../input/Gamepads"
 
 class GamaSource {
 
@@ -70,8 +71,9 @@ class GamaSource {
         })
 
         GameCanvas()
-        Mouse.initialize()
         KeyBoard.initialize()
+        Mouse.initialize()
+        Gamepads.initialize()
 
         this.time = new TimeController(config?.maxFPS ?? 60)
 
@@ -131,6 +133,8 @@ class GamaSource {
     }
 
     private update() {
+
+        Gamepads.update()
 
         GamaSource.globalEnv.set("FPS", this.time.FPS)
         GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())

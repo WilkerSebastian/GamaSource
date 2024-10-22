@@ -29,6 +29,8 @@ import VideoPlayer from "./UI/video/VideoPlayer";
 import DataSave from "./data/DataSave";
 import Animation from "./define/Animation";
 import StaticBody2D from "./math/physics/StaticBody2D";
+import Gamepads from "./input/Gamepads";
+import GamepadController from "./input/GamepadController";
 
 export default GamaSource
 
@@ -63,5 +65,7 @@ export {
     Camera,
     Helpers,
     DataSave,
+    Gamepads,
+    GamepadController,
     Animation
 }
