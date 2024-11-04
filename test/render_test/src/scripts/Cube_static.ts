@@ -9,7 +9,7 @@ export default class Cube_static extends GameObject {
 
     start() {
 
-        this.transform.set(-200, -300)
+        this.transform.set(-100, -300)
 
         this.setComponent("Rendering", this.sprite)
         this.setComponent("Collision", this.collider)

@@ -45,7 +45,10 @@ export default class Helpers {
             GamaSource.ctx.save()
             GamaSource.ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC"
 
-            GamaSource.ctx.translate(collider.position.x, collider.position.y)
+            const x = GamaSource.window.getScalableMeasure(collider.position.x)
+            const y = -GamaSource.window.getScalableMeasure(collider.position.y)
+
+            GamaSource.ctx.translate(x, y)
 
             GamaSource.ctx.fillRect(
                 -collider.width / 2, 

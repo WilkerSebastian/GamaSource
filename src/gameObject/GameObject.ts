@@ -171,6 +171,7 @@ export default class GameObject {
                                 physic.grounded = true;
                             
                         }
+                        
                     }
 
                     if (!this.collidingObjects.includes(obj))
