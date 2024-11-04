@@ -1,4 +1,4 @@
-import { GamaSource, GameObject } from "gamasource"
+import { GamaSource, GameObject, Helpers } from "gamasource"
 import Cube from "./scripts/Cube"
 import Man from "./scripts/Man"
 import man_idle from "./assets/sprites/man_idle.png"
@@ -7,6 +7,11 @@ import Cube_physics from "./scripts/Cube_physics"
 import Cube_static from "./scripts/Cube_static"
 
 const game = new GamaSource()
+
+Helpers.config = {
+    position: true,
+    collision: true
+}
 
 game.loader(man_idle, man_run)
 

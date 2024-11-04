@@ -17,6 +17,15 @@ export default class Cube_physics extends GameObject {
 
     }
 
+    protected onCollisionBetween(gameObject: GameObject): void {
+        
+        console.log(this.collider.position.x, this.collider.position.y, this.collider.width, this.collider.height);
+        
+        const otherCollider = gameObject.getComponent("Collision") as BoxCollider2D
+        console.log(otherCollider.position.x, otherCollider.position.y, otherCollider.width, otherCollider.height);
+
+    }
+
     update() {
         
 

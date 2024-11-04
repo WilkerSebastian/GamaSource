@@ -15,9 +15,10 @@ export default class Man extends GameObject {
 
     update(): void {
 
-        let axios: Vector2
+        let axios = Vector2.zero()
         
-        axios = Gamepads.first.getLeftAxis()
+        if (Gamepads.first)
+            axios = Gamepads.first.getLeftAxis()
 
         if (axios.isNullVector())
             this.sprite.set("idle")

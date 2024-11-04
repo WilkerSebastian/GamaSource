@@ -103,9 +103,11 @@ export default class BoxCollider2D extends Collider {
 
         }
 
-        this.position = this.reference.transform
-        this.width = sprite.width * this.scale.x
-        this.height = sprite.height * this.scale.y
+        const { x, y, width, height } = sprite.getRenderObject()
+
+        this.position.set(x, y)
+        this.width = width * this.scale.x
+        this.height = height * this.scale.x
 
     }   
 
