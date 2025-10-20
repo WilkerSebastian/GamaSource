@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "gamasource": "link:gamasource",
-    "typescript": "^5.2.2",
-    "vite": "^5.3.4"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.11"
   }
 }
