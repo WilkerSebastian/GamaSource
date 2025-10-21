@@ -15,6 +15,8 @@ import Camera from "../gameObject/Camera"
 import GameVideo from "../asset/video/GameVideo"
 import Helpers from "../helper/Helpers"
 import Gamepads from "../input/Gamepads"
+import CollisionManager from "../math/collision/CollisionManager"
+import PhysicsManager from "../math/physics/PhysicsManager"
 
 class GamaSource {
 
@@ -27,6 +29,9 @@ class GamaSource {
     public static globalEnv = new Map<string, any>()
     public static Camera:Camera
     public static canvas:HTMLCanvasElement
+
+    public static Physics: PhysicsManager;
+    public static Collisions: CollisionManager;
 
     private static state:GamaSourceState
     private time:TimeController
@@ -104,6 +109,9 @@ class GamaSource {
         });
         window.addEventListener('blur', () => GamaSource.stop());
 
+        GamaSource.Physics = new PhysicsManager(); 
+        GamaSource.Collisions = new CollisionManager();
+
     }
 
     // métodos de incialização
@@ -139,6 +147,12 @@ class GamaSource {
         GamaSource.globalEnv.set("FPS", this.time.FPS)
         GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())
         GamaSource.globalEnv.set("latency", this.time.getFrameInterval())
+
+        GamaSource.Physics.update(GamaSource.globalEnv.get("deltaTime") as number);
+
+        GamaSource.Collisions.checkAndResolveCollisions();
+
+        GamaSource.Physics.sync();
 
         GamaSource.GameObjects.forEach((g) => g.gameUpdate())
 

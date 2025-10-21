@@ -4,7 +4,9 @@ export default class Cube_physics extends GameObject {
 
     private sprite = new SquareSprite(100, 100, "red")
     private collider = new BoxCollider2D()
-    private physics = new RigidBody2D(1, 1, 0.3, 10)
+    private physics = new RigidBody2D(1, 0.1, 0.3, 10)
+
+    private pess = false;
 
 
     start() {
@@ -18,20 +20,18 @@ export default class Cube_physics extends GameObject {
     }
 
     protected onCollisionBetween(gameObject: GameObject): void {
-        
-        console.log(this.collider.position.x, this.collider.position.y, this.collider.width, this.collider.height);
-        
-        const otherCollider = gameObject.getComponent("Collision") as BoxCollider2D
-        console.log(otherCollider.position.x, otherCollider.position.y, otherCollider.width, otherCollider.height);
+    
 
     }
 
     update() {
         
 
-        if (KeyBoard.getKeyDown("SPACE"))
-            this.physics.applyForce(new Vector2(0, 1))
-
+        if (KeyBoard.getKeyDown("SPACE") && !this.pess) {
+            this.physics.applyForce(new Vector2(0, 5))
+            console.log("sus");
+            this.pess = true
+        }
     }
 
 }

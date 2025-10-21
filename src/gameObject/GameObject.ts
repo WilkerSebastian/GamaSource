@@ -37,15 +37,35 @@ export default class GameObject {
     }
 
     public destroy() {
+
+        const physics = this.getComponent<Physic>("Physics");
+        
+        if (physics) 
+            GamaSource.Physics.remove(physics);
+        
+        const collision = this.getComponent<Collider>("Collision");
+        
+        if (collision) 
+            GamaSource.Collisions.remove(collision);
+
         GamaSource.GameObjects = GamaSource.GameObjects.filter(obj => obj != this);
+        
     }
 
-    public getComponent(type: ComponentType) {
-        return this.components[type] ?? null;
+    public getComponent<T>(type: ComponentType) {
+        return this.components[type] as T ?? null;
     }
 
     public setComponent(type: ComponentType, component: Component) {
-        this.components[type] = component;
+        
+        this.components[type] = component
+
+        if (type === "Physics") 
+            GamaSource.Physics.add(component as Physic);
+        
+        else if (type === "Collision")
+            GamaSource.Collisions.add(component as Collider);
+
     }
 
     public static getElementByTag<T>(tag: string) {
@@ -135,57 +155,6 @@ export default class GameObject {
 
     public update() {}
 
-    private onCollision() {
-    
-        const objs = GamaSource.GameObjects.filter(obj => obj.getComponent("Collision") && obj != this && obj != this.root);
-
-        for (let i = 0; i < objs.length; i++) {
-            
-            const obj = objs[i];
-            const collision = this.getComponent("Collision") as Collider;
-            const objCollision = obj.getComponent("Collision") as Collider;
-
-            if (collision && objCollision) {
-
-                if (collision.isCollided(objCollision)) {
-
-                    const physic = this.getComponent("Physics") as Physic;
-                    const objPhysic = obj.getComponent("Physics") as Physic;
-
-                    if (physic instanceof RigidBody2D && objPhysic) {
-
-                        const resolve = collision.resolveCollision(objCollision);
-
-                        if (collision instanceof BoxCollider2D)
-                            objCollision instanceof CircularCollider ? physic.position.subtractInPlace(resolve) : physic.position.addInPlace(resolve);
-                        
-                        else if (collision instanceof CircularCollider)
-                            physic.position.addInPlace(resolve);
-
-                        if (resolve.y != 0) {
-
-                            physic.velocity.y = 0;
-                            physic.position.y += resolve.y;
-
-                            if (resolve.y > 0 && physic instanceof RigidBody2D) 
-                                physic.grounded = true;
-                            
-                        }
-                        
-                    }
-
-                    if (!this.collidingObjects.includes(obj))
-                        this.collidingObjects.push(obj);
-
-                    this.onCollisionBetween(obj);
-                } else if (this.collidingObjects.includes(obj)) {
-                    this.collidingObjects = this.collidingObjects.filter(o => o != obj);
-                    this.onCollisionExit(obj);
-                }
-            }
-        }
-    }
-
     protected onCollisionBetween(gameObject: GameObject) {}
 
     protected onCollisionExit(gameObject: GameObject) {}
@@ -194,33 +163,16 @@ export default class GameObject {
 
     public gameUpdate() {
 
-        this.update();
-
+        this.update(); 
+        
         const physics = this.getComponent("Physics") as Physic;
 
-        if (physics) {
-
-            const delta = GamaSource.globalEnv.get("deltaTime") as number;
-            physics.update(delta);
+        if (physics) 
             this.fixedUpdate();
-
-        }
-
-        const collision = this.getComponent("Collision") as Collider;
-
-        if (this.visible) {
-
-            if (collision) {
-
-                collision.update();
-                this.onCollision();
-
-            }
-            
+        
+        if (this.visible) 
             for (let i = 0; i < this.nodes.length; i++)
                 this.nodes[i].gameUpdate();
-
-        }
 
     }
 

@@ -1,4 +1,3 @@
-import GamaSource from "../../core/GamaSource";
 import Sprite from "../../rendering/Sprite";
 import Vector2 from "../vector/Vector2";
 import CircularCollider from "./CircularCollider";
@@ -23,13 +22,21 @@ export default class BoxCollider2D extends Collider {
         if (collider instanceof CircularCollider)
             return collider.isCollided(this);
 
-        else if (collider instanceof BoxCollider2D)
-            return (this.position.x < collider.position.x + collider.width &&
-                this.position.x + this.width > collider.position.x &&
-                this.position.y < collider.position.y + collider.height &&
-                this.position.y + this.height > collider.position.y);
+        else if (collider instanceof BoxCollider2D) {
 
-        return false
+            const myHalfWidth = this.width / 2;
+            const myHalfHeight = this.height / 2;
+            const otherHalfWidth = collider.width / 2;
+            const otherHalfHeight = collider.height / 2;
+
+            return (
+                Math.abs(this.position.x - collider.position.x) < myHalfWidth + otherHalfWidth &&
+                Math.abs(this.position.y - collider.position.y) < myHalfHeight + otherHalfHeight
+            );
+
+        }
+
+        return false;
 
     }
 
@@ -43,20 +50,16 @@ export default class BoxCollider2D extends Collider {
             if (collider.reference instanceof Vector2 || this.reference instanceof Vector2)
                 return Vector2.zero()
 
-            const size = (this.reference.getComponent("Rendering") as Sprite).getSize();
-            const csize = (collider.reference.getComponent("Rendering") as Sprite).getSize();
-
             const distance = new Vector2(
-                (this.position.x + size.width / 2) - (collider.position.x + csize.width / 2),
-                (this.position.y + size.height / 2) - (collider.position.y + csize.height / 2)
+                this.position.x - collider.position.x,
+                this.position.y - collider.position.y
             );
-    
-            const halfWidths = (size.width + csize.width) / 2;
-            const halfHeights = (size.height + csize.height) / 2;
-                
-            // TODO: remove 1.49 constant
-            const overlapX = halfWidths - Math.abs(distance.x * 1.49);
-            const overlapY = halfHeights - Math.abs(distance.y * 1.49);
+
+            const halfWidths = (this.width + collider.width) / 2;
+            const halfHeights = (this.height + collider.height) / 2;
+
+            const overlapX = halfWidths - Math.abs(distance.x);
+            const overlapY = halfHeights - Math.abs(distance.y);
 
             if (overlapX < overlapY) {
                 
@@ -76,7 +79,7 @@ export default class BoxCollider2D extends Collider {
                 else 
                     this.position.y -= overlapY; 
                 
-                return new Vector2(0, overlapY); 
+                return new Vector2(overlapX, overlapY); 
 
             }
 

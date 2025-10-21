@@ -32,7 +32,7 @@ export default class Cube extends GameObject {
     }
 
     update() {
- 
+        
         const axios = KeyBoard.getAxios("transverse")
 
         this.transform.addInPlace(axios.multiply(3))

@@ -25,14 +25,14 @@ export default class CircularCollider extends Collider {
 
         } else if (collider instanceof BoxCollider2D) {
 
-            const closet = new Vector2(
-                Math.max(collider.position.x, Math.min(this.position.x, collider.position.x + collider.width)),
-                Math.max(collider.position.y, Math.min(this.position.y, collider.position.y + collider.height))
-            )
+           const closet = new Vector2(
+                Math.max(collider.position.x - collider.width / 2, Math.min(this.position.x, collider.position.x + collider.width / 2)),
+                Math.max(collider.position.y - collider.height / 2, Math.min(this.position.y, collider.position.y + collider.height / 2))
+            );
+            
+            const distanceSq = Math.pow(this.position.x - closet.x, 2) + Math.pow(this.position.y - closet.y, 2);
 
-            const distance = this.position.dotProduct(closet)
-
-            return distance <= Math.pow(this.radius, 2);
+            return distanceSq <= Math.pow(this.radius, 2);
 
         }
 

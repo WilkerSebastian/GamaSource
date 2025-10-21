@@ -8,14 +8,6 @@ export default class StaticBody2D extends Physic {
         super(0, position)
     }
 
-    public override update() {
-
-        if (this.reference instanceof GameObject)
-            this.reference.transform.copy(this.position)
-
-        else
-            this.reference.copy(this.position)
-
-    }
+    public override update() {}
 
 }
