@@ -146,9 +146,8 @@ class GamaSource {
 
         GamaSource.globalEnv.set("FPS", this.time.FPS)
         GamaSource.globalEnv.set("deltaTime", this.time.getDeltaTime())
-        GamaSource.globalEnv.set("latency", this.time.getFrameInterval())
-
-        GamaSource.Physics.update(GamaSource.globalEnv.get("deltaTime") as number);
+        
+        GamaSource.Physics.update(this.time.getDeltaTime());
 
         GamaSource.Collisions.checkAndResolveCollisions();
 
@@ -200,20 +199,14 @@ class GamaSource {
          
             if (GamaSource.state != GamaSourceState.CLOSED && GamaSource.state != GamaSourceState.CRASHED) {
 
-                this.time.updateDeltaTime()
+                this.time.update()
 
-                if (this.time.deltaTimeIsGreaterThenFrameInterval()) {
-         
-                    if (GamaSource.state != GamaSourceState.STOPPED) {
+                if (GamaSource.state != GamaSourceState.STOPPED) 
+                    this.update()
 
-                        this.update()
+                this.render()    
 
-                    }
-
-                    this.render()
-                    this.time.frameUpdate()       
-
-                }
+            
 
             }
 
