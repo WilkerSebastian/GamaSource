@@ -43,14 +43,14 @@ export default class Helpers {
         if (collider instanceof BoxCollider2D) {
 
             GamaSource.ctx.save()
-            GamaSource.ctx.fillStyle = collied ? "#ec59b5" : "#CCCCCC"
+            GamaSource.ctx.strokeStyle = "2px " + collied ? "#fb09ffff" : "#00ff44ff"
 
             const x = GamaSource.window.getScalableMeasure(collider.position.x)
             const y = -GamaSource.window.getScalableMeasure(collider.position.y)
 
             GamaSource.ctx.translate(x, y)
 
-            GamaSource.ctx.fillRect(
+            GamaSource.ctx.strokeRect(
                 -collider.width / 2, 
                 -collider.height / 2, 
                 collider.width, 
